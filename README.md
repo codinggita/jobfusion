@@ -25,9 +25,4 @@ JobFusion is a full-stack web application built to help users search for jobs, s
 - Node.js (v16 or higher)
 - NPM or Yarn (for package management)
 
-### Setup Instructions
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/jobfusion.git
-   cd jobfusion
