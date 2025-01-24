@@ -1,9 +1,10 @@
 const express = require('express');
-const { searchJobs } = require('../controllers/jobController');
+const { searchJobs, getTrendingJobs } = require('../controllers/jobController'); // Import both functions
 
 const router = express.Router();
 
-// Define the route for searching jobs
-router.get('/search', searchJobs);
+// Define routes
+router.get('/search', searchJobs); // Search jobs route
+router.get('/trending', getTrendingJobs); // Trending jobs route
 
 module.exports = router;
