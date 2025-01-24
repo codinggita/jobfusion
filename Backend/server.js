@@ -1,14 +1,14 @@
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const express = require('express');
-const cors = require('cors'); // Import CORS
-const jobRoutes = require('./src/routes/jobRoutes'); // Import job routes
-const { getTrendingJobs } = require('./src/controllers/jobController'); // Import trending jobs controller
+const cors = require('cors'); 
+const jobRoutes = require('./src/routes/jobRoutes'); 
+const { getTrendingJobs } = require('./src/controllers/jobController'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors()); // Enable CORS
+app.use(cors());
 app.use(express.json());
 
 // Use job routes
