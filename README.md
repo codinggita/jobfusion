@@ -18,11 +18,6 @@ JobFusion is a full-stack web application built to help users search for jobs, s
 - **Database**: (Your choice of database, e.g., MongoDB or SQL)
 - **Version Control**: GitHub for code versioning
 
-## Installation
 
-### Prerequisites
-
-- Node.js (v16 or higher)
-- NPM or Yarn (for package management)
 
 
