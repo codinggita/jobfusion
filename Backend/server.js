@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jobRoutes = require('./src/routes/jobRoutes');
-const userRoutes = require('./src/routes/userRoutes'); // Add this line to import the user routes
+const userRoutes = require('./src/routes/userRoutes'); // Import user routes
 const { getTrendingJobs } = require('./src/controllers/jobController');
 
 // MongoDB connection
@@ -34,8 +34,8 @@ app.use(express.json());
 // Use job routes
 app.use('/api/jobs', jobRoutes);
 
-// Use user routes for creating a new user (important!)
-app.use('/api/users', userRoutes); // Add this line to use user routes
+// Use user routes for registration and login
+app.use('/api/users', userRoutes);
 
 // Separate route for trending jobs
 app.get('/api/trending', getTrendingJobs);
