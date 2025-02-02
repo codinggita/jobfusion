@@ -23,8 +23,14 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: 'https://jobfusion.onrender.com',  // Replace with your deployed frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+};
+
+app.use(cors(corsOptions));  // Apply CORS middleware with the options
 app.use(express.json());
 
 // Use job routes
