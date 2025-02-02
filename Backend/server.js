@@ -10,17 +10,13 @@ const { getTrendingJobs } = require('./src/controllers/jobController');
 const connectDB = async () => {
   try {
     const mongoURL = process.env.MONGO_URI; // Use MONGO_URI as per your preference
-    const conn = await mongoose.connect(mongoURL, { 
-      useNewUrlParser: true, 
-      useUnifiedTopology: true 
-    });
+    const conn = await mongoose.connect(mongoURL); // Removed deprecated options
     console.log(`Connected to MongoDB: ${conn.connection.host}`);
   } catch (error) {
     console.error('Error connecting to MongoDB:', error.message);
     process.exit(1); // Exit process with failure
   }
 };
-
 // Call the function to connect to MongoDB
 connectDB();
 
