@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BriefcaseIcon, Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
 
 function Register() {
     const [showPassword, setShowPassword] = useState(false);
@@ -8,16 +9,43 @@ function Register() {
         username: '',
         email: '',
         password: '',
-        workStatus: 'fresher'
+        workStatus: 'fresher', // default value
     });
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you'll add the API integration
-        console.log('Register data:', formData);
-        navigate('/login');
+    
+        // Ensure that the formData contains the correct experienceLevel value
+        const userData = {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            experienceLevel: formData.workStatus === 'fresher' ? 'Fresher' : 'Experienced',
+        };
+    
+        try {
+            const response = await fetch('https://jobfusion.onrender.com/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                console.log('User registered successfully:', data);
+                navigate('/login');
+            } else {
+                console.error('Error registering user:', data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
+    
 
     const handleChange = (e) => {
         setFormData({
