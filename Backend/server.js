@@ -3,39 +3,41 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const jobRoutes = require('./src/routes/jobRoutes');
-const userRoutes = require('./src/routes/userRoutes'); // Add this line to import the user routes
+const userRoutes = require('./src/routes/userRoutes'); // Import user routes
 const { getTrendingJobs } = require('./src/controllers/jobController');
 
 // MongoDB connection
 const connectDB = async () => {
   try {
     const mongoURL = process.env.MONGO_URI; // Use MONGO_URI as per your preference
-    const conn = await mongoose.connect(mongoURL, { 
-      useNewUrlParser: true, 
-      useUnifiedTopology: true 
-    });
+    const conn = await mongoose.connect(mongoURL); // Removed deprecated options
     console.log(`Connected to MongoDB: ${conn.connection.host}`);
   } catch (error) {
     console.error('Error connecting to MongoDB:', error.message);
     process.exit(1); // Exit process with failure
   }
 };
-
 // Call the function to connect to MongoDB
 connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: 'https://jobfusion.onrender.com',  // Replace with your deployed frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+};
+
+app.use(cors(corsOptions));  // Apply CORS middleware with the options
 app.use(express.json());
 
 // Use job routes
 app.use('/api/jobs', jobRoutes);
 
-// Use user routes for creating a new user (important!)
-app.use('/api/users', userRoutes); // Add this line to use user routes
+// Use user routes for registration and login
+app.use('/api/users', userRoutes);
 
 // Separate route for trending jobs
 app.get('/api/trending', getTrendingJobs);
