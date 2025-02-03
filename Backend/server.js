@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 3000;
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://jobfusion.onrender.com',  // Replace with your deployed frontend URL
+  origin: '*',  // Replace with your deployed frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
 };
