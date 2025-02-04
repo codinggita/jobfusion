@@ -111,5 +111,26 @@ const loginUser = async (req, res) => {
         });
     }
 };
+const getUserProfile = async (req, res) => {
+    try {
+        const { email } = req.params; // ✅ Fetch email from request params
 
-module.exports = { createUser, loginUser };
+        if (!email) {
+            return res.status(400).json({ success: false, message: "Email is required" });
+        }
+
+        const user = await User.findOne({ email }).select("-password"); // ✅ Find user by email and exclude password
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        console.error("Error in getUserProfile:", error.message);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+
+
+module.exports = { createUser, loginUser , getUserProfile};
