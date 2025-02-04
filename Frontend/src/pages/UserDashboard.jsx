@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { User, FileText, Menu, X } from 'lucide-react';
+import { useState } from "react"
+import { User, FileText, Menu, X } from "lucide-react"
 
-// Job card component for reusability
+// JobCard component
 const JobCard = ({ title, company, location, tags }) => (
   <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
     <div className="flex items-start gap-3 sm:gap-4">
@@ -29,10 +29,10 @@ const JobCard = ({ title, company, location, tags }) => (
       </div>
     </div>
   </div>
-);
+)
 
 function UserDashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // Sample job data
   const jobs = [
@@ -43,8 +43,8 @@ function UserDashboard() {
       tags: {
         type: "Full-Time",
         department: "Marketing",
-        role: "Design"
-      }
+        role: "Design",
+      },
     },
     {
       title: "HR Manager",
@@ -53,15 +53,15 @@ function UserDashboard() {
       tags: {
         type: "Full-Time",
         department: "Marketing",
-        role: "Design"
-      }
-    }
-  ];
+        role: "Design",
+      },
+    },
+  ]
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="flex-1 flex">
       {/* Mobile Toggle Button */}
-      <div className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 md:hidden">
+      <div className="fixed top-20 right-3 sm:top-20 sm:right-4 z-50 md:hidden">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-1.5 sm:p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors shadow-lg"
@@ -71,7 +71,7 @@ function UserDashboard() {
       </div>
 
       {/* Desktop Left Sidebar */}
-      <div className="fixed left-0 top-0 w-64 sm:w-72 h-screen bg-blue-500 p-4 sm:p-6 md:p-8 hidden md:block overflow-y-auto">
+      <div className="hidden md:block w-64 sm:w-72 bg-blue-500 p-4 sm:p-6 md:p-8 overflow-y-auto scrollbar-hide">
         {/* Profile Box */}
         <div className="bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[35vh] flex flex-col justify-center">
           <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-blue-300 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
@@ -90,8 +90,8 @@ function UserDashboard() {
           </div>
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6">
             {[1, 2, 3].map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="aspect-[3/4] bg-blue-300 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer"
               />
             ))}
@@ -100,9 +100,9 @@ function UserDashboard() {
       </div>
 
       {/* Mobile Right Sidebar */}
-      <div 
-        className={`fixed right-0 top-0 w-64 sm:w-72 h-screen bg-blue-500 p-4 sm:p-6 transform transition-transform duration-300 ease-in-out z-40 md:hidden overflow-y-auto
-          ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      <div
+        className={`fixed right-0 top-16 w-64 sm:w-72 h-[calc(100vh-4rem)] bg-blue-500 p-4 sm:p-6 transform transition-transform duration-300 ease-in-out z-40 md:hidden overflow-y-auto scrollbar-hide
+          ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Profile Box */}
         <div className="bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[35vh] flex flex-col justify-center mt-8 sm:mt-10">
@@ -116,14 +116,14 @@ function UserDashboard() {
         </div>
 
         {/* Resume Box */}
-        <div className="mt-4 sm:mt-6 bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[calc(65vh-2rem)]">
+        <div className="mt-4 sm:mt-6 bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[calc(65vh-6rem)]">
           <div className="w-24 h-24 sm:w-28 sm:h-28 bg-blue-300 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
             <FileText size={40} className="text-blue-600" />
           </div>
           <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-4 sm:mt-6">
             {[1, 2, 3].map((_, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="aspect-[3/4] bg-blue-300 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer"
               />
             ))}
@@ -132,7 +132,7 @@ function UserDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="p-3 sm:p-4 md:p-6 lg:p-8 md:ml-64 sm:md:ml-72 transition-all duration-300">
+      <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-y-auto scrollbar-hide">
         {/* Applied Jobs Section */}
         <div className="mb-8 sm:mb-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 bg-blue-100 inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg">
@@ -160,13 +160,11 @@ function UserDashboard() {
 
       {/* Overlay for mobile */}
       {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setIsSidebarOpen(false)} />
       )}
     </div>
-  );
+  )
 }
 
 export default UserDashboard;
+
