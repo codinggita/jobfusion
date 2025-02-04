@@ -1,17 +1,48 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BriefcaseIcon, Eye, EyeOff } from 'lucide-react';
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: ''
     });
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Login data:', formData);
+
+        const userData = {
+            email: formData.email,
+            password: formData.password
+        };
+
+        try {
+            const response = await fetch('https://jobfusion.onrender.com/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Store token in localStorage or sessionStorage
+                localStorage.setItem('token', data.token);
+
+                // Navigate to home page
+                navigate('/');
+            } else {
+                setError(data.message || 'Login failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+            setError('An error occurred. Please try again later.');
+        }
     };
 
     const handleChange = (e) => {
@@ -32,15 +63,18 @@ function Login() {
                     </Link>
 
                     <h1 className="text-3xl font-bold mb-2">LOGIN</h1>
-                    <p className="text-gray-600 mb-8">How to i get started lorem ipsum dolor at?</p>
+                    <p className="text-gray-600 mb-8">How to get started lorem ipsum dolor at?</p>
+
+                    {/* Error Message */}
+                    {error && <div className="mb-4 text-red-600">{error}</div>}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <input
-                                type="text"
-                                name="username"
-                                placeholder="Username"
-                                value={formData.username}
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={formData.email}
                                 onChange={handleChange}
                                 className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
                             />
@@ -77,7 +111,7 @@ function Login() {
                         <div className="space-y-3">
                             <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
                                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-                                <span>Login with google</span>
+                                <span>Login with Google</span>
                             </button>
                             <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
                                 <img src="https://www.facebook.com/favicon.ico" alt="Facebook" className="w-5 h-5" />
@@ -89,8 +123,6 @@ function Login() {
                                     Sign Up
                                 </Link>
                             </p>
-
-
                         </div>
                     </div>
                 </div>
@@ -102,7 +134,7 @@ function Login() {
                     <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-blue-600/20" />
                     <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-12">
                         <h2 className="text-4xl font-bold text-white mb-4">
-                            Very good works are waiting for you Login Now!!!
+                            Very good works are waiting for you. Login Now!!!
                         </h2>
                     </div>
                     <img
