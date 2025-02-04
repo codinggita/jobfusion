@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Ragister';
-import UserDashboard from './pages/UsetrDashboard';
+import UserDashboard from './pages/UserDashboard';
 
 function App() {
   return (
