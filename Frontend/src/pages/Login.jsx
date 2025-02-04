@@ -31,10 +31,8 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                // Store token in localStorage or sessionStorage
                 localStorage.setItem('token', data.token);
-
-                // Navigate to home page
+                localStorage.setItem('userEmail', formData.email); 
                 navigate('/');
             } else {
                 setError(data.message || 'Login failed. Please try again.');
