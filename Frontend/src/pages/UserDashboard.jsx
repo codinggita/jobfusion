@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { User, FileText, Menu, X } from "lucide-react"
-
+import axios from "axios";
 // JobCard component
 const JobCard = ({ title, company, location, tags }) => (
   <div className="bg-gray-50 p-4 sm:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -30,33 +30,62 @@ const JobCard = ({ title, company, location, tags }) => (
     </div>
   </div>
 )
-
-function UserDashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
-  // Sample job data
-  const jobs = [
-    {
-      title: "HR Manager",
-      company: "Packer",
-      location: "Lucern, Switzerland",
-      tags: {
-        type: "Full-Time",
-        department: "Marketing",
-        role: "Design",
-      },
+// Sample job data
+const jobs = [
+  {
+    title: "HR Manager",
+    company: "Packer",
+    location: "Lucern, Switzerland",
+    tags: {
+      type: "Full-Time",
+      department: "Marketing",
+      role: "Design",
     },
-    {
-      title: "HR Manager",
-      company: "Packer",
-      location: "Lucern, Switzerland",
-      tags: {
-        type: "Full-Time",
-        department: "Marketing",
-        role: "Design",
-      },
+  },
+  {
+    title: "HR Manager",
+    company: "Packer",
+    location: "Lucern, Switzerland",
+    tags: {
+      type: "Full-Time",
+      department: "Marketing",
+      role: "Design",
     },
-  ]
+  },
+]
+const UserDashboard = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const storedEmail = localStorage.getItem("userEmail"); // Get email from localStorage
+        if (!storedEmail) {
+          setError("No email found in local storage.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await axios.get(`http://localhost:3000/api/users/profile/${storedEmail}`);
+
+        if (response.data.success) {
+          setUserData(response.data.data); // Store the user data
+        } else {
+          setError("Failed to fetch user data.");
+        }
+      } catch (err) {
+        setError("Error fetching user data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
 
   return (
     <div className="flex-1 flex">
@@ -73,15 +102,24 @@ function UserDashboard() {
       {/* Desktop Left Sidebar */}
       <div className="hidden md:block w-64 sm:w-72 bg-blue-500 p-4 sm:p-6 md:p-8 overflow-y-auto scrollbar-hide">
         {/* Profile Box */}
-        <div className="bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[35vh] flex flex-col justify-center">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-blue-300 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-            <User size={40} className="text-blue-600" />
+        {loading && <p className="text-gray-600">Loading...</p>}
+        {/* {error && <p className="text-red-500">{error}</p>} */}
+
+        {userData && (
+          <div className="bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[35vh] flex flex-col justify-center mt-8 sm:mt-10">
+            {/* Profile Picture */}
+            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-blue-300 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
+              <User size={40} className="text-blue-600" />
+            </div>
+
+            {/* User Info */}
+            <div className="text-white text-center">
+              <h2 className="text-xl sm:text-2xl font-semibold mb-1">{userData.username}</h2>
+              <p className="text-base sm:text-lg text-blue-200 mb-1">{userData.experienceLevel}</p>
+              <p className="text-sm sm:text-base text-blue-100">{userData.email}</p>
+            </div>
           </div>
-          <div className="text-white text-center">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">UserName</h2>
-            <p className="text-blue-100 text-base sm:text-lg">Email</p>
-          </div>
-        </div>
+        )}
 
         {/* Resume Box */}
         <div className="mt-4 sm:mt-6 md:mt-8 bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[calc(65vh-2rem)]">
@@ -105,15 +143,22 @@ function UserDashboard() {
           ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Profile Box */}
-        <div className="bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[35vh] flex flex-col justify-center mt-8 sm:mt-10">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 bg-blue-300 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-            <User size={40} className="text-blue-600" />
+        {userData && (
+          <div className="bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[35vh] flex flex-col justify-center mt-8 sm:mt-10">
+            {/* Profile Picture */}
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-blue-300 rounded-full mx-auto mb-3 sm:mb-5 flex items-center justify-center">
+              <User size={35} className="text-blue-600" />
+            </div>
+
+            {/* User Info */}
+            <div className="text-white text-center">
+              <h2 className="text-lg sm:text-xl font-semibold mb-1">{userData.username}</h2>
+              <p className="text-sm sm:text-base text-blue-200 mb-1">{userData.experienceLevel}</p>
+              <p className="text-xs sm:text-sm text-blue-100">{userData.email}</p>
+            </div>
           </div>
-          <div className="text-white text-center">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-2 sm:mb-3">UserName</h2>
-            <p className="text-blue-100 text-base sm:text-lg">Email</p>
-          </div>
-        </div>
+        )}
+
 
         {/* Resume Box */}
         <div className="mt-4 sm:mt-6 bg-blue-400/30 rounded-xl p-4 sm:p-6 h-[calc(65vh-6rem)]">
@@ -167,4 +212,3 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
-
