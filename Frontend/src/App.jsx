@@ -6,6 +6,7 @@ import Register from './pages/Ragister';
 import UserDashboard from './pages/UserDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import JobDetails from "./pages/JobDetails";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/userdashboard" element={<UserDashboard />} />
+        <Route path="/jobs/:id" element={<JobDetails />} />
       </Routes>
       <Footer />
     </div>
