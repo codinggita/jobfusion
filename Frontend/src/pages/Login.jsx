@@ -61,7 +61,7 @@ function Login() {
                     </Link>
 
                     <h1 className="text-3xl font-bold mb-2">LOGIN</h1>
-                    <p className="text-gray-600 mb-8">How to get started lorem ipsum dolor at?</p>
+                    <p className="text-gray-600 mb-8"></p>
 
                     {/* Error Message */}
                     {error && <div className="mb-4 text-red-600">{error}</div>}
@@ -105,15 +105,11 @@ function Login() {
                     </form>
 
                     <div className="mt-8">
-                        <p className="text-center text-gray-600 mb-4">Login with Others</p>
+                        <p className="text-center text-gray-600 mb-4">--- OR ---</p>
                         <div className="space-y-3">
                             <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
                                 <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
                                 <span>Login with Google</span>
-                            </button>
-                            <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
-                                <img src="https://www.facebook.com/favicon.ico" alt="Facebook" className="w-5 h-5" />
-                                <span>Login with Facebook</span>
                             </button>
                             <p className="text-center mt-6">
                                 For A New User {' '}
@@ -132,8 +128,7 @@ function Login() {
                     <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-blue-600/20" />
                     <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-12">
                         <h2 className="text-4xl font-bold text-white mb-4">
-                            Very good works are waiting for you. Login Now!!!
-                        </h2>
+                        Exciting opportunities are just a step away. Login now !</h2>
                     </div>
                     <img
                         src="https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D"

@@ -65,7 +65,7 @@ function Register() {
                     </div>
 
                     <h1 className="text-3xl font-bold mb-2">REGISTER</h1>
-                    <p className="text-gray-600 mb-8">How to i get started lorem ipsum dolor at?</p>
+                    <p className="text-gray-600 mb-8"></p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
@@ -173,8 +173,7 @@ function Register() {
                     <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-blue-600/20" />
                     <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-12">
                         <h2 className="text-4xl font-bold text-white mb-4">
-                            Very good works are waiting for you Register Now!!!
-                        </h2>
+                        Great opportunities await you.Register now!                        </h2>
                     </div>
                     <img
                         src="https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D"
