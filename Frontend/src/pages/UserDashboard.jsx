@@ -178,17 +178,6 @@ const UserDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-y-auto scrollbar-hide">
-        {/* Applied Jobs Section */}
-        <div className="mb-8 sm:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 bg-blue-100 inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg">
-            Applied Jobs
-          </h2>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
-            {jobs.map((job, index) => (
-              <JobCard key={`applied-${index}`} {...job} />
-            ))}
-          </div>
-        </div>
 
         {/* Saved Jobs Section */}
         <div>

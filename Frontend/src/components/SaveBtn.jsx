@@ -1,16 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function BookmarkButton() {
+export default function BookmarkButton({ jobId, onToggle }) {
   const [bookmarked, setBookmarked] = useState(false);
 
+  useEffect(() => {
+    // Check if job is already saved
+    const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+    setBookmarked(savedJobs.includes(jobId));
+  }, [jobId]);
+
+  const handleClick = () => {
+    const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+
+    if (savedJobs.includes(jobId)) {
+      // Remove job from saved list
+      const updatedJobs = savedJobs.filter((id) => id !== jobId);
+      localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
+      setBookmarked(false);
+    } else {
+      // Add job to saved list
+      savedJobs.push(jobId);
+      localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
+      setBookmarked(true);
+    }
+
+    onToggle();
+  };
+
   return (
-    <button
-      onClick={() => setBookmarked((prev) => !prev)}
-      className="p-2 rounded-full bg-transparent border-none cursor-pointer"
-    >
+    <button onClick={handleClick} className="p-2 rounded-full bg-transparent border-none cursor-pointer">
       <AnimatePresence mode="wait">
         {bookmarked ? (
           <motion.div

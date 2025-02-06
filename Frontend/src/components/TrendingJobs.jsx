@@ -1,26 +1,32 @@
-// TrendingJobs.jsx
-import React, { useState, useEffect } from 'react';
-import { Database } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Database } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import BookmarkButton from "./SaveBtn";
 
-const JobCard = ({ job }) => {
+const JobCard = ({ job, onToggle }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      onClick={() => navigate(`/jobs/${job.id}`, { state: { job } })}
-      className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-    >
-      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-        <Database className="text-white" />
+    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer relative">
+      <div className="absolute top-4 right-4">
+        <BookmarkButton jobId={job.id} onToggle={onToggle} />
       </div>
-      <h3 className="font-semibold text-lg mb-2">{job.title}</h3>
+      <div
+        onClick={() => navigate(`/jobs/${job.id}`, { state: { job } })}
+        className="flex flex-col"
+      >
+        <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+          <Database className="text-white" />
+        </div>
+        <h3 className="font-semibold text-lg mb-2">{job.title}</h3>
+      </div>
     </div>
   );
 };
 
 const TrendingJobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const fetchTrendingJobs = async () => {
     try {
@@ -33,23 +39,23 @@ const TrendingJobs = () => {
       const data = await response.json();
       setJobs(data.results);
     } catch (error) {
-      console.error('Error fetching trending jobs:', error);
+      console.error("Error fetching trending jobs:", error);
     }
   };
 
   useEffect(() => {
     fetchTrendingJobs();
-  }, []);
+  }, [refresh]);
 
   return (
     <section className="py-16 px-6">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">
-        Fast-Track Job Openings in India
-        </h2>
+          Fast-Track Job Openings in India
+          </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {jobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard key={job.id} job={job} onToggle={() => setRefresh((prev) => !prev)} />
           ))}
         </div>
       </div>
