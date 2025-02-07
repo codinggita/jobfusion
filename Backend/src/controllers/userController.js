@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const SavedJob = require('../models/SavedJob'); // New: SavedJob model
+
 
 // User Registration
 const createUser = async (req, res) => {
@@ -135,69 +135,10 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-// -----------------------
-// Saved Jobs Endpoints
-// -----------------------
 
-// Get all saved jobs for a given email
-const getSavedJobs = async (req, res) => {
-    try {
-        const { email } = req.params;
-        if (!email) {
-            return res.status(400).json({ success: false, message: "Email is required" });
-        }
-        const savedJobs = await SavedJob.find({ email });
-        res.status(200).json({ success: true, data: savedJobs });
-    } catch (error) {
-        console.error("Error in getSavedJobs:", error.message);
-        res.status(500).json({ success: false, message: "Error retrieving saved jobs", error: error.message });
-    }
-};
-
-// Save a job for a given email
-const saveJob = async (req, res) => {
-    try {
-        const { email } = req.params;
-        const { job } = req.body; // Expecting the full job object
-        if (!job || !job.id) {
-            return res.status(400).json({ success: false, message: "Job data is missing or incomplete." });
-        }
-        // Check if the job is already saved for this user
-        const existing = await SavedJob.findOne({ email, "job.id": job.id });
-        if (existing) {
-            return res.status(400).json({ success: false, message: "Job already saved." });
-        }
-        const newSavedJob = await SavedJob.create({ email, job });
-        res.status(201).json({ success: true, message: "Job saved successfully", data: newSavedJob });
-    } catch (error) {
-        console.error("Error in saveJob:", error.message);
-        res.status(500).json({ success: false, message: "Error saving job", error: error.message });
-    }
-};
-
-// Unsave (delete) a job for a given email by job id
-const unsaveJob = async (req, res) => {
-    try {
-        const { email, jobId } = req.params;
-        if (!email || !jobId) {
-            return res.status(400).json({ success: false, message: "Email and jobId are required." });
-        }
-        const deletedJob = await SavedJob.findOneAndDelete({ email, "job.id": jobId });
-        if (!deletedJob) {
-            return res.status(404).json({ success: false, message: "Job not found." });
-        }
-        res.status(200).json({ success: true, message: "Job unsaved successfully." });
-    } catch (error) {
-        console.error("Error in unsaveJob:", error.message);
-        res.status(500).json({ success: false, message: "Error unsaving job", error: error.message });
-    }
-};
 
 module.exports = {
     createUser,
     loginUser,
     getUserProfile,
-    getSavedJobs, 
-    saveJob,
-    unsaveJob
 };

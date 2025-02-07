@@ -19,9 +19,4 @@ router.post('/login', loginUser);
 // Get User Profile
 router.get('/profile/:email', getUserProfile);
 
-// Saved Jobs Routes
-router.get('/savedjobs/:email', getSavedJobs);
-router.post('/savedjobs/:email', saveJob);
-router.delete('/savedjobs/:email/:jobId', unsaveJob);
-
 module.exports = router;
