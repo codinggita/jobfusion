@@ -8,7 +8,7 @@ export default function BookmarkButton({ job, onToggle }) {
   const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
-    // Check if job is already saved
+    // Check if job is already saved in local storage
     const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
     setBookmarked(savedJobs.includes(job.id));
   }, [job.id]);
@@ -22,15 +22,17 @@ export default function BookmarkButton({ job, onToggle }) {
     }
 
     try {
+      let updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+
       if (bookmarked) {
         // API Call to Delete Job
-        await axios.delete("http://localhost:3000/api/jobs/delete", {
+        await axios.delete("http://localhost:3000/api/jobs/unsave", {
           data: { email, jobId: job.id },
         });
 
         // Update LocalStorage
-        const updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-        localStorage.setItem("savedJobs", JSON.stringify(updatedJobs.filter((id) => id !== job.id)));
+        updatedJobs = updatedJobs.filter((id) => id !== job.id);
+        localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
 
         setBookmarked(false);
         alert("Job removed from saved list!");
@@ -39,7 +41,6 @@ export default function BookmarkButton({ job, onToggle }) {
         await axios.post("http://localhost:3000/api/jobs/save", { email, jobData: job });
 
         // Update LocalStorage
-        const updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
         updatedJobs.push(job.id);
         localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
 
@@ -47,7 +48,7 @@ export default function BookmarkButton({ job, onToggle }) {
         alert("Job saved successfully!");
       }
 
-      onToggle(); // Refresh the job list if needed
+      onToggle(); // Refresh UI
     } catch (error) {
       console.error("Error updating saved jobs:", error);
       alert("Failed to update saved jobs.");

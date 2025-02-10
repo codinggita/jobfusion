@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import BookmarkButton from "./SaveBtn"; // Your existing button component
+import BookmarkButton from "./SaveBtn"; // Updated button component
 import axios from "axios";
 
 const JobCard = ({ job, onToggle }) => {
@@ -34,11 +34,18 @@ const TrendingJobs = () => {
       const ADZUNA_API_ID = import.meta.env.VITE_ADZUNA_API_ID;
       const ADZUNA_API_KEY = import.meta.env.VITE_ADZUNA_API_KEY;
 
-      const response = await fetch(
-        `https://api.adzuna.com/v1/api/jobs/in/search/1?app_id=${ADZUNA_API_ID}&app_key=${ADZUNA_API_KEY}&results_per_page=8`
+      const response = await axios.get(
+        `https://api.adzuna.com/v1/api/jobs/in/search/1`,
+        {
+          params: {
+            app_id: ADZUNA_API_ID,
+            app_key: ADZUNA_API_KEY,
+            results_per_page: 8,
+          },
+        }
       );
-      const data = await response.json();
-      setJobs(data.results);
+
+      setJobs(response.data.results);
     } catch (error) {
       console.error("Error fetching trending jobs:", error);
     }
