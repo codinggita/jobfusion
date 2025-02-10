@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const jobRoutes = require('./src/routes/jobRoutes');
 const userRoutes = require('./src/routes/userRoutes'); // Import user routes
 const { getTrendingJobs } = require('./src/controllers/jobController');
+const savedJobRoutes = require("./src/routes/savedJobRoutes");
 
 // MongoDB connection
 const connectDB = async () => {
@@ -41,6 +42,9 @@ app.use('/api/users', userRoutes);
 
 // Separate route for trending jobs
 app.get('/api/trending', getTrendingJobs);
+
+//Save Jobs Rotes 
+app.use("/api/jobs", savedJobRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
