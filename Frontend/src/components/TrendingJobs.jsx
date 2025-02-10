@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import BookmarkButton from "./SaveBtn";
+import BookmarkButton from "./SaveBtn"; // Your existing button component
+import axios from "axios";
 
 const JobCard = ({ job, onToggle }) => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ const JobCard = ({ job, onToggle }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer relative">
       <div className="absolute top-4 right-4">
-        <BookmarkButton jobId={job.id} onToggle={onToggle} />
+        <BookmarkButton job={job} onToggle={onToggle} />
       </div>
       <div
         onClick={() => navigate(`/jobs/${job.id}`, { state: { job } })}
@@ -52,7 +53,7 @@ const TrendingJobs = () => {
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">
           Fast-Track Job Openings in India
-          </h2>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {jobs.map((job) => (
             <JobCard key={job.id} job={job} onToggle={() => setRefresh((prev) => !prev)} />

@@ -2,32 +2,56 @@ import { useState, useEffect } from "react";
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 
-export default function BookmarkButton({ jobId, onToggle }) {
+export default function BookmarkButton({ job, onToggle }) {
   const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     // Check if job is already saved
     const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-    setBookmarked(savedJobs.includes(jobId));
-  }, [jobId]);
+    setBookmarked(savedJobs.includes(job.id));
+  }, [job.id]);
 
-  const handleClick = () => {
-    const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+  const handleClick = async () => {
+    const email = localStorage.getItem("userEmail"); // Get user email from localStorage
 
-    if (savedJobs.includes(jobId)) {
-      // Remove job from saved list
-      const updatedJobs = savedJobs.filter((id) => id !== jobId);
-      localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
-      setBookmarked(false);
-    } else {
-      // Add job to saved list
-      savedJobs.push(jobId);
-      localStorage.setItem("savedJobs", JSON.stringify(savedJobs));
-      setBookmarked(true);
+    if (!email) {
+      alert("Please log in to save jobs.");
+      return;
     }
 
-    onToggle();
+    try {
+      if (bookmarked) {
+        // API Call to Delete Job
+        await axios.delete("http://localhost:3000/api/jobs/delete", {
+          data: { email, jobId: job.id },
+        });
+
+        // Update LocalStorage
+        const updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+        localStorage.setItem("savedJobs", JSON.stringify(updatedJobs.filter((id) => id !== job.id)));
+
+        setBookmarked(false);
+        alert("Job removed from saved list!");
+      } else {
+        // API Call to Save Job
+        await axios.post("http://localhost:3000/api/jobs/save", { email, jobData: job });
+
+        // Update LocalStorage
+        const updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
+        updatedJobs.push(job.id);
+        localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
+
+        setBookmarked(true);
+        alert("Job saved successfully!");
+      }
+
+      onToggle(); // Refresh the job list if needed
+    } catch (error) {
+      console.error("Error updating saved jobs:", error);
+      alert("Failed to update saved jobs.");
+    }
   };
 
   return (
