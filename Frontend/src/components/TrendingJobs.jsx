@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import BookmarkButton from "./SaveBtn"; // Updated button component
 import axios from "axios";
 
+
 const JobCard = ({ job, onToggle }) => {
   const navigate = useNavigate();
 
@@ -20,6 +21,12 @@ const JobCard = ({ job, onToggle }) => {
           <Database className="text-white" />
         </div>
         <h3 className="font-semibold text-lg mb-2">{job.title}</h3>
+        {job.company && (
+          <p className="text-gray-600 text-sm mb-2">{job.company.display_name}</p>
+        )}
+        {job.location && (
+          <p className="text-gray-600 text-sm mb-2">📍 {job.location.display_name}</p>
+        )}
       </div>
     </div>
   );
