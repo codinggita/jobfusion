@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Database } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Database, Search, MapPin } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import BookmarkButton from "../components/SaveBtn";
 import axios from "axios";
 
@@ -38,71 +38,53 @@ const JobCard = ({ job, onToggle }) => {
 };
 
 const SearchBar = ({ onSearch }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract previous search query from the URL
+  const searchParams = new URLSearchParams(location.search);
+  const initialWhat = searchParams.get("what") || "";
+  const initialWhere = searchParams.get("where") || "";
+
   const [filters, setFilters] = useState({
-    what: "",
-    what_exclude: "",
-    where: "",
-    salary_min: "",
-    full_time: false,
-    permanent: false,
+    what: initialWhat,
+    where: initialWhere,
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate(`/search?what=${filters.what}&where=${filters.where}`); // Preserve search state in URL
     onSearch(filters);
   };
 
   return (
     <form onSubmit={handleSubmit} className="mb-8 space-y-4 bg-white p-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="text"
-          placeholder="Job title or keywords"
-          value={filters.what}
-          onChange={(e) => setFilters({ ...filters, what: e.target.value })}
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={filters.where}
-          onChange={(e) => setFilters({ ...filters, where: e.target.value })}
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="number"
-          placeholder="Minimum salary"
-          value={filters.salary_min}
-          onChange={(e) => setFilters({ ...filters, salary_min: e.target.value })}
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-        <div className="flex items-center space-x-4">
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={filters.full_time}
-              onChange={(e) => setFilters({ ...filters, full_time: e.target.checked })}
-              className="rounded text-blue-600"
-            />
-            <span>Full Time</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={filters.permanent}
-              onChange={(e) => setFilters({ ...filters, permanent: e.target.checked })}
-              className="rounded text-blue-600"
-            />
-            <span>Permanent</span>
-          </label>
+      <div className="flex flex-col md:flex-row gap-4 p-2 bg-white rounded-lg shadow-lg">
+        <div className="flex-1 flex items-center gap-2 px-4">
+          <Search className="text-gray-400" />
+          <input
+            type="text"
+            placeholder="Job title or keyword"
+            value={filters.what}
+            onChange={(e) => setFilters({ ...filters, what: e.target.value })}
+            className="w-full p-2 outline-none"
+          />
+        </div>
+        <div className="flex-1 flex items-center gap-2 px-4 border-t md:border-t-0 md:border-l border-gray-200">
+          <MapPin className="text-gray-400" />
+          <input
+            type="text"
+            placeholder="Location"
+            value={filters.where}
+            onChange={(e) => setFilters({ ...filters, where: e.target.value })}
+            className="w-full p-2 outline-none"
+          />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700"
         >
-          Search Jobs
+          Search my job
         </button>
       </div>
     </form>
@@ -111,8 +93,15 @@ const SearchBar = ({ onSearch }) => {
 
 const TrendingJobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+
+  // Extract filters from URL parameters
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = {
+    what: searchParams.get("what") || "",
+    where: searchParams.get("where") || "",
+  };
 
   const fetchJobs = async (filters = {}) => {
     try {
@@ -127,7 +116,7 @@ const TrendingJobs = () => {
         ...filters,
         full_time: filters.full_time ? 1 : 0,
         permanent: filters.permanent ? 1 : 0,
-        sort_by: "salary"
+        sort_by: "salary",
       };
 
       const response = await axios.get(
@@ -144,16 +133,16 @@ const TrendingJobs = () => {
   };
 
   useEffect(() => {
-    fetchJobs();
-  }, [refresh]);
+    fetchJobs(searchQuery);
+  }, [location.search]); // Fetch jobs when the search query changes
 
   return (
     <section className="py-16 px-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">
-        Explore Jobs That Fit You
+          Explore Jobs That Fit You
         </h2>
-        
+
         <SearchBar onSearch={fetchJobs} />
 
         {loading ? (
@@ -163,11 +152,7 @@ const TrendingJobs = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {jobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onToggle={() => setRefresh((prev) => !prev)}
-              />
+              <JobCard key={job.id} job={job} onToggle={() => fetchJobs(searchQuery)} />
             ))}
           </div>
         )}
