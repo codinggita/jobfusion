@@ -32,14 +32,11 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/" className="text-gray-700 hover:text-blue-600">
+          <Link to="/Companies" className="text-gray-700 hover:text-blue-600">
             Companies
           </Link>
           <Link to="/" className="text-gray-700 hover:text-blue-600">
             Resume
-          </Link>
-          <Link to="/" className="text-gray-700 hover:text-blue-600">
-            Trending Jobs
           </Link>
         </nav>
 
@@ -92,9 +89,6 @@ const Header = () => {
           </Link>
           <Link to="/" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Resume
-          </Link>
-          <Link to="/" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
-            Trending Jobs
           </Link>
 
           {/* Sign In button in Mobile (only for guests) */}
