@@ -7,6 +7,7 @@ import UserDashboard from './pages/UserDashboard';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import JobDetails from "./pages/JobDetails";
+import Companies from "./pages/Companies"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="Companies" element={<Companies />} />
         <Route path="/register" element={<Register />} />
         <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
