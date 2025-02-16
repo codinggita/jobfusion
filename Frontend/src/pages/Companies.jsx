@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Database } from "lucide-react";
+import { Database, Search, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BookmarkButton from "../components/SaveBtn";
 import axios from "axios";
@@ -40,11 +40,7 @@ const JobCard = ({ job, onToggle }) => {
 const SearchBar = ({ onSearch }) => {
   const [filters, setFilters] = useState({
     what: "",
-    what_exclude: "",
     where: "",
-    salary_min: "",
-    full_time: false,
-    permanent: false,
   });
 
   const handleSubmit = (e) => {
@@ -54,55 +50,32 @@ const SearchBar = ({ onSearch }) => {
 
   return (
     <form onSubmit={handleSubmit} className="mb-8 space-y-4 bg-white p-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="text"
-          placeholder="Job title or keywords"
-          value={filters.what}
-          onChange={(e) => setFilters({ ...filters, what: e.target.value })}
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={filters.where}
-          onChange={(e) => setFilters({ ...filters, where: e.target.value })}
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="number"
-          placeholder="Minimum salary"
-          value={filters.salary_min}
-          onChange={(e) => setFilters({ ...filters, salary_min: e.target.value })}
-          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-        />
-        <div className="flex items-center space-x-4">
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={filters.full_time}
-              onChange={(e) => setFilters({ ...filters, full_time: e.target.checked })}
-              className="rounded text-blue-600"
-            />
-            <span>Full Time</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={filters.permanent}
-              onChange={(e) => setFilters({ ...filters, permanent: e.target.checked })}
-              className="rounded text-blue-600"
-            />
-            <span>Permanent</span>
-          </label>
+      <div className="flex flex-col md:flex-row gap-4 p-2 bg-white rounded-lg shadow-lg">
+        <div className="flex-1 flex items-center gap-2 px-4">
+          <Search className="text-gray-400" />
+          <input
+            type="text"
+            placeholder="Job title or keyword"
+            value={filters.what}
+            onChange={(e) => setFilters({ ...filters, what: e.target.value })}
+            className="w-full p-2 outline-none"
+          />
+        </div>
+        <div className="flex-1 flex items-center gap-2 px-4 border-t md:border-t-0 md:border-l border-gray-200">
+          <MapPin className="text-gray-400" />
+          <input
+            type="text"
+            placeholder="Location"
+            value={filters.where}
+            onChange={(e) => setFilters({ ...filters, where: e.target.value })}
+            className="w-full p-2 outline-none"
+          />
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700"
         >
-          Search Jobs
+          Search my job
         </button>
       </div>
     </form>
