@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Database, Search, MapPin } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import BookmarkButton from "../components/SaveBtn";
 import axios from "axios";
 
@@ -38,13 +38,22 @@ const JobCard = ({ job, onToggle }) => {
 };
 
 const SearchBar = ({ onSearch }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract previous search query from the URL
+  const searchParams = new URLSearchParams(location.search);
+  const initialWhat = searchParams.get("what") || "";
+  const initialWhere = searchParams.get("where") || "";
+
   const [filters, setFilters] = useState({
-    what: "",
-    where: "",
+    what: initialWhat,
+    where: initialWhere,
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    navigate(`/search?what=${filters.what}&where=${filters.where}`); // Preserve search state in URL
     onSearch(filters);
   };
 
@@ -84,8 +93,15 @@ const SearchBar = ({ onSearch }) => {
 
 const TrendingJobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+
+  // Extract filters from URL parameters
+  const searchParams = new URLSearchParams(location.search);
+  const searchQuery = {
+    what: searchParams.get("what") || "",
+    where: searchParams.get("where") || "",
+  };
 
   const fetchJobs = async (filters = {}) => {
     try {
@@ -100,7 +116,7 @@ const TrendingJobs = () => {
         ...filters,
         full_time: filters.full_time ? 1 : 0,
         permanent: filters.permanent ? 1 : 0,
-        sort_by: "salary"
+        sort_by: "salary",
       };
 
       const response = await axios.get(
@@ -117,16 +133,16 @@ const TrendingJobs = () => {
   };
 
   useEffect(() => {
-    fetchJobs();
-  }, [refresh]);
+    fetchJobs(searchQuery);
+  }, [location.search]); // Fetch jobs when the search query changes
 
   return (
     <section className="py-16 px-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">
-        Explore Jobs That Fit You
+          Explore Jobs That Fit You
         </h2>
-        
+
         <SearchBar onSearch={fetchJobs} />
 
         {loading ? (
@@ -136,11 +152,7 @@ const TrendingJobs = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {jobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onToggle={() => setRefresh((prev) => !prev)}
-              />
+              <JobCard key={job.id} job={job} onToggle={() => fetchJobs(searchQuery)} />
             ))}
           </div>
         )}
