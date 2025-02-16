@@ -11,8 +11,6 @@ JobFusion is a full-stack web application designed to help users search for jobs
 - **Current Vacancies**: View the latest available job opportunities in real time.
 - **Resume Maker**: Build your resume with helpful tips and formatting options.
 - **ATS Checker**: Analyze your resume to ensure it's optimized for applicant tracking systems (ATS).
-- **Free Access**: All features are free to use with no paid features or purchases.
-
 ---
 
 ## 🛠️ Technologies Used
@@ -27,6 +25,7 @@ JobFusion is a full-stack web application designed to help users search for jobs
 
 ### API
 - Adzuna API (for job listings)
+- Backend API Of JobFusion
 
 ### Database
 - MongoDB 
