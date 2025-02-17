@@ -4,6 +4,7 @@ import TrendingJobs from '../components/TrendingJobs';
 import HowItWorks from '../components/HowItWorks';
 import TopCompanies from '../components/TopCompanies';
 import Newsletter from '../components/Newsletter';
+import Review from '../components/Reviews';
 
 
 function Home() {
@@ -14,6 +15,7 @@ function Home() {
         <TrendingJobs />
         <HowItWorks />
         <TopCompanies /> 
+        <Review />  
          <Newsletter /> 
       </main>
     </>
