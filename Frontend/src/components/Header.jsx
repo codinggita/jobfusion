@@ -25,7 +25,7 @@ const Header = () => {
     <header className="bg-blue-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/home" className="flex items-center gap-2">
           <BriefcaseIcon className="h-8 w-8 text-blue-600" />
           <span className="text-xl font-bold">JOB FUSION</span>
         </Link>
@@ -35,7 +35,7 @@ const Header = () => {
           <Link to="/Companies" className="text-gray-700 hover:text-blue-600">
             Companies
           </Link>
-          <Link to="/" className="text-gray-700 hover:text-blue-600">
+          <Link to="/home" className="text-gray-700 hover:text-blue-600">
             Resume
           </Link>
         </nav>
@@ -84,10 +84,10 @@ const Header = () => {
       {/* Mobile Menu (without Dashboard & Logout) */}
       {isMenuOpen && (
         <div className="md:hidden flex flex-col bg-white shadow-md absolute top-16 left-0 w-full p-4 space-y-4">
-          <Link to="/" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
+          <Link to="/home" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Companies
           </Link>
-          <Link to="/" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
+          <Link to="/home" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Resume
           </Link>
 
