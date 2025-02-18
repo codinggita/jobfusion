@@ -50,6 +50,9 @@ app.use("/api/jobs", savedJobRoutes);
 // Use review routes
 app.use('/api/reviews', reviewRoutes);
 
+//Newstailer royes
+app.use('/api/newStailer', newStailerRoutes);
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
