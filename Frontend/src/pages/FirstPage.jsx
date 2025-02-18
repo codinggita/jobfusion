@@ -6,7 +6,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div className="max-w-4xl text-center">
         <img src="../../public/IMG@1x.png" alt="Career Success" className="w-full mb-6" />
-        <h1 className="text-3xl md:text-4xl font-bold">Your Gateway to Career Success</h1>
+        <h1 className="text-3xl md:text-4xl font-bold">Your Gateway to Career Success With <span className="text-blue-400">JobFusion</span></h1>
         <p className="mt-4 text-lg text-gray-400">
           Find high-demand jobs, build strong resumes, and track your career path
           with ease. Join thousands of professionals who've found their dream
@@ -29,10 +29,6 @@ export default function LandingPage() {
         <FeatureCard
           title="Resume Builder"
           description="Create professional resumes with our intuitive builder tool"
-        />
-        <FeatureCard
-          title="Career Tracking"
-          description="Monitor your career progress and get insights for growth"
         />
       </div>
     </div>

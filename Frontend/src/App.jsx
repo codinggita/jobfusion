@@ -1,27 +1,46 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Ragister';
 import UserDashboard from './pages/UserDashboard';
+import JobDetails from "./pages/JobDetails";
+import Companies from "./pages/Companies";
+import FirstPage from "./pages/FirstPage";
 import Header from './components/Header';
 import Footer from './components/Footer';
-import JobDetails from "./pages/JobDetails";
-import Companies from "./pages/Companies"
 
 function App() {
+  const location = useLocation(); // Get current route
+
+  // Pages that should not have Header & Footer
+  const hideHeaderFooter = ["/", "/login", "/register"].includes(location.pathname);
+
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      {/* Show Navbar & Footer only on Home and other main pages */}
+      {!hideHeaderFooter && <Header />}
+
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Landing Page (First Page) */}
+        <Route path="/" element={<FirstPage />} />
+
+        {/* Authentication Pages */}
         <Route path="/login" element={<Login />} />
-        <Route path="Companies" element={<Companies />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Main Website After Login */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/companies" element={<Companies />} />
         <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
+
+        {/* Redirect any unknown route to FirstPage */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      <Footer />
+
+      {/* Show Footer only on Home and other main pages */}
+      {!hideHeaderFooter && <Footer />}
     </div>
   );
 }
