@@ -36,7 +36,7 @@ function Login() {
             if (response.ok) {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("userEmail", formData.email);
-                navigate("/");
+                navigate("/home");
             } else {
                 setError(data.message || "Login failed. Please try again.");
             }
