@@ -8,7 +8,7 @@ const newStailerSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   }
-});
+}, { collection: 'newstaileremails' });  // Set collection name explicitly
 
 const NewStailer = mongoose.model('NewStailer', newStailerSchema);
 

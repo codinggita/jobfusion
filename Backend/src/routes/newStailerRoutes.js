@@ -3,7 +3,7 @@ const { addNewStailer, getAllNewStailers } = require('../controllers/newStailerC
 
 const router = express.Router();
 
-router.post('/newstailer', addNewStailer); // Add a new stailer
-router.get('/newstailer', getAllNewStailers); // Get all new stailers
+router.post('/', addNewStailer);
+router.get('/', getAllNewStailers);
 
 module.exports = router;
