@@ -18,6 +18,7 @@ JobFusion is a full-stack web application designed to help users search for jobs
 ### Frontend
 - React
 - Tailwind CSS
+- MUI
 
 ### Backend
 - Node.js

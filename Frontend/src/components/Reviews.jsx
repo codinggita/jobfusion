@@ -36,7 +36,7 @@ const ReviewComponent = () => {
     return (
         <div className="p-6 bg-[#F7F9FC] min-h-screen">
             <h2 className="text-2xl font-bold text-center mb-6 text-[#688BC5]">Client Testimonials</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {reviews.map((rev, index) => (
                     <div key={index} className="p-4 bg-white rounded-lg shadow-lg text-center border border-[#9BC6F7]">
                         <div className="flex justify-center mb-2">
@@ -62,7 +62,7 @@ const ReviewComponent = () => {
             </div>
 
             {/* Add Review Modal with Improved Styling */}
-            <Dialog open={open} onClose={() => setOpen(false)}>
+            <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
                 <DialogContent className="py-10 mt-10">
                     <TextField
                         label="Your Name"

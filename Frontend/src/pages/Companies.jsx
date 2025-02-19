@@ -41,7 +41,6 @@ const SearchBar = ({ onSearch }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extract previous search query from the URL
   const searchParams = new URLSearchParams(location.search);
   const initialWhat = searchParams.get("what") || "";
   const initialWhere = searchParams.get("where") || "";
@@ -53,7 +52,7 @@ const SearchBar = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate(`/search?what=${filters.what}&where=${filters.where}`); // Preserve search state in URL
+    navigate(`?what=${filters.what}&where=${filters.where}`, { replace: true });
     onSearch(filters);
   };
 
@@ -96,7 +95,6 @@ const TrendingJobs = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
 
-  // Extract filters from URL parameters
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = {
     what: searchParams.get("what") || "",
@@ -104,37 +102,42 @@ const TrendingJobs = () => {
   };
 
   const fetchJobs = async (filters = {}) => {
-    try {
-      setLoading(true);
-      const ADZUNA_API_ID = import.meta.env.VITE_ADZUNA_API_ID;
-      const ADZUNA_API_KEY = import.meta.env.VITE_ADZUNA_API_KEY;
+  try {
+    setLoading(true);
+    const ADZUNA_API_ID = import.meta.env.VITE_ADZUNA_API_ID;
+    const ADZUNA_API_KEY = import.meta.env.VITE_ADZUNA_API_KEY;
 
-      const params = {
-        app_id: ADZUNA_API_ID,
-        app_key: ADZUNA_API_KEY,
-        results_per_page: 20,
-        ...filters,
-        full_time: filters.full_time ? 1 : 0,
-        permanent: filters.permanent ? 1 : 0,
-        sort_by: "salary",
-      };
+    const params = {
+      app_id: ADZUNA_API_ID,
+      app_key: ADZUNA_API_KEY,
+      results_per_page: 20,
+      ...filters,
+      full_time: filters.full_time ? 1 : 0,
+      permanent: filters.permanent ? 1 : 0,
+      sort_by: "salary",
+    };
 
-      const response = await axios.get(
-        `https://api.adzuna.com/v1/api/jobs/in/search/1`,
-        { params }
-      );
-
-      setJobs(response.data.results);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-    } finally {
-      setLoading(false);
+    // If there's a location filter, add it to the API call
+    if (filters.where) {
+      params.where = filters.where;  // Allow partial location search
     }
-  };
+
+    const response = await axios.get(
+      `https://api.adzuna.com/v1/api/jobs/in/search/1`,
+      { params }
+    );
+
+    setJobs(response.data.results);
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchJobs(searchQuery);
-  }, [location.search]); // Fetch jobs when the search query changes
+  }, [location.search]);
 
   return (
     <section className="py-16 px-6 bg-gray-50 min-h-screen">
