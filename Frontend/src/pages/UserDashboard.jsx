@@ -68,7 +68,7 @@ const UserDashboard = () => {
           setLoading(false);
           return;
         }
-        const response = await axios.get(`http://localhost:3000/api/users/profile/${storedEmail}`);
+        const response = await axios.get(`https://jobfusion.onrender.com/api/users/profile/${storedEmail}`);
         if (response.data.success) {
           setUserData(response.data.data);
         } else {
@@ -90,7 +90,7 @@ const UserDashboard = () => {
         setError("No email found in local storage.");
         return;
       }
-      const response = await axios.get(`http://localhost:3000/api/jobs/saved/${storedEmail}`);
+      const response = await axios.get(`https://jobfusion.onrender.com/api/jobs/saved/${storedEmail}`);
       if (response.data.success) {
         setSavedJobs(response.data.data.map((item) => item.jobData));
       } else {
