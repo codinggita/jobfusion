@@ -35,7 +35,7 @@ const Header = () => {
           <Link to="/Companies" className="text-gray-700 hover:text-blue-600">
             Companies
           </Link>
-          <Link to="/home" className="text-gray-700 hover:text-blue-600">
+          <Link to="/resume" className="text-gray-700 hover:text-blue-600">
             Resume
           </Link>
         </nav>
@@ -87,7 +87,7 @@ const Header = () => {
           <Link to="/home" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Companies
           </Link>
-          <Link to="/home" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
+          <Link to="/resume" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Resume
           </Link>
 

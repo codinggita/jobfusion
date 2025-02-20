@@ -9,6 +9,7 @@ import Companies from "./pages/Companies";
 import FirstPage from "./pages/FirstPage";
 import Header from './components/Header';
 import Footer from './components/Footer';
+import ResumePage from './pages/ResumePage';
 
 function App() {
   const location = useLocation(); // Get current route
@@ -34,6 +35,7 @@ function App() {
         <Route path="/companies" element={<Companies />} />
         <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/resume" element={<ResumePage />} />
 
         {/* Redirect any unknown route to FirstPage */}
         <Route path="*" element={<Navigate to="/" />} />
