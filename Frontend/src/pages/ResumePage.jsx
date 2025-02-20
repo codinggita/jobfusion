@@ -2,7 +2,58 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function MainSection() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+    const [currentTip, setCurrentTip] = useState(0);
+
+    const resumeTips = [
+      {
+        title: "Keep It Concise & Relevant",
+        text: "Limit your resume to one or two pages (unless you have extensive experience). Focus on relevant skills and experiences related to the job you're applying for.",
+      },
+      {
+        title: "Use a Professional Format & Layout",
+        text: "Use a clean, easy-to-read font (e.g., Arial, Calibri, Times New Roman). Maintain consistent spacing, margins, and bullet points for clarity. Stick to reverse chronological order (most recent experiences first).",
+      },
+      {
+        title: "Craft a Strong Summary Statement",
+        text: "A 3-4 line professional summary at the top should highlight your key skills, experience, and career goals. Example: 'Results-driven marketing specialist with 5+ years of experience in digital campaigns, content creation, and brand strategy. Proven ability to increase engagement by 40%.'",
+      },
+      {
+        title: "Use Strong Action Words",
+        text: "Start bullet points with power words like 'Managed,' 'Designed,' 'Developed,' 'Increased,' 'Led,' 'Achieved,' etc. Example: 'Optimized website performance, reducing load time by 30% and improving user experience.'",
+      },
+      {
+        title: "Quantify Your Achievements",
+        text: "Numbers make an impact. Use metrics to showcase your accomplishments. Example: 'Increased sales by 25% in six months through targeted email campaigns.'",
+      },
+      {
+        title: "Tailor Your Resume for Each Job",
+        text: "Customize your resume by matching keywords from the job description. Highlight skills and experience that align with the role you're applying for.",
+      },
+      {
+        title: "Highlight Key Skills & Certifications",
+        text: "Include a dedicated 'Skills' section with technical and soft skills relevant to the job. Mention industry-specific tools (e.g., Python, Photoshop, Google Analytics).",
+      },
+      {
+        title: "Optimize for ATS",
+        text: "Many companies use ATS software to filter resumes before human review. Use keywords from the job posting to increase your chances of passing ATS.",
+      },
+      {
+        title: "Keep It Error-Free",
+        text: "Double-check grammar, spelling, and formatting. Use Grammarly or ask a friend to proofread your resume.",
+      },
+      {
+        title: "Include Strong Contact Information",
+        text: "Clearly mention your name, phone number, professional email, LinkedIn profile, and portfolio (if applicable).",
+      },
+    ];
+  
+    const nextTip = () => {
+      setCurrentTip((prev) => (prev + 1) % resumeTips.length);
+    };
+  
+    const prevTip = () => {
+      setCurrentTip((prev) => (prev - 1 + resumeTips.length) % resumeTips.length);
+    };
 
   const testimonials = [
     {
@@ -48,7 +99,7 @@ export default function MainSection() {
               Build Resume
             </button>
           </div>
-          <div className="relative">
+          <div className="relative hidden md:block">
             <div className="absolute -right-4 top-0 z-10">
               <div className="bg-green-50 p-2 rounded-full">
                 <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +107,7 @@ export default function MainSection() {
                 </svg>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="bg-black text-white p-6 rounded-lg">
                 <h3 className="font-bold mb-4">FEATURE</h3>
                 <ul className="space-y-2 text-sm">
@@ -80,28 +131,56 @@ export default function MainSection() {
         </div>
       </section>
 
-      {/* Testimonial Section */}
+      {/* Tips Section */}
       <section className="py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto relative">
-          <button 
-            onClick={() => setCurrentTestimonial(prev => prev > 0 ? prev - 1 : testimonials.length - 1)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <div className="text-center px-12">
-            <p className="text-gray-600 mb-6">{testimonials[currentTestimonial].text}</p>
-            <h3 className="font-bold">{testimonials[currentTestimonial].author}</h3>
-            <p className="text-sm text-gray-500">{testimonials[currentTestimonial].position}</p>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-8">Tips For Making A Resume</h2>
+          <div className="relative bg-white rounded-xl shadow-lg p-8 md:p-12">
+            <button 
+              onClick={prevTip}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+              aria-label="Previous tip"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            
+            <div className="text-center px-8 md:px-12 min-h-[200px] flex flex-col justify-center">
+              <div className="space-y-4">
+                <div className="inline-flex items-center justify-center">
+                  <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                    Tip {currentTip + 1} of {resumeTips.length}
+                  </span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800">
+                  {resumeTips[currentTip].title}
+                </h3>
+                <p className="text-gray-600 md:text-lg">
+                  {resumeTips[currentTip].text}
+                </p>
+              </div>
+            </div>
+
+            <button 
+              onClick={nextTip}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+              aria-label="Next tip"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+
+            <div className="mt-8 flex justify-center gap-2">
+              {resumeTips.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTip(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    currentTip === index ? 'w-8 bg-blue-600' : 'w-2 bg-gray-300'
+                  }`}
+                  aria-label={`Go to tip ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
-          <button 
-            onClick={() => setCurrentTestimonial(prev => prev < testimonials.length - 1 ? prev + 1 : 0)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
         </div>
       </section>
 
