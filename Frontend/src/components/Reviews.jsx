@@ -14,7 +14,7 @@ const ReviewComponent = () => {
 
     const fetchReviews = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/api/reviews");
+            const response = await axios.get("https://jobfusion.onrender.com/api/reviews");
             setReviews(response.data);
         } catch (error) {
             console.error("Error fetching reviews:", error);
@@ -24,7 +24,7 @@ const ReviewComponent = () => {
     const handleSubmit = async () => {
         if (!newReview.username || !newReview.review || newReview.rating === 0) return;
         try {
-            await axios.post("http://localhost:3000/api/reviews", newReview);
+            await axios.post("https://jobfusion.onrender.com/api/reviews", newReview);
             fetchReviews();
             setOpen(false);
             setNewReview({ username: "", rating: 0, review: "" });

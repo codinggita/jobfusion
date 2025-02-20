@@ -13,7 +13,7 @@ const Newsletter = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/newStailer', { email });
+      const response = await axios.post('https://jobfusion.onrender.com/api/newStailer', { email });
       if (response.data.success) {
         setIsSuccess(true);
         setEmail('Thank you for subscribing!'); // Show message inside input

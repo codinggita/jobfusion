@@ -1,25 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BriefcaseIcon, Eye, EyeOff } from "lucide-react";
 import ModernLoader from "../components/Loader"; // Import the loader
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false); // State for loader
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
-        password: ""
+        password: "",
     });
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    // Function to handle input changes (optimized with useCallback)
+    const handleChange = useCallback((e) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [e.target.name]: e.target.value,
+        }));
+    }, []);
+
+    // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Show loader
 
         const userData = {
             email: formData.email,
-            password: formData.password
+            password: formData.password,
         };
 
         try {
@@ -48,22 +57,15 @@ function Login() {
         }
     };
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-
     return (
         <div className="min-h-screen flex">
             {loading ? (
                 <div className="w-full flex justify-center items-center">
-                    <ModernLoader /> {/* Show loader when loading */}
+                    <ModernLoader />
                 </div>
             ) : (
                 <>
-                    {/* Left side - Login form */}
+                    {/* Left Side - Login Form */}
                     <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8">
                         <div className="w-full max-w-md">
                             <Link to="/" className="flex items-center gap-2 mb-8">
@@ -73,7 +75,6 @@ function Login() {
 
                             <h1 className="text-3xl font-bold mb-2">LOGIN</h1>
 
-                            {/* Error Message */}
                             {error && <div className="mb-4 text-red-600">{error}</div>}
 
                             <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,7 +100,7 @@ function Login() {
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
+                                        onClick={() => setShowPassword((prev) => !prev)}
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2"
                                     >
                                         {showPassword ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
@@ -132,19 +133,25 @@ function Login() {
                         </div>
                     </div>
 
-                    {/* Right side - Image */}
+                    {/* Right Side - Image Section */}
                     <div className="hidden lg:block lg:w-1/2 bg-blue-50 p-12">
                         <div className="h-full rounded-3xl overflow-hidden relative">
+                            {/* Gradient Overlay */}
                             <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-blue-600/20" />
+                            
+                            {/* Text Overlay */}
                             <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-12">
                                 <h2 className="text-4xl font-bold text-white mb-4">
                                     Exciting opportunities are just a step away. Login now!
                                 </h2>
                             </div>
+
+                            {/* Background Image */}
                             <img
-                                src="https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D"
+                                src="https://images.unsplash.com/photo-1529539795054-3c162aab037a?w=800&auto=format&fit=crop&q=80&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bG9naW58ZW58MHx8MHx8fDA%3D"
                                 alt="Professional woman"
                                 className="w-full h-full object-cover"
+                                loading="lazy" // Optimized for faster loading
                             />
                         </div>
                     </div>

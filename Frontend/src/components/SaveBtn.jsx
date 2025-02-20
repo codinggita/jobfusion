@@ -26,7 +26,7 @@ export default function BookmarkButton({ job, onToggle }) {
 
       if (bookmarked) {
         // API Call to Delete Job
-        await axios.delete("http://localhost:3000/api/jobs/unsave", {
+        await axios.delete("https://jobfusion.onrender.com/api/jobs/unsave", {
           data: { email, jobId: job.id },
         });
 
@@ -38,7 +38,7 @@ export default function BookmarkButton({ job, onToggle }) {
         alert("Job removed from saved list!");
       } else {
         // API Call to Save Job
-        await axios.post("http://localhost:3000/api/jobs/save", { email, jobData: job });
+        await axios.post("https://jobfusion.onrender.com/api/jobs/save", { email, jobData: job });
 
         // Update LocalStorage
         updatedJobs.push(job.id);
