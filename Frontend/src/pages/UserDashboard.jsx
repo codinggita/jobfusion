@@ -26,16 +26,18 @@ const JobCard = ({ job, onToggle }) => {
 
 const ResumeCard = ({ resume }) => (
   <div className="bg-white p-4 rounded-lg shadow-md mb-4 flex justify-between items-center hover:shadow-lg transition-shadow">
-    <div className="flex items-center space-x-3">
-      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+    <div className="flex items-center space-x-3 min-w-0 flex-1">
+      <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
         <FileText className="text-blue-500" size={24} />
       </div>
-      <div>
-        <p className="font-medium text-gray-800">{resume.name}</p>
+      <div className="min-w-0 flex-1">
+        <p className="font-medium text-gray-800 truncate" title={resume.name}>
+          {resume.name}
+        </p>
         <p className="text-sm text-gray-500">{resume.date}</p>
       </div>
     </div>
-    <div className="flex space-x-2">
+    <div className="flex space-x-2 flex-shrink-0 ml-4">
       <button className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">
         <Download size={18} />
       </button>
@@ -54,9 +56,9 @@ const UserDashboard = () => {
 
   // Mock resume data
   const resumes = [
-    { id: 1, name: "Software_Developer_Resume.pdf", date: "Mar 15, 2024" },
-    { id: 2, name: "Frontend_Resume_2024.pdf", date: "Mar 10, 2024" },
-    { id: 3, name: "Technical_CV.pdf", date: "Mar 5, 2024" },
+    { id: 1, name: "Software_Developer_Resume_With_Very_Long_Name_2024_Updated_Version_Final.pdf", date: "Mar 15, 2024" },
+    { id: 2, name: "Frontend_Developer_Resume_Portfolio_Projects_Experience_2024.pdf", date: "Mar 10, 2024" },
+    { id: 3, name: "Technical_CV_Full_Stack_Developer_Position.pdf", date: "Mar 5, 2024" },
   ];
 
   useEffect(() => {
