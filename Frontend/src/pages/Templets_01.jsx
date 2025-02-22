@@ -14,7 +14,6 @@ const Button = ({ children, onClick, className = "", variant = "primary", size =
     md: "px-4 py-2",
     icon: "p-2",
   };
-
   return (
     <button onClick={onClick} className={`${baseStyle} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
       {children}
@@ -23,24 +22,20 @@ const Button = ({ children, onClick, className = "", variant = "primary", size =
 };
 
 // Custom Input Component
-const Input = ({ className = "", ...props }) => {
-  return (
-    <input
-      className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
-      {...props}
-    />
-  );
-};
+const Input = ({ className = "", ...props }) => (
+  <input
+    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
+    {...props}
+  />
+);
 
 // Custom Textarea Component
-const Textarea = ({ className = "", ...props }) => {
-  return (
-    <textarea
-      className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
-      {...props}
-    />
-  );
-};
+const Textarea = ({ className = "", ...props }) => (
+  <textarea
+    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
+    {...props}
+  />
+);
 
 // PDF Styles
 const styles = StyleSheet.create({
@@ -50,21 +45,20 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    backgroundColor: "#003087",
     padding: 20,
     flexDirection: "row",
     alignItems: "center",
     gap: 16,
   },
   profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     objectFit: "cover",
+    border: "4px solid rgba(255, 255, 255, 0.3)",
   },
   name: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#ffffff",
   },
@@ -72,55 +66,42 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#ffffff",
     opacity: 0.9,
+    marginTop: 4,
   },
   container: {
     flexDirection: "row",
-    marginTop: 10,
   },
   leftColumn: {
-    width: "33%",
-    backgroundColor: "#000000",
+    width: "35%",
     padding: 20,
     color: "#ffffff",
   },
   rightColumn: {
-    width: "67%",
+    width: "65%",
     padding: 20,
     backgroundColor: "#ffffff",
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
-    color: "#003087",
+    marginBottom: 12,
+    paddingBottom: 4,
+    borderBottom: "2px solid",
   },
   text: {
     fontSize: 12,
-    marginBottom: 5,
-    color: "#000000",
+    marginBottom: 6,
+    color: "#333333",
   },
   whiteText: {
     fontSize: 12,
-    marginBottom: 5,
+    marginBottom: 6,
     color: "#ffffff",
-  },
-  icon: {
-    width: 16,
-    height: 16,
-    marginRight: 8,
-    color: "#003087",
   },
   socialLink: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 5,
-  },
-  inputField: {
-    border: "1px solid #e5e7eb",
-    padding: 5,
-    borderRadius: 4,
-    backgroundColor: "#ffffff",
-    color: "#000000",
+    marginBottom: 6,
   },
 });
 
@@ -128,12 +109,9 @@ const styles = StyleSheet.create({
 const ResumePDF = ({ resumeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: resumeData.primaryColor }]}>
         <Image
-          src={
-            resumeData.profileImage ||
-            "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-20%20174833-9PD8ILwmTSyK2pgMCFWBHLG99aYeGf.png"
-          }
+          src={resumeData.profileImage || "https://via.placeholder.com/100"}
           style={styles.profileImage}
         />
         <View>
@@ -143,60 +121,61 @@ const ResumePDF = ({ resumeData }) => (
       </View>
 
       <View style={styles.container}>
-        <View style={styles.leftColumn}>
+        <View style={[styles.leftColumn, { backgroundColor: resumeData.secondaryColor }]}>
           <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#ffffff" }}>About Me</Text>
+            <Text style={{ ...styles.sectionTitle, color: "#ffffff", borderBottomColor: "rgba(255, 255, 255, 0.3)" }}>
+              About Me
+            </Text>
             <Text style={styles.whiteText}>{resumeData.about}</Text>
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#ffffff" }}>Contact</Text>
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 5 }}>
-              <Phone style={styles.icon} />
-              <Text style={styles.whiteText}>{resumeData.phone}</Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 5 }}>
-              <Mail style={styles.icon} />
-              <Text style={styles.whiteText}>{resumeData.email}</Text>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 5 }}>
-              <MapPin style={styles.icon} />
-              <Text style={styles.whiteText}>{resumeData.address}</Text>
-            </View>
+            <Text style={{ ...styles.sectionTitle, color: "#ffffff", borderBottomColor: "rgba(255, 255, 255, 0.3)" }}>
+              Contact
+            </Text>
+            <Text style={styles.whiteText}><Phone size={14} style={{display: "inline", marginRight: 8}} /> {resumeData.phone}</Text>
+            <Text style={styles.whiteText}><Mail size={14} style={{display: "inline", marginRight: 8}} /> {resumeData.email}</Text>
+            <Text style={styles.whiteText}><MapPin size={14} style={{display: "inline", marginRight: 8}} /> {resumeData.address}</Text>
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#ffffff" }}>Social Links</Text>
+            <Text style={{ ...styles.sectionTitle, color: "#ffffff", borderBottomColor: "rgba(255, 255, 255, 0.3)" }}>
+              Social Links
+            </Text>
             {resumeData.socialLinks.map((link, index) => (
-              <View key={index} style={styles.socialLink}>
-                <Text style={styles.whiteText}>
-                  {link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}: {link.url}
-                </Text>
-              </View>
+              <Text key={index} style={styles.whiteText}>
+                {link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}: {link.url}
+              </Text>
             ))}
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#ffffff" }}>Languages</Text>
+            <Text style={{ ...styles.sectionTitle, color: "#ffffff", borderBottomColor: "rgba(255, 255, 255, 0.3)" }}>
+              Languages
+            </Text>
             {resumeData.languages.map((language, index) => (
               <Text key={index} style={styles.whiteText}>{language}</Text>
             ))}
           </View>
 
           <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 10, color: "#ffffff" }}>Skills</Text>
+            <Text style={{ ...styles.sectionTitle, color: "#ffffff", borderBottomColor: "rgba(255, 255, 255, 0.3)" }}>
+              Skills
+            </Text>
             {resumeData.skills.map((skill, index) => (
-              <Text key={index} style={styles.whiteText}>{skill}</Text>
+              <Text key={index} style={styles.whiteText}>• {skill}</Text>
             ))}
           </View>
         </View>
 
         <View style={styles.rightColumn}>
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.sectionTitle}>Projects</Text>
+            <Text style={{ ...styles.sectionTitle, color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}>
+              Projects
+            </Text>
             {resumeData.projects.map((project, index) => (
               <View key={index} style={{ marginBottom: 15 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 14, color: "#000000" }}>{project.name}</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 14, color: "#000000", marginBottom: 4 }}>{project.name}</Text>
                 <Text style={styles.text}>{project.description}</Text>
                 <Text style={styles.text}>Technologies: {project.technologies}</Text>
               </View>
@@ -204,10 +183,12 @@ const ResumePDF = ({ resumeData }) => (
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={{ ...styles.sectionTitle, color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}>
+              Education
+            </Text>
             {resumeData.education.map((edu, index) => (
               <View key={index} style={{ marginBottom: 15 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 14, color: "#000000" }}>{edu.university}</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 14, color: "#000000", marginBottom: 2 }}>{edu.university}</Text>
                 <Text style={styles.text}>{edu.degree}</Text>
                 <Text style={styles.text}>{edu.period}</Text>
               </View>
@@ -215,10 +196,12 @@ const ResumePDF = ({ resumeData }) => (
           </View>
 
           <View>
-            <Text style={styles.sectionTitle}>Certificates</Text>
+            <Text style={{ ...styles.sectionTitle, color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}>
+              Certificates
+            </Text>
             {resumeData.certificates.map((cert, index) => (
               <View key={index} style={{ marginBottom: 15 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 14, color: "#000000" }}>{cert.name}</Text>
+                <Text style={{ fontWeight: "bold", fontSize: 14, color: "#000000", marginBottom: 2 }}>{cert.name}</Text>
                 <Text style={styles.text}>{cert.issuer}</Text>
                 <Text style={styles.text}>{cert.year}</Text>
               </View>
@@ -260,52 +243,30 @@ function ResumePage() {
       },
     ],
     certificates: [
-      {
-        name: "AWS Certified Solutions Architect",
-        issuer: "Amazon Web Services",
-        year: "2023",
-      },
-      {
-        name: "Google Professional Cloud Developer",
-        issuer: "Google Cloud",
-        year: "2022",
-      },
+      { name: "AWS Certified Solutions Architect", issuer: "Amazon Web Services", year: "2023" },
+      { name: "Google Professional Cloud Developer", issuer: "Google Cloud", year: "2022" },
     ],
-    themeColor: "#003087",
+    primaryColor: "#003087",
+    secondaryColor: "#000000",
   });
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setResumeData((prev) => ({
-          ...prev,
-          profileImage: reader.result,
-        }));
-      };
+      reader.onloadend = () => setResumeData((prev) => ({ ...prev, profileImage: reader.result }));
       reader.readAsDataURL(file);
     }
   };
 
   const addItem = (section, defaultItem) => {
-    setResumeData((prev) => ({
-      ...prev,
-      [section]: [...prev[section], defaultItem],
-    }));
+    setResumeData((prev) => ({ ...prev, [section]: [...prev[section], defaultItem] }));
   };
 
   const removeItem = (section, index) => {
     if (resumeData[section].length > 1) {
-      setResumeData((prev) => ({
-        ...prev,
-        [section]: prev[section].filter((_, i) => i !== index),
-      }));
+      setResumeData((prev) => ({ ...prev, [section]: prev[section].filter((_, i) => i !== index) }));
     }
-  };
-
-  const addSocialLink = () => {
-    addItem("socialLinks", { platform: "github", url: "" });
   };
 
   const handleDownloadPDF = async () => {
@@ -328,107 +289,123 @@ function ResumePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg">
-        {/* Controls */}
-        <div className="mb-4 p-4 flex justify-end">
-          <div className="space-x-4">
-            <Input
-              type="color"
-              value={resumeData.themeColor}
-              onChange={(e) => setResumeData((prev) => ({ ...prev, themeColor: e.target.value }))}
-              className="w-20 h-10"
-            />
-            <Button onClick={handleDownloadPDF} className="flex items-center gap-2">
-              <Download className="h-4 w-4" />
-              Download PDF
-            </Button>
+    <div className="min-h-screen bg-gray-100 py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* Controls Section */}
+        <div className="mb-6 flex justify-between items-center bg-white p-4 rounded-lg shadow">
+          <div className="flex gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Header Color:</label>
+              <Input
+                type="color"
+                value={resumeData.primaryColor}
+                onChange={(e) => setResumeData((prev) => ({ ...prev, primaryColor: e.target.value }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Sidebar Color:</label>
+              <Input
+                type="color"
+                value={resumeData.secondaryColor}
+                onChange={(e) => setResumeData((prev) => ({ ...prev, secondaryColor: e.target.value }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
           </div>
+          <Button onClick={handleDownloadPDF} className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Download PDF
+          </Button>
         </div>
 
-        {/* Resume Content (Editable on Screen) */}
-        <div className="resume-content">
-          <div style={{ backgroundColor: resumeData.themeColor, padding: "1rem" }}>
-            <div className="flex flex-col md:flex-row items-center gap-4 p-6 text-white">
-              <div className="relative w-32 h-32 rounded-full overflow-hidden bg-white/20">
-                <label className="cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
+        {/* Resume Content */}
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <div style={{ backgroundColor: resumeData.primaryColor }} className="p-8 text-white">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white/30">
+                <label className="cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity text-white text-sm">
                   Upload Photo
                   <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                 </label>
                 <img
-                  src={
-                    resumeData.profileImage ||
-                    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-20%20174833-9PD8ILwmTSyK2pgMCFWBHLG99aYeGf.png"
-                  }
+                  src={resumeData.profileImage || "https://via.placeholder.com/100"}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="text-center md:text-left">
+              <div className="text-center md:text-left flex-1">
                 <Input
                   value={resumeData.name}
                   onChange={(e) => setResumeData((prev) => ({ ...prev, name: e.target.value }))}
-                  className="bg-transparent border-none text-3xl font-bold text-white text-center md:text-left"
+                  className="bg-transparent border-none text-4xl font-bold text-white w-full mb-2"
                 />
                 <Input
                   value={resumeData.title}
                   onChange={(e) => setResumeData((prev) => ({ ...prev, title: e.target.value }))}
-                  className="bg-transparent border-none text-lg text-white/90 text-center md:text-left"
+                  className="bg-transparent border-none text-lg text-white/90 w-full"
                 />
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            <div className="bg-black text-white p-6">
-              {/* Left column sections */}
-              <section className="mb-6">
-                <h2 className="text-xl font-semibold mb-4 text-white">About Me</h2>
+          <div className="flex flex-col md:flex-row">
+            <div style={{ backgroundColor: resumeData.secondaryColor }} className="md:w-1/3 p-6 text-white">
+              <section className="mb-8">
+                <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">About Me</h2>
                 <Textarea
                   value={resumeData.about}
                   onChange={(e) => setResumeData((prev) => ({ ...prev, about: e.target.value }))}
                   className="bg-transparent border-none text-white/80 resize-none w-full"
-                  rows={3}
+                  rows={4}
                 />
               </section>
 
-              <section className="space-y-4 mb-6">
-                <h2 className="text-xl font-semibold mb-4 text-white">Contact</h2>
-                <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-blue-500" />
-                  <Input
-                    value={resumeData.phone}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, phone: e.target.value }))}
-                    className="bg-transparent border-none text-white"
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-blue-500" />
-                  <Input
-                    value={resumeData.email}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, email: e.target.value }))}
-                    className="bg-transparent border-none text-white"
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-blue-500" />
-                  <Input
-                    value={resumeData.address}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, address: e.target.value }))}
-                    className="bg-transparent border-none text-white"
-                  />
+              <section className="mb-8">
+                <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">Contact</h2>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-5 w-5" />
+                    <Input
+                      value={resumeData.phone}
+                      onChange={(e) => setResumeData((prev) => ({ ...prev, phone: e.target.value }))}
+                      className="bg-transparent border-none text-white"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5" />
+                    <Input
+                      value={resumeData.email}
+                      onChange={(e) => setResumeData((prev) => ({ ...prev, email: e.target.value }))}
+                      className="bg-transparent border-none text-white"
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5" />
+                    <Input
+                      value={resumeData.address}
+                      onChange={(e) => setResumeData((prev) => ({ ...prev, address: e.target.value }))}
+                      className="bg-transparent border-none text-white"
+                    />
+                  </div>
                 </div>
               </section>
 
-              <section className="mb-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-white">Social Links</h2>
-                  <Button onClick={addSocialLink} variant="ghost" size="icon" className="text-white hover:text-white/80">
+              <section className="mb-8">
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">Social Links</h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => addItem("socialLinks", { platform: "github", url: "" })}
+                    className="text-white"
+                  >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
                 {resumeData.socialLinks.map((link, index) => (
-                  <div key={index} className="flex items-center gap-2 mb-2">
+                  <div key={index} className="flex items-center gap-2 mb-3">
+                    {socialIcons[link.platform]}
                     <select
                       value={link.platform}
                       onChange={(e) => {
@@ -436,7 +413,7 @@ function ResumePage() {
                         newLinks[index] = { ...link, platform: e.target.value };
                         setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
                       }}
-                      className="bg-transparent text-white border rounded px-2 py-1"
+                      className="bg-transparent text-white border border-white/30 rounded px-2 py-1"
                     >
                       <option value="github">GitHub</option>
                       <option value="linkedin">LinkedIn</option>
@@ -450,16 +427,11 @@ function ResumePage() {
                         newLinks[index] = { ...link, url: e.target.value };
                         setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
                       }}
-                      className="bg-transparent border-none text-white"
+                      className="bg-transparent border-none text-white flex-1"
                       placeholder="URL"
                     />
                     {resumeData.socialLinks.length > 1 && (
-                      <Button
-                        onClick={() => removeItem("socialLinks", index)}
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:text-white/80"
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => removeItem("socialLinks", index)} className="text-white">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     )}
@@ -467,15 +439,10 @@ function ResumePage() {
                 ))}
               </section>
 
-              <section className="mb-6">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-white">Languages</h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => addItem("languages", "")}
-                    className="text-white hover:text-white/80"
-                  >
+              <section className="mb-8">
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">Languages</h2>
+                  <Button variant="ghost" size="icon" onClick={() => addItem("languages", "")} className="text-white">
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -488,15 +455,10 @@ function ResumePage() {
                         newLanguages[index] = e.target.value;
                         setResumeData((prev) => ({ ...prev, languages: newLanguages }));
                       }}
-                      className="bg-transparent border-none text-white"
+                      className="bg-transparent border-none text-white flex-1"
                     />
                     {resumeData.languages.length > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem("languages", index)}
-                        className="text-white hover:text-white/80"
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => removeItem("languages", index)} className="text-white">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     )}
@@ -505,14 +467,9 @@ function ResumePage() {
               </section>
 
               <section>
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-white">Skills</h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => addItem("skills", "")}
-                    className="text-white hover:text-white/80"
-                  >
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">Skills</h2>
+                  <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-white">
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
@@ -525,15 +482,10 @@ function ResumePage() {
                         newSkills[index] = e.target.value;
                         setResumeData((prev) => ({ ...prev, skills: newSkills }));
                       }}
-                      className="bg-transparent border-none text-white"
+                      className="bg-transparent border-none text-white flex-1"
                     />
                     {resumeData.skills.length > 1 && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeItem("skills", index)}
-                        className="text-white hover:text-white/80"
-                      >
+                      <Button variant="ghost" size="icon" onClick={() => removeItem("skills", index)} className="text-white">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     )}
@@ -542,21 +494,14 @@ function ResumePage() {
               </section>
             </div>
 
-            <div className="col-span-2 p-6 bg-white">
-              {/* Right column sections */}
-              <section className="mb-6">
+            <div className="md:w-2/3 p-6">
+              <section className="mb-8">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-blue-600">Projects</h2>
+                  <h2 style={{ color: resumeData.primaryColor }} className="text-xl font-semibold border-b-2 pb-2" >Projects</h2>
                   <Button
                     variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      addItem("projects", {
-                        name: "",
-                        description: "",
-                        technologies: "",
-                      })
-                    }
+                    size="icon"
+                    onClick={() => addItem("projects", { name: "", description: "", technologies: "" })}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
@@ -566,7 +511,7 @@ function ResumePage() {
                     {resumeData.projects.length > 1 && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => removeItem("projects", index)}
                         className="absolute right-0 top-0"
                       >
@@ -580,7 +525,7 @@ function ResumePage() {
                         newProjects[index] = { ...project, name: e.target.value };
                         setResumeData((prev) => ({ ...prev, projects: newProjects }));
                       }}
-                      className="font-semibold mb-2"
+                      className="font-semibold text-lg mb-2"
                       placeholder="Project Name"
                     />
                     <Textarea
@@ -591,7 +536,8 @@ function ResumePage() {
                         setResumeData((prev) => ({ ...prev, projects: newProjects }));
                       }}
                       className="mb-2 resize-none"
-                      placeholder="Project Description"
+                      placeholder="Description"
+                      rows={3}
                     />
                     <Input
                       value={project.technologies}
@@ -601,35 +547,29 @@ function ResumePage() {
                         setResumeData((prev) => ({ ...prev, projects: newProjects }));
                       }}
                       className="text-gray-600"
-                      placeholder="Technologies Used"
+                      placeholder="Technologies (e.g., React, Node.js)"
                     />
                   </div>
                 ))}
               </section>
 
-              <section className="mb-6">
+              <section className="mb-8">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-blue-600">Education</h2>
+                  <h2 style={{ color: resumeData.primaryColor }} className="text-xl font-semibold border-b-2 pb-2">Education</h2>
                   <Button
                     variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      addItem("education", {
-                        university: "",
-                        degree: "",
-                        period: "",
-                      })
-                    }
+                    size="icon"
+                    onClick={() => addItem("education", { university: "", degree: "", period: "" })}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
                 {resumeData.education.map((edu, index) => (
-                  <div key={index} className="mb-4 relative">
+                  <div key={index} className="mb-6 relative">
                     {resumeData.education.length > 1 && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => removeItem("education", index)}
                         className="absolute right-0 top-0"
                       >
@@ -643,8 +583,8 @@ function ResumePage() {
                         newEducation[index] = { ...edu, university: e.target.value };
                         setResumeData((prev) => ({ ...prev, education: newEducation }));
                       }}
-                      className="font-semibold mb-2"
-                      placeholder="University Name"
+                      className="font-semibold text-lg mb-2"
+                      placeholder="University"
                     />
                     <Input
                       value={edu.degree}
@@ -664,7 +604,7 @@ function ResumePage() {
                         setResumeData((prev) => ({ ...prev, education: newEducation }));
                       }}
                       className="text-gray-600"
-                      placeholder="Period"
+                      placeholder="Period (e.g., 2014 - 2018)"
                     />
                   </div>
                 ))}
@@ -672,27 +612,21 @@ function ResumePage() {
 
               <section>
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-semibold text-blue-600">Certificates</h2>
+                  <h2 style={{ color: resumeData.primaryColor }} className="text-xl font-semibold border-b-2 pb-2">Certificates</h2>
                   <Button
                     variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      addItem("certificates", {
-                        name: "",
-                        issuer: "",
-                        year: "",
-                      })
-                    }
+                    size="icon"
+                    onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
                 {resumeData.certificates.map((cert, index) => (
-                  <div key={index} className="mb-4 relative">
+                  <div key={index} className="mb-6 relative">
                     {resumeData.certificates.length > 1 && (
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="icon"
                         onClick={() => removeItem("certificates", index)}
                         className="absolute right-0 top-0"
                       >
@@ -706,7 +640,7 @@ function ResumePage() {
                         newCertificates[index] = { ...cert, name: e.target.value };
                         setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
                       }}
-                      className="font-semibold mb-2"
+                      className="font-semibold text-lg mb-2"
                       placeholder="Certificate Name"
                     />
                     <Input
@@ -717,7 +651,7 @@ function ResumePage() {
                         setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
                       }}
                       className="mb-2"
-                      placeholder="Issuing Organization"
+                      placeholder="Issuer"
                     />
                     <Input
                       value={cert.year}
