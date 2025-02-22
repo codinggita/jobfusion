@@ -45,26 +45,33 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    padding: 20,
+    padding: 25,
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
+    gap: 20,
+    backgroundColor: "#003087", // Default primary color
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 110, // Slightly larger for better visibility
+    height: 110,
+    borderRadius: 55,
     objectFit: "cover",
-    border: "4px solid rgba(255, 255, 255, 0.3)",
+    border: "5px solid rgba(255, 255, 255, 0.4)", // Thicker border with slight transparency
   },
   name: {
-    fontSize: 28,
+    fontSize: 32, // Increased size for better prominence
     fontWeight: "bold",
+    color: "#ffffff",
+    flexWrap: "wrap", // Ensures long names wrap
+    maxWidth: "70%", // Prevents overflow
   },
   title: {
-    fontSize: 16,
+    fontSize: 18, // Slightly larger for clarity
+    color: "#ffffff",
     opacity: 0.9,
-    marginTop: 4,
+    marginTop: 6, // More spacing from name
+    flexWrap: "wrap",
+    maxWidth: "70%", // Prevents overflow
   },
   container: {
     flexDirection: "row",
@@ -404,31 +411,43 @@ function ResumePage() {
         {/* Resume Content */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden flex" style={{ minWidth: "100%" }}>
           <div style={{ flex: "0 0 35%", backgroundColor: resumeData.secondaryColor }} className="p-6 text-white">
-            <div style={{ backgroundColor: resumeData.primaryColor, margin: "-1.5rem -1.5rem 1.5rem -1.5rem", padding: "1.5rem" }}>
+            <div
+              style={{
+                backgroundColor: resumeData.primaryColor,
+                margin: "-1.5rem -1.5rem 1.5rem -1.5rem",
+                padding: "25px", // Matches PDF padding
+              }}
+            >
               <div className="flex items-center gap-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white/30 flex-shrink-0">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white/40 flex-shrink-0">
                   <label className="cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity text-white text-sm">
                     Upload Photo
                     <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                   </label>
-                  <img
-                    src={resumeData.profileImage || "https://via.placeholder.com/100"}
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={resumeData.profileImage} alt="Profile" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1">
                   <Input
                     value={resumeData.name}
                     onChange={(e) => setResumeData((prev) => ({ ...prev, name: e.target.value }))}
-                    className="bg-transparent border-none text-4xl font-bold w-full mb-2"
-                    style={{ color: resumeData.headerTextColor }}
+                    className="bg-transparent border-none text-4xl font-bold w-full mb-2" // Matches PDF font size
+                    style={{
+                      color: resumeData.headerTextColor,
+                      wordBreak: "break-word", // Ensures long names wrap
+                      maxWidth: "100%", // Prevents overflow
+                    }}
+                    placeholder="Your Name"
                   />
                   <Input
                     value={resumeData.title}
                     onChange={(e) => setResumeData((prev) => ({ ...prev, title: e.target.value }))}
-                    className="bg-transparent border-none text-lg w-full"
-                    style={{ color: resumeData.headerTextColor }}
+                    className="bg-transparent border-none text-xl w-full" // Slightly larger for UI
+                    style={{
+                      color: resumeData.headerTextColor,
+                      wordBreak: "break-word", // Ensures long titles wrap
+                      maxWidth: "100%", // Prevents overflow
+                    }}
+                    placeholder="Your Role"
                   />
                 </div>
               </div>
