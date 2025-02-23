@@ -354,7 +354,7 @@ function ResumePage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-3xl mx-auto md:max-w-5xl"> {/* 60% of screen width on desktop, full width on mobile */}
-        {/* Controls Section (Navbar) - Perfect navbar from your code, using only Tailwind CSS */}
+        {/* Controls Section (Navbar) - Unchanged, as it’s perfect */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 justify-between items-center">
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
@@ -408,7 +408,7 @@ function ResumePage() {
           </Button>
         </div>
 
-        {/* Resume Content (Unchanged, maintaining two-column layout on both mobile and desktop) */}
+        {/* Resume Content with Modified Design for Consistent Layout */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{ minWidth: "100%" }}>
           {/* Header Section (Top with no space, matching the image) */}
           <div
