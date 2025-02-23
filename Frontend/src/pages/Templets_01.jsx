@@ -353,7 +353,7 @@ function ResumePage() {
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-3xl mx-auto md:max-w-5xl"> {/* 60% of screen width on desktop, full width on mobile */}
         {/* Controls Section (unchanged) */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 justify-between items-center">
           <div className="flex flex-wrap gap-4">
@@ -851,43 +851,63 @@ function ResumePage() {
 
       {/* Custom CSS for Consistent Layout on Mobile and Desktop */}
       <style jsx global>{`
-        /* Ensure the two-column layout persists on mobile and desktop */
-        .flex {
-          display: flex;
-          width: 100%;
-        }
-
-        /* Desktop (default) - 35%/65% split, full width */
-        @media (min-width: 1024px) { /* Tailwind's 'lg' breakpoint or higher */
-          .max-w-5xl {
-            max-width: 100% !important; /* Override max-width for full width on desktop */
+        /* Desktop (min-width: 1024px) - 60% of screen width, 35%/65% split */
+        @media (min-width: 1024px) {
+          .max-w-3xl {
+            max-width: 60% !important; /* 60% of screen width on desktop */
           }
-          .flex > div {
-            flex: 0 0 auto; /* Prevent shrinking/growing */
+          .flex > div:first-child {
+            flex: 0 0 35%;
+            min-width: 35%;
+          }
+          .flex > div:last-child {
+            flex: 0 0 65%;
+            min-width: 65%;
           }
           .p-6 {
-            padding: 1.5rem; /* Default padding */
+            padding: 1.5rem;
+          }
+          .text-4xl {
+            font-size: 2.25rem;
+          }
+          .text-xl {
+            font-size: 1.25rem;
+          }
+          .text-lg {
+            font-size: 1.125rem;
+          }
+          input, textarea {
+            font-size: 1rem;
+            padding: 0.75rem;
+          }
+          .h-5, .w-5 {
+            height: 1.25rem;
+            width: 1.25rem;
+          }
+          .h-4, .w-4 {
+            height: 1rem;
+            width: 1rem;
+          }
+          .w-28, .h-28 {
+            width: 7rem;
+            height: 7rem;
           }
         }
 
-        /* Mobile (below 1024px) - Maintain 35%/65% split, scale down, and ensure full width */
-        @media (max-width: 1023px) { /* Tailwind's 'md' breakpoint or lower */
-          .max-w-5xl {
+        /* Mobile (below 1023px) - Full screen width, 35%/65% split, no scaling */
+        @media (max-width: 1023px) {
+          .max-w-3xl {
             max-width: 100% !important; /* Full width on mobile */
             margin: 0; /* Remove margins for full screen */
           }
           .flex {
             flex-direction: row; /* Keep side-by-side */
             width: 100vw; /* Use viewport width */
-            overflow-x: hidden; /* Prevent horizontal scrolling if content overflows */
+            overflow-x: auto; /* Allow horizontal scrolling if content overflows */
           }
           .flex > div {
             flex: 0 0 auto; /* Prevent shrinking/growing */
           }
-          .p-6 {
-            padding: 0.75rem; /* Reduce padding on mobile for scaling */
-          }
-          /* Adjust widths for mobile to maintain 35%/65% */
           .flex > div:first-child {
             width: 35% !important; /* Fixed 35% for sidebar */
             min-width: 35% !important; /* Ensure minimum width */
@@ -896,41 +916,38 @@ function ResumePage() {
             width: 65% !important; /* Fixed 65% for content */
             min-width: 65% !important; /* Ensure minimum width */
           }
-          /* Scale down font sizes and inputs for mobile */
+          .p-6 {
+            padding: 1.5rem; /* Same padding as desktop */
+          }
           .text-4xl {
-            font-size: 1.5rem !important; /* Reduce header name size */
+            font-size: 2.25rem; /* Same font size as desktop */
           }
           .text-xl {
-            font-size: 1rem !important; /* Reduce title size */
+            font-size: 1.25rem; /* Same font size as desktop */
           }
           .text-lg {
-            font-size: 0.875rem !important; /* Reduce project/education titles */
+            font-size: 1.125rem; /* Same font size as desktop */
           }
           input, textarea {
-            font-size: 0.875rem !important; /* Reduce input/textarea size */
-            padding: 0.5rem !important; /* Reduce padding */
+            font-size: 1rem; /* Same font size as desktop */
+            padding: 0.75rem; /* Same padding as desktop */
           }
           .h-5, .w-5 {
-            height: 1rem !important; /* Reduce icon sizes */
-            width: 1rem !important; /* Reduce icon sizes */
+            height: 1.25rem; /* Same icon size as desktop */
+            width: 1.25rem; /* Same icon size as desktop */
           }
           .h-4, .w-4 {
-            height: 0.75rem !important; /* Reduce button icon sizes */
-            width: 0.75rem !important; /* Reduce button icon sizes */
+            height: 1rem; /* Same button icon size as desktop */
+            width: 1rem; /* Same button icon size as desktop */
           }
-          /* Ensure content fits within mobile viewport */
-          .w-full {
-            width: 100% !important;
-          }
-          /* Adjust header image size */
           .w-28, .h-28 {
-            width: 3.5rem !important; /* Reduce profile image size */
-            height: 3.5rem !important; /* Reduce profile image size */
+            width: 7rem; /* Same profile image size as desktop */
+            height: 7rem; /* Same profile image size as desktop */
           }
-          /* Prevent overflow and ensure scrolling works vertically if needed */
+          /* Ensure content fits within mobile viewport with scrolling */
           .min-h-screen, .min-h-[calc(100vh-200px)] {
-            min-height: calc(100vh - 200px) !important; /* Maintain height */
-            overflow-y: auto; /* Allow vertical scrolling if content overflows */
+            min-height: calc(100vh - 200px) !important;
+            overflow-y: auto;
           }
         }
       `}</style>
@@ -938,4 +955,4 @@ function ResumePage() {
   );
 }
 
-export default ResumePage;  
+export default ResumePage;
