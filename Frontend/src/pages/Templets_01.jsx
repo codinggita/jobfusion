@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
 // PDF Document Component (unchanged)
 const ResumePDF = ({ resumeData }) => (
   <Document>
-    <Page size="A4" style={styles.page}>
+    <Page size="A4" className={styles.page}>
       <View style={[styles.header, { backgroundColor: resumeData.primaryColor }]}>
         <Image src={resumeData.profileImage || "https://via.placeholder.com/100"} style={styles.profileImage} />
         <View>
@@ -354,7 +354,7 @@ function ResumePage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-3xl mx-auto md:max-w-5xl"> {/* 60% of screen width on desktop, full width on mobile */}
-        {/* Controls Section (unchanged) */}
+        {/* Controls Section (Navbar) - Perfect navbar from your code, using only Tailwind CSS */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 justify-between items-center">
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
@@ -408,7 +408,7 @@ function ResumePage() {
           </Button>
         </div>
 
-        {/* Resume Content with Modified Design for Consistent Layout */}
+        {/* Resume Content (Unchanged, maintaining two-column layout on both mobile and desktop) */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{ minWidth: "100%" }}>
           {/* Header Section (Top with no space, matching the image) */}
           <div
@@ -848,109 +848,6 @@ function ResumePage() {
           </div>
         </div>
       </div>
-
-      {/* Custom CSS for Consistent Layout on Mobile and Desktop */}
-      <style jsx global>{`
-        /* Desktop (min-width: 1024px) - 60% of screen width, 35%/65% split */
-        @media (min-width: 1024px) {
-          .max-w-3xl {
-            max-width: 60% !important; /* 60% of screen width on desktop */
-          }
-          .flex > div:first-child {
-            flex: 0 0 35%;
-            min-width: 35%;
-          }
-          .flex > div:last-child {
-            flex: 0 0 65%;
-            min-width: 65%;
-          }
-          .p-6 {
-            padding: 1.5rem;
-          }
-          .text-4xl {
-            font-size: 2.25rem;
-          }
-          .text-xl {
-            font-size: 1.25rem;
-          }
-          .text-lg {
-            font-size: 1.125rem;
-          }
-          input, textarea {
-            font-size: 1rem;
-            padding: 0.75rem;
-          }
-          .h-5, .w-5 {
-            height: 1.25rem;
-            width: 1.25rem;
-          }
-          .h-4, .w-4 {
-            height: 1rem;
-            width: 1rem;
-          }
-          .w-28, .h-28 {
-            width: 7rem;
-            height: 7rem;
-          }
-        }
-
-        /* Mobile (below 1023px) - Full screen width, 35%/65% split, no scaling */
-        @media (max-width: 1023px) {
-          .max-w-3xl {
-            max-width: 100% !important; /* Full width on mobile */
-            margin: 0; /* Remove margins for full screen */
-          }
-          .flex {
-            flex-direction: row; /* Keep side-by-side */
-            width: 100vw; /* Use viewport width */
-            overflow-x: auto; /* Allow horizontal scrolling if content overflows */
-          }
-          .flex > div {
-            flex: 0 0 auto; /* Prevent shrinking/growing */
-          }
-          .flex > div:first-child {
-            width: 35% !important; /* Fixed 35% for sidebar */
-            min-width: 35% !important; /* Ensure minimum width */
-          }
-          .flex > div:last-child {
-            width: 65% !important; /* Fixed 65% for content */
-            min-width: 65% !important; /* Ensure minimum width */
-          }
-          .p-6 {
-            padding: 1.5rem; /* Same padding as desktop */
-          }
-          .text-4xl {
-            font-size: 2.25rem; /* Same font size as desktop */
-          }
-          .text-xl {
-            font-size: 1.25rem; /* Same font size as desktop */
-          }
-          .text-lg {
-            font-size: 1.125rem; /* Same font size as desktop */
-          }
-          input, textarea {
-            font-size: 1rem; /* Same font size as desktop */
-            padding: 0.75rem; /* Same padding as desktop */
-          }
-          .h-5, .w-5 {
-            height: 1.25rem; /* Same icon size as desktop */
-            width: 1.25rem; /* Same icon size as desktop */
-          }
-          .h-4, .w-4 {
-            height: 1rem; /* Same button icon size as desktop */
-            width: 1rem; /* Same button icon size as desktop */
-          }
-          .w-28, .h-28 {
-            width: 7rem; /* Same profile image size as desktop */
-            height: 7rem; /* Same profile image size as desktop */
-          }
-          /* Ensure content fits within mobile viewport with scrolling */
-          .min-h-screen, .min-h-[calc(100vh-200px)] {
-            min-height: calc(100vh - 200px) !important;
-            overflow-y: auto;
-          }
-        }
-      `}</style>
     </div>
   );
 }
