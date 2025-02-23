@@ -512,7 +512,7 @@ function Template01() {
                 className="h-4 w-4 rounded border-gray-300 focus:ring-blue-500"
               />
             </div>
-            {/* Section styling options */}
+            {/* Section styling options (for all sections) */}
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium">About BG Color:</label>
               <Input
@@ -537,14 +537,181 @@ function Template01() {
                 className="w-12 h-10 p-1 rounded"
               />
             </div>
-            {/* ... (similar for other sections: contact, socialLinks, languages, skills, projects, education, certificates) ... */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Contact BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.contact.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, contact: { ...prev.sectionStyles.contact, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Contact Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.contact.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, contact: { ...prev.sectionStyles.contact, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Social Links BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.socialLinks.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, socialLinks: { ...prev.sectionStyles.socialLinks, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Social Links Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.socialLinks.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, socialLinks: { ...prev.sectionStyles.socialLinks, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Languages BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.languages.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, languages: { ...prev.sectionStyles.languages, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Languages Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.languages.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, languages: { ...prev.sectionStyles.languages, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Skills BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.skills.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, skills: { ...prev.sectionStyles.skills, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Skills Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.skills.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, skills: { ...prev.sectionStyles.skills, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Projects BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.projects.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, projects: { ...prev.sectionStyles.projects, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Projects Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.projects.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, projects: { ...prev.sectionStyles.projects, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Education BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.education.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, education: { ...prev.sectionStyles.education, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Education Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.education.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, education: { ...prev.sectionStyles.education, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Certificates BG Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.certificates.bgColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, certificates: { ...prev.sectionStyles.certificates, bgColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Certificates Text Color:</label>
+              <Input
+                type="color"
+                value={resumeData.sectionStyles.certificates.textColor}
+                onChange={(e) => setResumeData((prev) => ({
+                  ...prev,
+                  sectionStyles: { ...prev.sectionStyles, certificates: { ...prev.sectionStyles.certificates, textColor: e.target.value } },
+                }))}
+                className="w-12 h-10 p-1 rounded"
+              />
+            </div>
           </div>
           <Button onClick={handleDownloadPDF} className="flex items-center gap-2">
             <Download className="h-4 w-4" /> Download PDF
           </Button>
         </div>
 
-        {/* Resume Content with Drag-and-Drop */}
+        {/* Resume Content with Drag-and-Drop (No Visible Drag Handles) */}
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{ minWidth: "100%" }}>
             {/* Header Section (unchanged) */}
