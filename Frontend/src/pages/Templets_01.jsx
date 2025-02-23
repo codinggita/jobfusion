@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Document, Page, Text, View, StyleSheet, Image, pdf } from "@react-pdf/renderer";
 import { Phone, Mail, MapPin, Download, Plus, Trash2, Github, Linkedin, Twitter, Globe } from "lucide-react";
 
-// Custom Button Component
+// Custom Button Component (unchanged)
 const Button = ({ children, onClick, className = "", variant = "primary", size = "md", ...props }) => {
   const baseStyle = "rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
   const variants = {
@@ -21,7 +21,7 @@ const Button = ({ children, onClick, className = "", variant = "primary", size =
   );
 };
 
-// Custom Input Component
+// Custom Input Component (unchanged)
 const Input = ({ className = "", ...props }) => (
   <input
     className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
@@ -29,7 +29,7 @@ const Input = ({ className = "", ...props }) => (
   />
 );
 
-// Custom Textarea Component
+// Custom Textarea Component (unchanged)
 const Textarea = ({ className = "", ...props }) => (
   <textarea
     className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}`}
@@ -37,7 +37,7 @@ const Textarea = ({ className = "", ...props }) => (
   />
 );
 
-// PDF Styles
+// PDF Styles (unchanged, as you want to keep the PDF output as is)
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
@@ -52,26 +52,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#003087", // Default primary color
   },
   profileImage: {
-    width: 110, // Slightly larger for better visibility
+    width: 110,
     height: 110,
     borderRadius: 55,
     objectFit: "cover",
-    border: "5px solid rgba(255, 255, 255, 0.4)", // Thicker border with slight transparency
+    border: "5px solid rgba(255, 255, 255, 0.4)",
   },
   name: {
-    fontSize: 32, // Increased size for better prominence
+    fontSize: 32,
     fontWeight: "bold",
     color: "#ffffff",
-    flexWrap: "wrap", // Ensures long names wrap
-    maxWidth: "70%", // Prevents overflow
+    flexWrap: "wrap",
+    maxWidth: "70%",
   },
   title: {
-    fontSize: 18, // Slightly larger for clarity
+    fontSize: 18,
     color: "#ffffff",
     opacity: 0.9,
-    marginTop: 6, // More spacing from name
+    marginTop: 6,
     flexWrap: "wrap",
-    maxWidth: "70%", // Prevents overflow
+    maxWidth: "70%",
   },
   container: {
     flexDirection: "row",
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
 });
 
-// PDF Document Component
+// PDF Document Component (unchanged)
 const ResumePDF = ({ resumeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -354,7 +354,7 @@ function ResumePage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Controls Section */}
+        {/* Controls Section (unchanged) */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 justify-between items-center">
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
@@ -408,422 +408,443 @@ function ResumePage() {
           </Button>
         </div>
 
-        {/* Resume Content */}
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden flex" style={{ minWidth: "100%" }}>
-          <div style={{ flex: "0 0 35%", backgroundColor: resumeData.secondaryColor }} className="p-6 text-white">
-            <div
-              style={{
-                backgroundColor: resumeData.primaryColor,
-                margin: "-1.5rem -1.5rem 1.5rem -1.5rem",
-                padding: "25px", // Matches PDF padding
-              }}
-            >
-              <div className="flex items-center gap-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white/40 flex-shrink-0">
-                  <label className="cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity text-white text-sm">
-                    Upload Photo
-                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                  </label>
-                  <img src={resumeData.profileImage} alt="Profile" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1">
-                  <Input
-                    value={resumeData.name}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, name: e.target.value }))}
-                    className="bg-transparent border-none text-4xl font-bold w-full mb-2" // Matches PDF font size
-                    style={{
-                      color: resumeData.headerTextColor,
-                      wordBreak: "break-word", // Ensures long names wrap
-                      maxWidth: "100%", // Prevents overflow
-                    }}
-                    placeholder="Your Name"
-                  />
-                  <Input
-                    value={resumeData.title}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, title: e.target.value }))}
-                    className="bg-transparent border-none text-xl w-full" // Slightly larger for UI
-                    style={{
-                      color: resumeData.headerTextColor,
-                      wordBreak: "break-word", // Ensures long titles wrap
-                      maxWidth: "100%", // Prevents overflow
-                    }}
-                    placeholder="Your Role"
-                  />
-                </div>
-              </div>
+        {/* Resume Content with Modified Design */}
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{ minWidth: "100%" }}>
+          {/* Header Section (Top with no space, matching the image) */}
+          <div
+            style={{
+              backgroundColor: resumeData.primaryColor,
+              padding: "25px", // Matches PDF padding
+              display: "flex",
+              alignItems: "center",
+              gap: "20px", // Matches the image gap
+              margin: 0, // No extra space at the top
+            }}
+          >
+            <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-white/40 flex-shrink-0">
+              <label className="cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity text-white text-sm">
+                Upload Photo
+                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+              </label>
+              <img src={resumeData.profileImage} alt="Profile" className="w-full h-full object-cover" />
             </div>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2" style={{ color: resumeData.sidebarTextColor }}>
-                About Me
-              </h2>
-              <Textarea
-                value={resumeData.about}
-                onChange={(e) => setResumeData((prev) => ({ ...prev, about: e.target.value }))}
-                className="bg-transparent border-none resize-none w-full"
-                style={{ color: resumeData.sidebarTextColor }}
-                rows={4}
+            <div className="flex-1">
+              <Input
+                value={resumeData.name}
+                onChange={(e) => setResumeData((prev) => ({ ...prev, name: e.target.value }))}
+                className="bg-transparent border-none text-4xl font-bold w-full mb-2"
+                style={{
+                  color: resumeData.headerTextColor,
+                  wordBreak: "break-word",
+                  maxWidth: "100%",
+                }}
+                placeholder="Your Name"
               />
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2" style={{ color: resumeData.sidebarTextColor }}>
-                Contact
-              </h2>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5" style={{ color: resumeData.sidebarTextColor }} />
-                  <Input
-                    value={resumeData.phone}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, phone: e.target.value }))}
-                    className="bg-transparent border-none"
-                    style={{ color: resumeData.sidebarTextColor }}
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5" style={{ color: resumeData.sidebarTextColor }} />
-                  <Input
-                    value={resumeData.email}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, email: e.target.value }))}
-                    className="bg-transparent border-none"
-                    style={{ color: resumeData.sidebarTextColor }}
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5" style={{ color: resumeData.sidebarTextColor }} />
-                  <Input
-                    value={resumeData.address}
-                    onChange={(e) => setResumeData((prev) => ({ ...prev, address: e.target.value }))}
-                    className="bg-transparent border-none"
-                    style={{ color: resumeData.sidebarTextColor }}
-                  />
-                </div>
-              </div>
-            </section>
-
-            <section className="mb-8">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2" style={{ color: resumeData.sidebarTextColor }}>
-                  Social Links
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => addItem("socialLinks", { platform: "github", url: "" })}
-                  className="text-white"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              {resumeData.socialLinks.map((link, index) => (
-                <div key={index} className="flex items-center gap-2 mb-3">
-                  {socialIcons[link.platform]}
-                  <select
-                    value={link.platform}
-                    onChange={(e) => {
-                      const newLinks = [...resumeData.socialLinks];
-                      newLinks[index] = { ...link, platform: e.target.value };
-                      setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
-                    }}
-                    className="bg-black text-white border border-white/30 rounded px-2 py-1"
-                  >
-                    <option value="github">GitHub</option>
-                    <option value="linkedin">LinkedIn</option>
-                    <option value="twitter">Twitter</option>
-                    <option value="website">Website</option>
-                  </select>
-                  <Input
-                    value={link.url}
-                    onChange={(e) => {
-                      const newLinks = [...resumeData.socialLinks];
-                      newLinks[index] = { ...link, url: e.target.value };
-                      setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
-                    }}
-                    className="bg-transparent border-none flex-1"
-                    style={{ color: resumeData.sidebarTextColor }}
-                    placeholder="URL"
-                  />
-                  {resumeData.socialLinks.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem("socialLinks", index)}
-                      className="text-white"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </section>
-
-            <section className="mb-8">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2" style={{ color: resumeData.sidebarTextColor }}>
-                  Languages
-                </h2>
-                <Button variant="ghost" size="icon" onClick={() => addItem("languages", "")} className="text-white">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              {resumeData.languages.map((language, index) => (
-                <div key={index} className="flex items-center gap-2 mb-2">
-                  <Input
-                    value={language}
-                    onChange={(e) => {
-                      const newLanguages = [...resumeData.languages];
-                      newLanguages[index] = e.target.value;
-                      setResumeData((prev) => ({ ...prev, languages: newLanguages }));
-                    }}
-                    className="bg-transparent border-none flex-1"
-                    style={{ color: resumeData.sidebarTextColor }}
-                  />
-                  {resumeData.languages.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem("languages", index)}
-                      className="text-white"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </section>
-
-            <section>
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2" style={{ color: resumeData.sidebarTextColor }}>
-                  Skills
-                </h2>
-                <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-white">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              {resumeData.skills.map((skill, index) => (
-                <div key={index} className="flex items-center gap-2 mb-2">
-                  <Input
-                    value={skill}
-                    onChange={(e) => {
-                      const newSkills = [...resumeData.skills];
-                      newSkills[index] = e.target.value;
-                      setResumeData((prev) => ({ ...prev, skills: newSkills }));
-                    }}
-                    className="bg-transparent border-none flex-1"
-                    style={{ color: resumeData.sidebarTextColor }}
-                  />
-                  {resumeData.skills.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem("skills", index)}
-                      className="text-white"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </section>
+              <Input
+                value={resumeData.title}
+                onChange={(e) => setResumeData((prev) => ({ ...prev, title: e.target.value }))}
+                className="bg-transparent border-none text-xl w-full"
+                style={{
+                  color: resumeData.headerTextColor,
+                  wordBreak: "break-word",
+                  maxWidth: "100%",
+                }}
+                placeholder="Your Role"
+              />
+            </div>
           </div>
 
-          <div style={{ flex: "0 0 65%" }} className="p-6">
-            <section className="mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <h2
-                  style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
-                  className="text-xl font-semibold border-b-2 pb-2"
-                >
-                  Projects
+          {/* Two-Column Layout (Sidebar and Main Content) */}
+          <div className="flex flex-col md:flex-row" style={{ minHeight: "calc(100vh - 200px)" }}>
+            {/* Left Sidebar (35% width, black background, white text) */}
+            <div
+              style={{
+                flex: "0 0 35%",
+                padding: "20px",
+                backgroundColor: resumeData.secondaryColor,
+                color: resumeData.sidebarTextColor,
+              }}
+            >
+              <section className="mb-8">
+                <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">
+                  About Me
                 </h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => addItem("projects", { name: "", description: "", technologies: "" })}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              {resumeData.projects.map((project, index) => (
-                <div key={index} className="mb-6 relative">
-                  {resumeData.projects.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem("projects", index)}
-                      className="absolute right-0 top-0"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                  <Input
-                    value={project.name}
-                    onChange={(e) => {
-                      const newProjects = [...resumeData.projects];
-                      newProjects[index] = { ...project, name: e.target.value };
-                      setResumeData((prev) => ({ ...prev, projects: newProjects }));
-                    }}
-                    className="font-semibold text-lg mb-2"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Project Name"
-                  />
-                  <Textarea
-                    value={project.description}
-                    onChange={(e) => {
-                      const newProjects = [...resumeData.projects];
-                      newProjects[index] = { ...project, description: e.target.value };
-                      setResumeData((prev) => ({ ...prev, projects: newProjects }));
-                    }}
-                    className="mb-2 resize-none"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Description"
-                    rows={3}
-                  />
-                  <Input
-                    value={project.technologies}
-                    onChange={(e) => {
-                      const newProjects = [...resumeData.projects];
-                      newProjects[index] = { ...project, technologies: e.target.value };
-                      setResumeData((prev) => ({ ...prev, projects: newProjects }));
-                    }}
-                    className="text-gray-600"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Technologies (e.g., React, Node.js)"
-                  />
-                </div>
-              ))}
-            </section>
+                <Textarea
+                  value={resumeData.about}
+                  onChange={(e) => setResumeData((prev) => ({ ...prev, about: e.target.value }))}
+                  className="bg-transparent border-none resize-none w-full"
+                  style={{ color: resumeData.sidebarTextColor }}
+                  rows={4}
+                />
+              </section>
 
-            <section className="mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <h2
-                  style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
-                  className="text-xl font-semibold border-b-2 pb-2"
-                >
-                  Education
+              <section className="mb-8">
+                <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">
+                  Contact
                 </h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => addItem("education", { university: "", degree: "", period: "" })}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              {resumeData.education.map((edu, index) => (
-                <div key={index} className="mb-6 relative">
-                  {resumeData.education.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem("education", index)}
-                      className="absolute right-0 top-0"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                  <Input
-                    value={edu.university}
-                    onChange={(e) => {
-                      const newEducation = [...resumeData.education];
-                      newEducation[index] = { ...edu, university: e.target.value };
-                      setResumeData((prev) => ({ ...prev, education: newEducation }));
-                    }}
-                    className="font-semibold text-lg mb-2"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="University"
-                  />
-                  <Input
-                    value={edu.degree}
-                    onChange={(e) => {
-                      const newEducation = [...resumeData.education];
-                      newEducation[index] = { ...edu, degree: e.target.value };
-                      setResumeData((prev) => ({ ...prev, education: newEducation }));
-                    }}
-                    className="mb-2"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Degree"
-                  />
-                  <Input
-                    value={edu.period}
-                    onChange={(e) => {
-                      const newEducation = [...resumeData.education];
-                      newEducation[index] = { ...edu, period: e.target.value };
-                      setResumeData((prev) => ({ ...prev, education: newEducation }));
-                    }}
-                    className="text-gray-600"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Period (e.g., 2014 - 2018)"
-                  />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-5 w-5" style={{ color: resumeData.sidebarTextColor }} />
+                    <Input
+                      value={resumeData.phone}
+                      onChange={(e) => setResumeData((prev) => ({ ...prev, phone: e.target.value }))}
+                      className="bg-transparent border-none"
+                      style={{ color: resumeData.sidebarTextColor }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5" style={{ color: resumeData.sidebarTextColor }} />
+                    <Input
+                      value={resumeData.email}
+                      onChange={(e) => setResumeData((prev) => ({ ...prev, email: e.target.value }))}
+                      className="bg-transparent border-none"
+                      style={{ color: resumeData.sidebarTextColor }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5" style={{ color: resumeData.sidebarTextColor }} />
+                    <Input
+                      value={resumeData.address}
+                      onChange={(e) => setResumeData((prev) => ({ ...prev, address: e.target.value }))}
+                      className="bg-transparent border-none"
+                      style={{ color: resumeData.sidebarTextColor }}
+                    />
+                  </div>
                 </div>
-              ))}
-            </section>
+              </section>
 
-            <section>
-              <div className="flex justify-between items-center mb-4">
-                <h2
-                  style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
-                  className="text-xl font-semibold border-b-2 pb-2"
-                >
-                  Certificates
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              {resumeData.certificates.map((cert, index) => (
-                <div key={index} className="mb-6 relative">
-                  {resumeData.certificates.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeItem("certificates", index)}
-                      className="absolute right-0 top-0"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                  <Input
-                    value={cert.name}
-                    onChange={(e) => {
-                      const newCertificates = [...resumeData.certificates];
-                      newCertificates[index] = { ...cert, name: e.target.value };
-                      setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
-                    }}
-                    className="font-semibold text-lg mb-2"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Certificate Name"
-                  />
-                  <Input
-                    value={cert.issuer}
-                    onChange={(e) => {
-                      const newCertificates = [...resumeData.certificates];
-                      newCertificates[index] = { ...cert, issuer: e.target.value };
-                      setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
-                    }}
-                    className="mb-2"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Issuer"
-                  />
-                  <Input
-                    value={cert.year}
-                    onChange={(e) => {
-                      const newCertificates = [...resumeData.certificates];
-                      newCertificates[index] = { ...cert, year: e.target.value };
-                      setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
-                    }}
-                    className="text-gray-600"
-                    style={{ color: resumeData.mainTextColor }}
-                    placeholder="Year"
-                  />
+              <section className="mb-8">
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">
+                    Social Links
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => addItem("socialLinks", { platform: "github", url: "" })}
+                    className="text-white"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-              ))}
-            </section>
+                {resumeData.socialLinks.map((link, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-3">
+                    {socialIcons[link.platform]}
+                    <select
+                      value={link.platform}
+                      onChange={(e) => {
+                        const newLinks = [...resumeData.socialLinks];
+                        newLinks[index] = { ...link, platform: e.target.value };
+                        setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
+                      }}
+                      className="bg-black text-white border border-white/30 rounded px-2 py-1"
+                    >
+                      <option value="github">GitHub</option>
+                      <option value="linkedin">LinkedIn</option>
+                      <option value="twitter">Twitter</option>
+                      <option value="website">Website</option>
+                    </select>
+                    <Input
+                      value={link.url}
+                      onChange={(e) => {
+                        const newLinks = [...resumeData.socialLinks];
+                        newLinks[index] = { ...link, url: e.target.value };
+                        setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
+                      }}
+                      className="bg-transparent border-none flex-1"
+                      style={{ color: resumeData.sidebarTextColor }}
+                      placeholder="URL"
+                    />
+                    {resumeData.socialLinks.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem("socialLinks", index)}
+                        className="text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </section>
+
+              <section className="mb-8">
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">
+                    Languages
+                  </h2>
+                  <Button variant="ghost" size="icon" onClick={() => addItem("languages", "")} className="text-white">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {resumeData.languages.map((language, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-2">
+                    <Input
+                      value={language}
+                      onChange={(e) => {
+                        const newLanguages = [...resumeData.languages];
+                        newLanguages[index] = e.target.value;
+                        setResumeData((prev) => ({ ...prev, languages: newLanguages }));
+                      }}
+                      className="bg-transparent border-none flex-1"
+                      style={{ color: resumeData.sidebarTextColor }}
+                    />
+                    {resumeData.languages.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem("languages", index)}
+                        className="text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </section>
+
+              <section>
+                <div className="flex justify-between items-center mb-3">
+                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">
+                    Skills
+                  </h2>
+                  <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-white">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {resumeData.skills.map((skill, index) => (
+                  <div key={index} className="flex items-center gap-2 mb-2">
+                    <Input
+                      value={skill}
+                      onChange={(e) => {
+                        const newSkills = [...resumeData.skills];
+                        newSkills[index] = e.target.value;
+                        setResumeData((prev) => ({ ...prev, skills: newSkills }));
+                      }}
+                      className="bg-transparent border-none flex-1"
+                      style={{ color: resumeData.sidebarTextColor }}
+                    />
+                    {resumeData.skills.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem("skills", index)}
+                        className="text-white"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </section>
+            </div>
+
+            {/* Right Column (65% width, white background, main text color) */}
+            <div
+              style={{
+                flex: "0 0 65%",
+                padding: "20px",
+                backgroundColor: "#ffffff",
+                color: resumeData.mainTextColor,
+              }}
+            >
+              <section className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2
+                    style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
+                    className="text-xl font-semibold border-b-2 pb-2"
+                  >
+                    Projects
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => addItem("projects", { name: "", description: "", technologies: "" })}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {resumeData.projects.map((project, index) => (
+                  <div key={index} className="mb-6 relative">
+                    {resumeData.projects.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem("projects", index)}
+                        className="absolute right-0 top-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <Input
+                      value={project.name}
+                      onChange={(e) => {
+                        const newProjects = [...resumeData.projects];
+                        newProjects[index] = { ...project, name: e.target.value };
+                        setResumeData((prev) => ({ ...prev, projects: newProjects }));
+                      }}
+                      className="font-semibold text-lg mb-2"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Project Name"
+                    />
+                    <Textarea
+                      value={project.description}
+                      onChange={(e) => {
+                        const newProjects = [...resumeData.projects];
+                        newProjects[index] = { ...project, description: e.target.value };
+                        setResumeData((prev) => ({ ...prev, projects: newProjects }));
+                      }}
+                      className="mb-2 resize-none"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Description"
+                      rows={3}
+                    />
+                    <Input
+                      value={project.technologies}
+                      onChange={(e) => {
+                        const newProjects = [...resumeData.projects];
+                        newProjects[index] = { ...project, technologies: e.target.value };
+                        setResumeData((prev) => ({ ...prev, projects: newProjects }));
+                      }}
+                      className="text-gray-600"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Technologies (e.g., React, Node.js)"
+                    />
+                  </div>
+                ))}
+              </section>
+
+              <section className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2
+                    style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
+                    className="text-xl font-semibold border-b-2 pb-2"
+                  >
+                    Education
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => addItem("education", { university: "", degree: "", period: "" })}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {resumeData.education.map((edu, index) => (
+                  <div key={index} className="mb-6 relative">
+                    {resumeData.education.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem("education", index)}
+                        className="absolute right-0 top-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <Input
+                      value={edu.university}
+                      onChange={(e) => {
+                        const newEducation = [...resumeData.education];
+                        newEducation[index] = { ...edu, university: e.target.value };
+                        setResumeData((prev) => ({ ...prev, education: newEducation }));
+                      }}
+                      className="font-semibold text-lg mb-2"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="University"
+                    />
+                    <Input
+                      value={edu.degree}
+                      onChange={(e) => {
+                        const newEducation = [...resumeData.education];
+                        newEducation[index] = { ...edu, degree: e.target.value };
+                        setResumeData((prev) => ({ ...prev, education: newEducation }));
+                      }}
+                      className="mb-2"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Degree"
+                    />
+                    <Input
+                      value={edu.period}
+                      onChange={(e) => {
+                        const newEducation = [...resumeData.education];
+                        newEducation[index] = { ...edu, period: e.target.value };
+                        setResumeData((prev) => ({ ...prev, education: newEducation }));
+                      }}
+                      className="text-gray-600"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Period (e.g., 2014 - 2018)"
+                    />
+                  </div>
+                ))}
+              </section>
+
+              <section>
+                <div className="flex justify-between items-center mb-4">
+                  <h2
+                    style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
+                    className="text-xl font-semibold border-b-2 pb-2"
+                  >
+                    Certificates
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {resumeData.certificates.map((cert, index) => (
+                  <div key={index} className="mb-6 relative">
+                    {resumeData.certificates.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeItem("certificates", index)}
+                        className="absolute right-0 top-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <Input
+                      value={cert.name}
+                      onChange={(e) => {
+                        const newCertificates = [...resumeData.certificates];
+                        newCertificates[index] = { ...cert, name: e.target.value };
+                        setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
+                      }}
+                      className="font-semibold text-lg mb-2"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Certificate Name"
+                    />
+                    <Input
+                      value={cert.issuer}
+                      onChange={(e) => {
+                        const newCertificates = [...resumeData.certificates];
+                        newCertificates[index] = { ...cert, issuer: e.target.value };
+                        setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
+                      }}
+                      className="mb-2"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Issuer"
+                    />
+                    <Input
+                      value={cert.year}
+                      onChange={(e) => {
+                        const newCertificates = [...resumeData.certificates];
+                        newCertificates[index] = { ...cert, year: e.target.value };
+                        setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
+                      }}
+                      className="text-gray-600"
+                      style={{ color: resumeData.mainTextColor }}
+                      placeholder="Year"
+                    />
+                  </div>
+                ))}
+              </section>
+            </div>
           </div>
         </div>
       </div>
@@ -831,4 +852,4 @@ function ResumePage() {
   );
 }
 
-export default ResumePage;
+export default ResumePage;x
