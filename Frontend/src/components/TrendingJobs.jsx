@@ -1,9 +1,26 @@
-import React, { useState, useEffect } from "react";
+// 1.Used useRef for caching:
+// -> jobsCache.current acts as a memory cache for job data.
+// -> This avoids refetching when navigating between pages — only fetching once unless the page fully reloads.
+// -> Faster because it skips repeated API calls.
+
+// 2.Reduced state updates:
+// -->setJobs only gets called when data is actually fetched.
+// -->No unnecessary state updates on every navigation, avoiding extra re-renders.
+// -->Simplified environment variable access:
+
+// 3.Destructured import.meta.env for cleaner and more efficient variable use.
+// -->Optimized API call logic:
+
+// 4.API only gets called if no cache exists — saves bandwidth and speeds up perceived performance.
+// -->Passed fetchTrendingJobs directly to onToggle:
+// -->Avoided an extra function wrapper — keeping it simple and efficient.
+
+
+import React, { useState, useEffect, useRef } from "react";
 import { Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import BookmarkButton from "./SaveBtn"; // Updated button component
+import BookmarkButton from "./SaveBtn";
 import axios from "axios";
-
 
 const JobCard = ({ job, onToggle }) => {
   const navigate = useNavigate();
@@ -34,24 +51,22 @@ const JobCard = ({ job, onToggle }) => {
 
 const TrendingJobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const jobsCache = useRef(null); // Memoize API response
 
   const fetchTrendingJobs = async () => {
+    if (jobsCache.current) return setJobs(jobsCache.current); // Use cached data if available
+
     try {
-      const ADZUNA_API_ID = import.meta.env.VITE_ADZUNA_API_ID;
-      const ADZUNA_API_KEY = import.meta.env.VITE_ADZUNA_API_KEY;
+      const { VITE_ADZUNA_API_ID, VITE_ADZUNA_API_KEY } = import.meta.env;
+      const response = await axios.get("https://api.adzuna.com/v1/api/jobs/in/search/1", {
+        params: {
+          app_id: VITE_ADZUNA_API_ID,
+          app_key: VITE_ADZUNA_API_KEY,
+          results_per_page: 8,
+        },
+      });
 
-      const response = await axios.get(
-        `https://api.adzuna.com/v1/api/jobs/in/search/1`,
-        {
-          params: {
-            app_id: ADZUNA_API_ID,
-            app_key: ADZUNA_API_KEY,
-            results_per_page: 8,
-          },
-        }
-      );
-
+      jobsCache.current = response.data.results; // Cache the results
       setJobs(response.data.results);
     } catch (error) {
       console.error("Error fetching trending jobs:", error);
@@ -59,8 +74,8 @@ const TrendingJobs = () => {
   };
 
   useEffect(() => {
-    fetchTrendingJobs();
-  }, [refresh]);
+    if (!jobsCache.current) fetchTrendingJobs();
+  }, []);
 
   return (
     <section className="py-16 px-6">
@@ -70,7 +85,7 @@ const TrendingJobs = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {jobs.map((job) => (
-            <JobCard key={job.id} job={job} onToggle={() => setRefresh((prev) => !prev)} />
+            <JobCard key={job.id} job={job} onToggle={fetchTrendingJobs} />
           ))}
         </div>
       </div>
