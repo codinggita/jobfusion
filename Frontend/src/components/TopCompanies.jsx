@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+// Avoided unnecessary API calls : I used useRef
 
+// Optimized state management --> The companiesCache.current check ensures the API call only happens once.
+
+// Reduced state updates --> The setCompanies function only gets called when data is actually fetched.
+
+
+import React, { useState, useEffect, useRef } from 'react';
 const CompanyCard = ({ canonical_name, count, description, average_salary }) => {
-  // Determine Job Type
   const jobType = (average_salary !== undefined && average_salary !== null && average_salary > 15000)
     ? "Full Time"
     : "Part Time";
-  // For Sub Job Role, use the first word of the canonical_name as a simple example
   const subJobRole = canonical_name ? canonical_name.split(" ")[0] : "General";
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      {/* Top row: Placeholder icon and dynamic badge */}
       <div className="flex items-start justify-between mb-4">
         <div className="w-12 h-12 bg-red-100 rounded-lg"></div>
         <span className="px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-sm">
           {jobType}
         </span>
       </div>
-      {/* Company Name */}
       <h3 className="font-semibold text-lg mb-2">
         {canonical_name || "Unknown Company"}
       </h3>
-      {/* Dynamic description */}
       <p className="text-gray-600">
         {description || `Leading ${canonical_name || "this company"} in the industry.`}
       </p>
-      {/* Vacancy details */}
       <div className="mt-4">
         <p className="text-gray-600">Vacancies: {count || "N/A"}</p>
       </div>
@@ -35,8 +35,11 @@ const CompanyCard = ({ canonical_name, count, description, average_salary }) => 
 
 const TopCompanies = () => {
   const [companies, setCompanies] = useState([]);
+  const companiesCache = useRef(null);
 
   const fetchTopCompanies = async () => {
+    if (companiesCache.current) return;
+
     try {
       const ADZUNA_API_ID = import.meta.env.VITE_ADZUNA_API_ID;
       const ADZUNA_API_KEY = import.meta.env.VITE_ADZUNA_API_KEY;
@@ -52,6 +55,7 @@ const TopCompanies = () => {
           ...company,
           description: company.description || `Leading ${company.canonical_name} in the industry.`
         }));
+        companiesCache.current = customizedCompanies;
         setCompanies(customizedCompanies);
       } else {
         console.error("No leaderboard data found in API response.");
@@ -62,7 +66,11 @@ const TopCompanies = () => {
   };
 
   useEffect(() => {
-    fetchTopCompanies();
+    if (!companiesCache.current) {
+      fetchTopCompanies();
+    } else {
+      setCompanies(companiesCache.current);
+    }
   }, []);
 
   return (
