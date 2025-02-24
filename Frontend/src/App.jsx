@@ -37,7 +37,7 @@ function App() {
         <Route path="/userdashboard" element={<UserDashboard />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
         <Route path="/resume" element={<ResumePage />} />
-        <Route path="/templet01" element={<Templet01 />} />
+        <Route path="/resume/template01" element={<Templet01 />} />
 
         {/* Redirect any unknown route to FirstPage */}
         <Route path="*" element={<Navigate to="/" />} />

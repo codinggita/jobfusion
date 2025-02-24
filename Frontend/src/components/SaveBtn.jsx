@@ -8,50 +8,41 @@ export default function BookmarkButton({ job, onToggle }) {
   const [bookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
-    // Check if job is already saved in local storage
     const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
     setBookmarked(savedJobs.includes(job.id));
   }, [job.id]);
 
   const handleClick = async () => {
-    const email = localStorage.getItem("userEmail"); // Get user email from localStorage
+    const email = localStorage.getItem("userEmail");
 
     if (!email) {
       alert("Please log in to save jobs.");
       return;
     }
 
+    // Optimistic UI update
+    const newBookmarkedState = !bookmarked;
+    setBookmarked(newBookmarkedState);
+
     try {
       let updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
 
-      if (bookmarked) {
-        // API Call to Delete Job
+      if (newBookmarkedState) {
+        await axios.post("https://jobfusion.onrender.com/api/jobs/save", { email, jobData: job });
+        updatedJobs.push(job.id);
+      } else {
         await axios.delete("https://jobfusion.onrender.com/api/jobs/unsave", {
           data: { email, jobId: job.id },
         });
-
-        // Update LocalStorage
         updatedJobs = updatedJobs.filter((id) => id !== job.id);
-        localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
-
-        setBookmarked(false);
-        alert("Job removed from saved list!");
-      } else {
-        // API Call to Save Job
-        await axios.post("https://jobfusion.onrender.com/api/jobs/save", { email, jobData: job });
-
-        // Update LocalStorage
-        updatedJobs.push(job.id);
-        localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
-
-        setBookmarked(true);
-        alert("Job saved successfully!");
       }
 
-      onToggle(); // Refresh UI
+      localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
+      onToggle();
     } catch (error) {
       console.error("Error updating saved jobs:", error);
       alert("Failed to update saved jobs.");
+      setBookmarked(!newBookmarkedState); // Rollback UI on error
     }
   };
 

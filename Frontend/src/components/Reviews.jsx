@@ -7,6 +7,8 @@ const ReviewComponent = () => {
     const [reviews, setReviews] = useState([]);
     const [open, setOpen] = useState(false);
     const [newReview, setNewReview] = useState({ username: "", rating: 0, review: "" });
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         fetchReviews();
@@ -22,7 +24,8 @@ const ReviewComponent = () => {
     };
 
     const handleSubmit = async () => {
-        if (!newReview.username || !newReview.review || newReview.rating === 0) return;
+        if (!newReview.username || !newReview.review || newReview.rating === 0 || loading) return;
+        setLoading(true);
         try {
             await axios.post("https://jobfusion.onrender.com/api/reviews", newReview);
             fetchReviews();
@@ -30,6 +33,8 @@ const ReviewComponent = () => {
             setNewReview({ username: "", rating: 0, review: "" });
         } catch (error) {
             console.error("Error submitting review:", error);
+        }finally{
+            setLoading(false);
         }
     };
 
@@ -91,7 +96,14 @@ const ReviewComponent = () => {
                 </DialogContent>
                 <DialogActions className="bg-[#F7F9FC]">
                     <Button onClick={() => setOpen(false)} className="text-[#688BC5]">Cancel</Button>
-                    <Button onClick={handleSubmit} variant="contained" className="bg-[#688BC5] text-white">Submit</Button>
+                    <Button
+                        onClick={handleSubmit}
+                        variant="contained"
+                        className="bg-[#688BC5] text-white"
+                        disabled={loading}
+                    >
+                        { loading ? "Submitting..." : "Submit"}
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>
