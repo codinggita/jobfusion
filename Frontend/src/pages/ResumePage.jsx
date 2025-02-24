@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 export default function MainSection() {
     const [currentTip, setCurrentTip] = useState(0);
@@ -66,19 +67,23 @@ export default function MainSection() {
   const templates = [
     { 
       id: 1, 
-      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-10.png" 
+      image: "/Re_Temp_001.png",
+      path: "/resume/template01" // Add a path property for each template
     },
     { 
       id: 2, 
-      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-9-New-2.png" 
+      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-9-New-2.png",
+      path: "/resume/template02"
     },
     { 
       id: 3, 
-      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-8.png" 
+      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-8.png",
+      path: "/resume/template03"
     },
     { 
       id: 4, 
-      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-7-New-2.png" 
+      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-7-New-2.png",
+      path: "/resume/template04"
     },
   ];
 
@@ -194,12 +199,14 @@ export default function MainSection() {
                 key={template.id} 
                 className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105"
               >
-                <img
-                  src={template.image || "/placeholder.svg"}
-                  alt={`Resume template ${template.id}`}
-                  className="w-full h-auto"
-                  loading="lazy"
-                />
+                <Link to={template.path}> {/* Use Link to navigate to the template page */}
+                  <img
+                    src={template.image || "/placeholder.svg"}
+                    alt={`Resume template ${template.id}`}
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                </Link>
               </div>
             ))}
           </div>
