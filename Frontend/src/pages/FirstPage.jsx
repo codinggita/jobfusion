@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"; // Ensure React Router is installed for routing
 import { PlayCircle } from "lucide-react";
+import Image01 from "../../public/IMG@1x.png";
 
 export default function LandingPage() {
   return (
@@ -7,7 +8,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div className="max-w-4xl text-center">
         <img 
-          src="../../public/IMG@1x.png" 
+          src={Image01} 
           alt="Career Success" 
           className="w-full mb-6 shadow-lg rounded-xl" 
         />
