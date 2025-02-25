@@ -31,7 +31,10 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-12.5">
+          <Link to="/home" className="text-gray-700 hover:text-blue-600">
+            Home
+          </Link>
           <Link to="/Companies" className="text-gray-700 hover:text-blue-600">
             Companies
           </Link>
@@ -81,10 +84,13 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu (without Dashboard & Logout) */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden flex flex-col bg-white shadow-md absolute top-16 left-0 w-full p-4 space-y-4">
           <Link to="/home" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/Companies" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Companies
           </Link>
           <Link to="/resume" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>

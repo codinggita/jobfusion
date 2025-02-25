@@ -40,70 +40,20 @@ const Textarea = ({ className = "", ...props }) => (
 
 // PDF Styles (unchanged)
 const styles = StyleSheet.create({
-  page: {
-    flexDirection: "column",
-    backgroundColor: "#ffffff",
-    padding: 20,
-  },
-  header: {
-    padding: 25,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
-    backgroundColor: "#003087",
-  },
-  profileImage: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    objectFit: "cover",
-    border: "5px solid rgba(255, 255, 255, 0.4)",
-  },
-  name: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#ffffff",
-    flexWrap: "wrap",
-    maxWidth: "70%",
-  },
-  title: {
-    fontSize: 18,
-    color: "#ffffff",
-    opacity: 0.9,
-    marginTop: 6,
-    flexWrap: "wrap",
-    maxWidth: "70%",
-  },
-  container: {
-    flexDirection: "row",
-  },
-  leftColumn: {
-    width: "35%",
-    padding: 20,
-  },
-  rightColumn: {
-    width: "65%",
-    padding: 20,
-    backgroundColor: "#ffffff",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 12,
-    paddingBottom: 4,
-    borderBottom: "2px solid",
-  },
-  text: {
-    fontSize: 12,
-    marginBottom: 6,
-  },
-  whiteText: {
-    fontSize: 12,
-    marginBottom: 6,
-  },
+  page: { flexDirection: "column", backgroundColor: "#ffffff", padding: 20 },
+  header: { padding: 25, flexDirection: "row", alignItems: "center", gap: 20, backgroundColor: "#003087" },
+  profileImage: { width: 110, height: 110, borderRadius: 55, objectFit: "cover", border: "5px solid rgba(255, 255, 255, 0.4)" },
+  name: { fontSize: 32, fontWeight: "bold", color: "#ffffff", flexWrap: "wrap", maxWidth: "70%" },
+  title: { fontSize: 18, color: "#ffffff", opacity: 0.9, marginTop: 6, flexWrap: "wrap", maxWidth: "70%" },
+  container: { flexDirection: "row" },
+  leftColumn: { width: "35%", padding: 20 },
+  rightColumn: { width: "65%", padding: 20, backgroundColor: "#ffffff" },
+  sectionTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 12, paddingBottom: 4, borderBottom: "2px solid" },
+  text: { fontSize: 12, marginBottom: 6 },
+  whiteText: { fontSize: 12, marginBottom: 6 },
 });
 
-// PDF Document Component (updated for reordered sections and customizations)
+// PDF Document Component (unchanged)
 const TemplatePDF = ({ resumeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -357,19 +307,54 @@ function Template01() {
   const onDragEnd = (result) => {
     const { source, destination } = result;
     if (!destination) return;
-    const newOrder = Array.from(resumeData.sectionOrder);
-    const [reorderedItem] = newOrder.splice(source.index, 1);
-    newOrder.splice(destination.index, 0, reorderedItem);
-    setResumeData((prev) => ({ ...prev, sectionOrder: newOrder }));
+
+    const sourceDroppableId = source.droppableId;
+    const destDroppableId = destination.droppableId;
+
+    const sidebarSections = resumeData.sectionOrder.filter((section) =>
+      ["about", "contact", "socialLinks", "languages", "skills"].includes(section) && resumeData.sectionVisibility[section]
+    );
+    const contentSections = resumeData.sectionOrder.filter((section) =>
+      ["projects", "education", "certificates"].includes(section) && resumeData.sectionVisibility[section]
+    );
+
+    let sourceSections = sourceDroppableId === "sidebar" ? sidebarSections : contentSections;
+    let destSections = destDroppableId === "sidebar" ? sidebarSections : contentSections;
+
+    // Prevent dragging between sidebar and content
+    if (sourceDroppableId !== destDroppableId) return;
+
+    const newSections = Array.from(sourceSections);
+    const [reorderedItem] = newSections.splice(source.index, 1);
+    newSections.splice(destination.index, 0, reorderedItem);
+
+    // Reconstruct the full sectionOrder with updated order within the respective droppable
+    const updatedSectionOrder = resumeData.sectionOrder.map((section) => {
+      if (sourceDroppableId === "sidebar" && ["about", "contact", "socialLinks", "languages", "skills"].includes(section)) {
+        return newSections.shift() || section;
+      } else if (sourceDroppableId === "content" && ["projects", "education", "certificates"].includes(section)) {
+        return newSections.shift() || section;
+      }
+      return section;
+    });
+
+    setResumeData((prev) => ({ ...prev, sectionOrder: updatedSectionOrder }));
   };
+
+  // Filter sections for each droppable area
+  const sidebarSections = resumeData.sectionOrder.filter((section) =>
+    ["about", "contact", "socialLinks", "languages", "skills"].includes(section) && resumeData.sectionVisibility[section]
+  );
+  const contentSections = resumeData.sectionOrder.filter((section) =>
+    ["projects", "education", "certificates"].includes(section) && resumeData.sectionVisibility[section]
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-3xl mx-auto md:max-w-5xl">
-        {/* Controls Section (Navbar) - Enhanced with customization options */}
+        {/* Controls Section (Navbar) - Unchanged */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex flex-wrap gap-4 w-full md:w-auto">
-            {/* Existing color inputs for header, sidebar, etc. (unchanged) */}
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium">Header Color:</label>
               <Input
@@ -415,7 +400,6 @@ function Template01() {
                 className="w-12 h-10 p-1 rounded"
               />
             </div>
-            {/* Section visibility toggles */}
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium">Show About:</label>
               <input
@@ -512,7 +496,6 @@ function Template01() {
                 className="h-4 w-4 rounded border-gray-300 focus:ring-blue-500"
               />
             </div>
-            {/* Section styling options (for all sections) */}
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium">About BG Color:</label>
               <Input
@@ -711,7 +694,7 @@ function Template01() {
           </Button>
         </div>
 
-        {/* Resume Content with Drag-and-Drop (No Visible Drag Handles) */}
+        {/* Resume Content with Drag-and-Drop */}
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{ minWidth: "100%" }}>
             {/* Header Section (unchanged) */}
@@ -737,22 +720,14 @@ function Template01() {
                   value={resumeData.name}
                   onChange={(e) => setResumeData((prev) => ({ ...prev, name: e.target.value }))}
                   className="bg-transparent border-none text-4xl font-bold w-full mb-2"
-                  style={{
-                    color: resumeData.headerTextColor,
-                    wordBreak: "break-word",
-                    maxWidth: "100%",
-                  }}
+                  style={{ color: resumeData.headerTextColor, wordBreak: "break-word", maxWidth: "100%" }}
                   placeholder="Your Name"
                 />
                 <Input
                   value={resumeData.title}
                   onChange={(e) => setResumeData((prev) => ({ ...prev, title: e.target.value }))}
                   className="bg-transparent border-none text-xl w-full"
-                  style={{
-                    color: resumeData.headerTextColor,
-                    wordBreak: "break-word",
-                    maxWidth: "100%",
-                  }}
+                  style={{ color: resumeData.headerTextColor, wordBreak: "break-word", maxWidth: "100%" }}
                   placeholder="Your Role"
                 />
               </div>
@@ -773,212 +748,193 @@ function Template01() {
                       color: resumeData.sidebarTextColor,
                     }}
                   >
-                    {resumeData.sectionOrder.map((section, index) => {
-                      if (["about", "contact", "socialLinks", "languages", "skills"].includes(section) && resumeData.sectionVisibility[section]) {
-                        return (
-                          <Draggable
-                            key={section}
-                            draggableId={section}
-                            index={index}
+                    {sidebarSections.map((section, index) => (
+                      <Draggable key={section} draggableId={section} index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="mb-8 cursor-move"
+                            style={{
+                              ...provided.draggableProps.style,
+                              backgroundColor: resumeData.sectionStyles[section].bgColor,
+                              color: resumeData.sectionStyles[section].textColor,
+                            }}
                           >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className="mb-8 cursor-move"
-                                style={{
-                                  ...provided.draggableProps.style,
-                                  backgroundColor: resumeData.sectionStyles[section].bgColor,
-                                  color: resumeData.sectionStyles[section].textColor,
-                                }}
-                              >
-                                {section === "about" && (
-                                  <>
-                                    <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">
-                                      About Me
-                                    </h2>
-                                    <Textarea
-                                      value={resumeData.about}
-                                      onChange={(e) => setResumeData((prev) => ({ ...prev, about: e.target.value }))}
-                                      className="bg-transparent border-none resize-none w-full"
+                            {section === "about" && (
+                              <>
+                                <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">About Me</h2>
+                                <Textarea
+                                  value={resumeData.about}
+                                  onChange={(e) => setResumeData((prev) => ({ ...prev, about: e.target.value }))}
+                                  className="bg-transparent border-none resize-none w-full"
+                                  style={{ color: resumeData.sectionStyles[section].textColor }}
+                                  rows={4}
+                                />
+                              </>
+                            )}
+                            {section === "contact" && (
+                              <>
+                                <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">Contact</h2>
+                                <div className="space-y-3">
+                                  <div className="flex items-center gap-3">
+                                    <Phone className="h-5 w-5" style={{ color: resumeData.sectionStyles[section].textColor }} />
+                                    <Input
+                                      value={resumeData.phone}
+                                      onChange={(e) => setResumeData((prev) => ({ ...prev, phone: e.target.value }))}
+                                      className="bg-transparent border-none"
                                       style={{ color: resumeData.sectionStyles[section].textColor }}
-                                      rows={4}
                                     />
-                                  </>
-                                )}
-                                {section === "contact" && (
-                                  <>
-                                    <h2 className="text-xl font-semibold mb-3 border-b-2 border-white/30 pb-2">
-                                      Contact
-                                    </h2>
-                                    <div className="space-y-3">
-                                      <div className="flex items-center gap-3">
-                                        <Phone className="h-5 w-5" style={{ color: resumeData.sectionStyles[section].textColor }} />
-                                        <Input
-                                          value={resumeData.phone}
-                                          onChange={(e) => setResumeData((prev) => ({ ...prev, phone: e.target.value }))}
-                                          className="bg-transparent border-none"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                        />
-                                      </div>
-                                      <div className="flex items-center gap-3">
-                                        <Mail className="h-5 w-5" style={{ color: resumeData.sectionStyles[section].textColor }} />
-                                        <Input
-                                          value={resumeData.email}
-                                          onChange={(e) => setResumeData((prev) => ({ ...prev, email: e.target.value }))}
-                                          className="bg-transparent border-none"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                        />
-                                      </div>
-                                      <div className="flex items-center gap-3">
-                                        <MapPin className="h-5 w-5" style={{ color: resumeData.sectionStyles[section].textColor }} />
-                                        <Input
-                                          value={resumeData.address}
-                                          onChange={(e) => setResumeData((prev) => ({ ...prev, address: e.target.value }))}
-                                          className="bg-transparent border-none"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </>
-                                )}
-                                {section === "socialLinks" && (
-                                  <>
-                                    <div className="flex justify-between items-center mb-3">
-                                      <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">
-                                        Social Links
-                                      </h2>
+                                  </div>
+                                  <div className="flex items-center gap-3">
+                                    <Mail className="h-5 w-5" style={{ color: resumeData.sectionStyles[section].textColor }} />
+                                    <Input
+                                      value={resumeData.email}
+                                      onChange={(e) => setResumeData((prev) => ({ ...prev, email: e.target.value }))}
+                                      className="bg-transparent border-none"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-3">
+                                    <MapPin className="h-5 w-5" style={{ color: resumeData.sectionStyles[section].textColor }} />
+                                    <Input
+                                      value={resumeData.address}
+                                      onChange={(e) => setResumeData((prev) => ({ ...prev, address: e.target.value }))}
+                                      className="bg-transparent border-none"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+                            {section === "socialLinks" && (
+                              <>
+                                <div className="flex justify-between items-center mb-3">
+                                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">Social Links</h2>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => addItem("socialLinks", { platform: "github", url: "" })}
+                                    className="text-white"
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.socialLinks.map((link, index) => (
+                                  <div key={index} className="flex items-center gap-2 mb-3">
+                                    {socialIcons[link.platform]}
+                                    <select
+                                      value={link.platform}
+                                      onChange={(e) => {
+                                        const newLinks = [...resumeData.socialLinks];
+                                        newLinks[index] = { ...link, platform: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
+                                      }}
+                                      className="bg-black text-white border border-white/30 rounded px-2 py-1"
+                                    >
+                                      <option value="github">GitHub</option>
+                                      <option value="linkedin">LinkedIn</option>
+                                      <option value="twitter">Twitter</option>
+                                      <option value="website">Website</option>
+                                    </select>
+                                    <Input
+                                      value={link.url}
+                                      onChange={(e) => {
+                                        const newLinks = [...resumeData.socialLinks];
+                                        newLinks[index] = { ...link, url: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
+                                      }}
+                                      className="bg-transparent border-none flex-1"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="URL"
+                                    />
+                                    {resumeData.socialLinks.length > 1 && (
                                       <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => addItem("socialLinks", { platform: "github", url: "" })}
+                                        onClick={() => removeItem("socialLinks", index)}
                                         className="text-white"
                                       >
-                                        <Plus className="h-4 w-4" />
+                                        <Trash2 className="h-4 w-4" />
                                       </Button>
-                                    </div>
-                                    {resumeData.socialLinks.map((link, index) => (
-                                      <div key={index} className="flex items-center gap-2 mb-3">
-                                        {socialIcons[link.platform]}
-                                        <select
-                                          value={link.platform}
-                                          onChange={(e) => {
-                                            const newLinks = [...resumeData.socialLinks];
-                                            newLinks[index] = { ...link, platform: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
-                                          }}
-                                          className="bg-black text-white border border-white/30 rounded px-2 py-1"
-                                        >
-                                          <option value="github">GitHub</option>
-                                          <option value="linkedin">LinkedIn</option>
-                                          <option value="twitter">Twitter</option>
-                                          <option value="website">Website</option>
-                                        </select>
-                                        <Input
-                                          value={link.url}
-                                          onChange={(e) => {
-                                            const newLinks = [...resumeData.socialLinks];
-                                            newLinks[index] = { ...link, url: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, socialLinks: newLinks }));
-                                          }}
-                                          className="bg-transparent border-none flex-1"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="URL"
-                                        />
-                                        {resumeData.socialLinks.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem("socialLinks", index)}
-                                            className="text-white"
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                                {section === "languages" && (
-                                  <>
-                                    <div className="flex justify-between items-center mb-3">
-                                      <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">
-                                        Languages
-                                      </h2>
-                                      <Button variant="ghost" size="icon" onClick={() => addItem("languages", "")} className="text-white">
-                                        <Plus className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                    {resumeData.languages.map((language, index) => (
-                                      <div key={index} className="flex items-center gap-2 mb-2">
-                                        <Input
-                                          value={language}
-                                          onChange={(e) => {
-                                            const newLanguages = [...resumeData.languages];
-                                            newLanguages[index] = e.target.value;
-                                            setResumeData((prev) => ({ ...prev, languages: newLanguages }));
-                                          }}
-                                          className="bg-transparent border-none flex-1"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                        />
-                                        {resumeData.languages.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem("languages", index)}
-                                            className="text-white"
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                                {section === "skills" && (
-                                  <>
-                                    <div className="flex justify-between items-center mb-3">
-                                      <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">
-                                        Skills
-                                      </h2>
-                                      <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-white">
-                                        <Plus className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                    {resumeData.skills.map((skill, index) => (
-                                      <div key={index} className="flex items-center gap-2 mb-2">
-                                        <Input
-                                          value={skill}
-                                          onChange={(e) => {
-                                            const newSkills = [...resumeData.skills];
-                                            newSkills[index] = e.target.value;
-                                            setResumeData((prev) => ({ ...prev, skills: newSkills }));
-                                          }}
-                                          className="bg-transparent border-none flex-1"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                        />
-                                        {resumeData.skills.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem("skills", index)}
-                                            className="text-white"
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                              </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </>
                             )}
-                          </Draggable>
-                        );
-                      }
-                      return null;
-                    })}
+                            {section === "languages" && (
+                              <>
+                                <div className="flex justify-between items-center mb-3">
+                                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">Languages</h2>
+                                  <Button variant="ghost" size="icon" onClick={() => addItem("languages", "")} className="text-white">
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.languages.map((language, index) => (
+                                  <div key={index} className="flex items-center gap-2 mb-2">
+                                    <Input
+                                      value={language}
+                                      onChange={(e) => {
+                                        const newLanguages = [...resumeData.languages];
+                                        newLanguages[index] = e.target.value;
+                                        setResumeData((prev) => ({ ...prev, languages: newLanguages }));
+                                      }}
+                                      className="bg-transparent border-none flex-1"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                    />
+                                    {resumeData.languages.length > 1 && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeItem("languages", index)}
+                                        className="text-white"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    )}
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                            {section === "skills" && (
+                              <>
+                                <div className="flex justify-between items-center mb-3">
+                                  <h2 className="text-xl font-semibold border-b-2 border-white/30 pb-2">Skills</h2>
+                                  <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-white">
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.skills.map((skill, index) => (
+                                  <div key={index} className="flex items-center gap-2 mb-2">
+                                    <Input
+                                      value={skill}
+                                      onChange={(e) => {
+                                        const newSkills = [...resumeData.skills];
+                                        newSkills[index] = e.target.value;
+                                        setResumeData((prev) => ({ ...prev, skills: newSkills }));
+                                      }}
+                                      className="bg-transparent border-none flex-1"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                    />
+                                    {resumeData.skills.length > 1 && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeItem("skills", index)}
+                                        className="text-white"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    )}
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
                   </div>
                 )}
@@ -997,232 +953,223 @@ function Template01() {
                       color: resumeData.mainTextColor,
                     }}
                   >
-                    {resumeData.sectionOrder.map((section, index) => {
-                      if (["projects", "education", "certificates"].includes(section) && resumeData.sectionVisibility[section]) {
-                        return (
-                          <Draggable
-                            key={section}
-                            draggableId={section}
-                            index={index}
+                    {contentSections.map((section, index) => (
+                      <Draggable key={section} draggableId={section} index={index}>
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            className="mb-8 cursor-move"
+                            style={{
+                              ...provided.draggableProps.style,
+                              backgroundColor: resumeData.sectionStyles[section].bgColor,
+                              color: resumeData.sectionStyles[section].textColor,
+                            }}
                           >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className="mb-8 cursor-move"
-                                style={{
-                                  ...provided.draggableProps.style,
-                                  backgroundColor: resumeData.sectionStyles[section].bgColor,
-                                  color: resumeData.sectionStyles[section].textColor,
-                                }}
-                              >
-                                {section === "projects" && (
-                                  <>
-                                    <div className="flex justify-between items-center mb-4">
-                                      <h2
-                                        style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
-                                        className="text-xl font-semibold border-b-2 pb-2"
-                                      >
-                                        Projects
-                                      </h2>
+                            {section === "projects" && (
+                              <>
+                                <div className="flex justify-between items-center mb-4">
+                                  <h2
+                                    style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
+                                    className="text-xl font-semibold border-b-2 pb-2"
+                                  >
+                                    Projects
+                                  </h2>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => addItem("projects", { name: "", description: "", technologies: "" })}
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.projects.map((project, index) => (
+                                  <div key={index} className="mb-6 relative">
+                                    {resumeData.projects.length > 1 && (
                                       <Button
                                         variant="ghost"
                                         size="icon"
-                                        onClick={() => addItem("projects", { name: "", description: "", technologies: "" })}
+                                        onClick={() => removeItem("projects", index)}
+                                        className="absolute right-0 top-0"
                                       >
-                                        <Plus className="h-4 w-4" />
+                                        <Trash2 className="h-4 w-4" />
                                       </Button>
-                                    </div>
-                                    {resumeData.projects.map((project, index) => (
-                                      <div key={index} className="mb-6 relative">
-                                        {resumeData.projects.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem("projects", index)}
-                                            className="absolute right-0 top-0"
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-                                        <Input
-                                          value={project.name}
-                                          onChange={(e) => {
-                                            const newProjects = [...resumeData.projects];
-                                            newProjects[index] = { ...project, name: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, projects: newProjects }));
-                                          }}
-                                          className="font-semibold text-lg mb-2"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Project Name"
-                                        />
-                                        <Textarea
-                                          value={project.description}
-                                          onChange={(e) => {
-                                            const newProjects = [...resumeData.projects];
-                                            newProjects[index] = { ...project, description: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, projects: newProjects }));
-                                          }}
-                                          className="mb-2 resize-none"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Description"
-                                          rows={3}
-                                        />
-                                        <Input
-                                          value={project.technologies}
-                                          onChange={(e) => {
-                                            const newProjects = [...resumeData.projects];
-                                            newProjects[index] = { ...project, technologies: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, projects: newProjects }));
-                                          }}
-                                          className="text-gray-600"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Technologies (e.g., React, Node.js)"
-                                        />
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                                {section === "education" && (
-                                  <>
-                                    <div className="flex justify-between items-center mb-4">
-                                      <h2
-                                        style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
-                                        className="text-xl font-semibold border-b-2 pb-2"
-                                      >
-                                        Education
-                                      </h2>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => addItem("education", { university: "", degree: "", period: "" })}
-                                      >
-                                        <Plus className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                    {resumeData.education.map((edu, index) => (
-                                      <div key={index} className="mb-6 relative">
-                                        {resumeData.education.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem("education", index)}
-                                            className="absolute right-0 top-0"
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-                                        <Input
-                                          value={edu.university}
-                                          onChange={(e) => {
-                                            const newEducation = [...resumeData.education];
-                                            newEducation[index] = { ...edu, university: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, education: newEducation }));
-                                          }}
-                                          className="font-semibold text-lg mb-2"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="University"
-                                        />
-                                        <Input
-                                          value={edu.degree}
-                                          onChange={(e) => {
-                                            const newEducation = [...resumeData.education];
-                                            newEducation[index] = { ...edu, degree: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, education: newEducation }));
-                                          }}
-                                          className="mb-2"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Degree"
-                                        />
-                                        <Input
-                                          value={edu.period}
-                                          onChange={(e) => {
-                                            const newEducation = [...resumeData.education];
-                                            newEducation[index] = { ...edu, period: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, education: newEducation }));
-                                          }}
-                                          className="text-gray-600"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Period (e.g., 2014 - 2018)"
-                                        />
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                                {section === "certificates" && (
-                                  <>
-                                    <div className="flex justify-between items-center mb-4">
-                                      <h2
-                                        style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
-                                        className="text-xl font-semibold border-b-2 pb-2"
-                                      >
-                                        Certificates
-                                      </h2>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}
-                                      >
-                                        <Plus className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                    {resumeData.certificates.map((cert, index) => (
-                                      <div key={index} className="mb-6 relative">
-                                        {resumeData.certificates.length > 1 && (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => removeItem("certificates", index)}
-                                            className="absolute right-0 top-0"
-                                          >
-                                            <Trash2 className="h-4 w-4" />
-                                          </Button>
-                                        )}
-                                        <Input
-                                          value={cert.name}
-                                          onChange={(e) => {
-                                            const newCertificates = [...resumeData.certificates];
-                                            newCertificates[index] = { ...cert, name: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
-                                          }}
-                                          className="font-semibold text-lg mb-2"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Certificate Name"
-                                        />
-                                        <Input
-                                          value={cert.issuer}
-                                          onChange={(e) => {
-                                            const newCertificates = [...resumeData.certificates];
-                                            newCertificates[index] = { ...cert, issuer: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
-                                          }}
-                                          className="mb-2"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Issuer"
-                                        />
-                                        <Input
-                                          value={cert.year}
-                                          onChange={(e) => {
-                                            const newCertificates = [...resumeData.certificates];
-                                            newCertificates[index] = { ...cert, year: e.target.value };
-                                            setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
-                                          }}
-                                          className="text-gray-600"
-                                          style={{ color: resumeData.sectionStyles[section].textColor }}
-                                          placeholder="Year"
-                                        />
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                              </div>
+                                    )}
+                                    <Input
+                                      value={project.name}
+                                      onChange={(e) => {
+                                        const newProjects = [...resumeData.projects];
+                                        newProjects[index] = { ...project, name: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, projects: newProjects }));
+                                      }}
+                                      className="font-semibold text-lg mb-2"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Project Name"
+                                    />
+                                    <Textarea
+                                      value={project.description}
+                                      onChange={(e) => {
+                                        const newProjects = [...resumeData.projects];
+                                        newProjects[index] = { ...project, description: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, projects: newProjects }));
+                                      }}
+                                      className="mb-2 resize-none"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Description"
+                                      rows={3}
+                                    />
+                                    <Input
+                                      value={project.technologies}
+                                      onChange={(e) => {
+                                        const newProjects = [...resumeData.projects];
+                                        newProjects[index] = { ...project, technologies: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, projects: newProjects }));
+                                      }}
+                                      className="text-gray-600"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Technologies (e.g., React, Node.js)"
+                                    />
+                                  </div>
+                                ))}
+                              </>
                             )}
-                          </Draggable>
-                        );
-                      }
-                      return null;
-                    })}
+                            {section === "education" && (
+                              <>
+                                <div className="flex justify-between items-center mb-4">
+                                  <h2
+                                    style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
+                                    className="text-xl font-semibold border-b-2 pb-2"
+                                  >
+                                    Education
+                                  </h2>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => addItem("education", { university: "", degree: "", period: "" })}
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.education.map((edu, index) => (
+                                  <div key={index} className="mb-6 relative">
+                                    {resumeData.education.length > 1 && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeItem("education", index)}
+                                        className="absolute right-0 top-0"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    )}
+                                    <Input
+                                      value={edu.university}
+                                      onChange={(e) => {
+                                        const newEducation = [...resumeData.education];
+                                        newEducation[index] = { ...edu, university: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, education: newEducation }));
+                                      }}
+                                      className="font-semibold text-lg mb-2"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="University"
+                                    />
+                                    <Input
+                                      value={edu.degree}
+                                      onChange={(e) => {
+                                        const newEducation = [...resumeData.education];
+                                        newEducation[index] = { ...edu, degree: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, education: newEducation }));
+                                      }}
+                                      className="mb-2"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Degree"
+                                    />
+                                    <Input
+                                      value={edu.period}
+                                      onChange={(e) => {
+                                        const newEducation = [...resumeData.education];
+                                        newEducation[index] = { ...edu, period: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, education: newEducation }));
+                                      }}
+                                      className="text-gray-600"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Period (e.g., 2014 - 2018)"
+                                    />
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                            {section === "certificates" && (
+                              <>
+                                <div className="flex justify-between items-center mb-4">
+                                  <h2
+                                    style={{ color: resumeData.primaryColor, borderBottomColor: resumeData.primaryColor }}
+                                    className="text-xl font-semibold border-b-2 pb-2"
+                                  >
+                                    Certificates
+                                  </h2>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => addItem("certificates", { name: "", issuer: "", year: "" })}
+                                  >
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.certificates.map((cert, index) => (
+                                  <div key={index} className="mb-6 relative">
+                                    {resumeData.certificates.length > 1 && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeItem("certificates", index)}
+                                        className="absolute right-0 top-0"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    )}
+                                    <Input
+                                      value={cert.name}
+                                      onChange={(e) => {
+                                        const newCertificates = [...resumeData.certificates];
+                                        newCertificates[index] = { ...cert, name: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
+                                      }}
+                                      className="font-semibold text-lg mb-2"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Certificate Name"
+                                    />
+                                    <Input
+                                      value={cert.issuer}
+                                      onChange={(e) => {
+                                        const newCertificates = [...resumeData.certificates];
+                                        newCertificates[index] = { ...cert, issuer: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
+                                      }}
+                                      className="mb-2"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Issuer"
+                                    />
+                                    <Input
+                                      value={cert.year}
+                                      onChange={(e) => {
+                                        const newCertificates = [...resumeData.certificates];
+                                        newCertificates[index] = { ...cert, year: e.target.value };
+                                        setResumeData((prev) => ({ ...prev, certificates: newCertificates }));
+                                      }}
+                                      className="text-gray-600"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                      placeholder="Year"
+                                    />
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
                   </div>
                 )}

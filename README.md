@@ -1,5 +1,11 @@
 # JobFusion
+## --> [Currently Deploy](https://jobfusionofficial.netlify.app/)
 
+## --> [Backend Documentation ](https://documenter.getpostman.com/view/39216913/2sAYdeKWnK)
+
+## --> [Figma Link ](https://www.figma.com/design/JKSVgQ6t0zfMdbniBUAsEy/ASSIGNMENT?node-id=0-1&t=4mfxhUgRUn0Cwwx2-1)
+
+ 
 ## 📌 Project Overview
 JobFusion is a full-stack web application that helps users search for jobs, stay updated with the latest job opportunities, and create optimized resumes. The platform integrates real-time job listings using the Adzuna API, providing users with powerful search and filtering options. Additionally, JobFusion features a resume maker and an ATS checker to enhance job seekers' chances of landing their ideal jobs.
 
