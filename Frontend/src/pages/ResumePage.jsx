@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import Temp01 from '../../public/Re_Temp_001.png'
+import Temp02 from '../../public/Temp - 02.png'
 
 export default function MainSection() {
     const [currentTip, setCurrentTip] = useState(0);
@@ -67,12 +69,12 @@ export default function MainSection() {
   const templates = [
     { 
       id: 1, 
-      image: "/Re_Temp_001.png",
-      path: "/resume/template01" // Add a path property for each template
+      image: '../../public/Re_Temp_001.png',
+      path: "/resume/template01" 
     },
     { 
       id: 2, 
-      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-9-New-2.png",
+      image: '../../public/Temp - 02.png',
       path: "/resume/template02"
     },
     { 
