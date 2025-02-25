@@ -1,45 +1,86 @@
-import * as React from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { motion } from "framer-motion";
+import React from 'react';
 
-const LoaderContainer = styled(Box)({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100vh",
-  width: "100vw",
-  background: "linear-gradient(to bottom, #F7F9FC, #E3ECFA)", // Smooth blue tint
-  position: "relative",
-});
-
-const StyledCircularProgress = styled(CircularProgress)({
-  color: "#688BC5", // JobFusion blue shade
-  filter: "drop-shadow(0px 0px 10px rgba(104, 139, 197, 0.5))", // Soft blue glow
-});
-
-const LoadingText = styled(Typography)({
-  marginTop: 20,
-  fontSize: "1.2rem",
-  fontWeight: "bold",
-  color: "#6b7280", // Grey for contrast
-  textAlign: "center",
-  "@media (max-width: 600px)": {
-    fontSize: "1rem", // Mobile-friendly
-  },
-});
-
-export default function ModernLoader() {
+const Spinner = () => {
   return (
-    <LoaderContainer>
-      <motion.div
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-      >
-        <StyledCircularProgress size={60} thickness={4} />
-      </motion.div>
-      <LoadingText>Loading, please wait...</LoadingText>
-    </LoaderContainer>
+    <>
+      <style>
+        {`
+          @keyframes spinner {
+            0% {
+              transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+            }
+            50% {
+              transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+            }
+            100% {
+              transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+            }
+          }
+
+          .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffffff; /* Set background to white */
+          }
+
+          .spinner {
+            width: 44px;
+            height: 44px;
+            animation: spinner 2s infinite ease;
+            transform-style: preserve-3d;
+          }
+
+          .spinner > div {
+            background-color: rgba(0, 77, 255, 0.2);
+            height: 100%;
+            position: absolute;
+            width: 100%;
+            border: 2px solid #004dff;
+          }
+
+          .spinner div:nth-of-type(1) {
+            transform: translateZ(-22px) rotateY(180deg);
+          }
+
+          .spinner div:nth-of-type(2) {
+            transform: rotateY(-270deg) translateX(50%);
+            transform-origin: top right;
+          }
+
+          .spinner div:nth-of-type(3) {
+            transform: rotateY(270deg) translateX(-50%);
+            transform-origin: center left;
+          }
+
+          .spinner div:nth-of-type(4) {
+            transform: rotateX(90deg) translateY(-50%);
+            transform-origin: top center;
+          }
+
+          .spinner div:nth-of-type(5) {
+            transform: rotateX(-90deg) translateY(50%);
+            transform-origin: bottom center;
+          }
+
+          .spinner div:nth-of-type(6) {
+            transform: translateZ(22px);
+          }
+        `}
+      </style>
+      <div className="spinner-container">
+        <div className="spinner relative">
+          <div className="absolute inset-0"></div>
+          <div className="absolute inset-0"></div>
+          <div className="absolute inset-0"></div>
+          <div className="absolute inset-0"></div>
+          <div className="absolute inset-0"></div>
+          <div className="absolute inset-0"></div>
+        </div>
+      </div>
+    </>
   );
-}
+};
+
+export default Spinner;

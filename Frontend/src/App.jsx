@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import ResumePage from './pages/ResumePage';
 import Templet01 from "./pages/Templets_01";
 import Template02 from './pages/Templets_02';
+import Template03 from './pages/Templets_03';
 
 function App() {
   const location = useLocation(); // Get current route
@@ -40,6 +41,7 @@ function App() {
         <Route path="/resume" element={<ResumePage />} />
         <Route path="/resume/template01" element={<Templet01 />} />
         <Route path='/resume/template02' element={<Template02 />} />
+        <Route path='/resume/template03'element={<Template03 />} />
 
         {/* Redirect any unknown route to FirstPage */}
         <Route path="*" element={<Navigate to="/" />} />
