@@ -38,22 +38,38 @@ const Textarea = ({ className = "", ...props }) => (
   />
 );
 
-// PDF Styles
+// PDF Styles (Updated to match UI)
 const styles = StyleSheet.create({
   page: { flexDirection: "column", backgroundColor: "#ffffff", padding: 20 },
-  header: { padding: 25, flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 10, backgroundColor: "#E0F6F6", borderBottom: "2px solid #D3E4E5" },
-  name: { fontSize: 32, fontWeight: "bold", color: "#333333", flexWrap: "wrap", textAlign: "center" },
-  title: { fontSize: 18, color: "#333333", opacity: 0.9, marginTop: 6, flexWrap: "wrap", textAlign: "center" },
+  header: {
+    padding: 25,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "#E0F6F6",
+    borderBottom: "2px solid #D3E4E5",
+  },
+  name: { fontSize: 32, fontWeight: "bold", color: "#333333", textAlign: "center" },
+  title: { fontSize: 18, color: "#333333", marginTop: 6, textAlign: "center" },
   line: { flex: 1, height: "2px", backgroundColor: "#D3E4E5" },
-  container: { flexDirection: "row", borderTop: "2px dashed #D3E4E5" },
-  leftColumn: { width: "35%", padding: 20, backgroundColor: "#ffffff" },
-  rightColumn: { width: "65%", padding: 20, backgroundColor: "#ffffff" },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10, paddingBottom: 4, borderBottom: "1px solid #D3E4E5", color: "#333333" },
+  container: { flexDirection: "row", marginTop: 10 },
+  column: { width: "50%", padding: 10, backgroundColor: "#ffffff" },
+  section: {
+    marginBottom: 15,
+    padding: 10,
+    border: "1px solid #D3E4E5",
+    borderRadius: 8,
+    backgroundColor: "#ffffff",
+    shadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+  },
+  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 8, color: "#333333", borderBottom: "1px solid #D3E4E5" },
   text: { fontSize: 12, marginBottom: 6, color: "#333333" },
-  icon: { display: "inline", marginRight: 8, color: "#D3E4E5" },
+  icon: { display: "inline", marginRight: 8, color: "#D3E4E5", width: 14, height: 14 },
+  listItem: { marginLeft: 16, marginBottom: 4 },
 });
 
-// PDF Document Component
+// PDF Document Component (Updated to match UI)
 const TemplatePDF = ({ resumeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -67,67 +83,38 @@ const TemplatePDF = ({ resumeData }) => (
       </View>
 
       <View style={styles.container}>
-        <View style={styles.leftColumn}>
+        <View style={styles.column}>
           {resumeData.sectionOrder.map((section) => {
-            if (["contact", "education", "skills", "languages"].includes(section) && resumeData.sectionVisibility[section]) {
+            if (["contact", "education"].includes(section) && resumeData.sectionVisibility[section]) {
               return (
-                <View
-                  key={section}
-                  style={{
-                    marginBottom: 20,
-                    backgroundColor: resumeData.sectionStyles[section].bgColor,
-                    color: resumeData.sectionStyles[section].textColor,
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...styles.sectionTitle,
-                      color: resumeData.sectionStyles[section].textColor,
-                      borderBottomColor: "#D3E4E5",
-                    }}
-                  >
+                <View key={section} style={styles.section}>
+                  <Text style={styles.sectionTitle}>
                     {section === "contact" && "Contact"}
                     {section === "education" && "Education"}
-                    {section === "skills" && "Skills"}
-                    {section === "languages" && "Languages"}
                   </Text>
                   {section === "contact" && (
                     <>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                        <Phone size={14} style={styles.icon} /> {resumeData.phone}
+                      <Text style={styles.text}>
+                        <Phone style={styles.icon} /> {resumeData.phone}
                       </Text>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                        <Mail size={14} style={styles.icon} /> {resumeData.email}
+                      <Text style={styles.text}>
+                        <Mail style={styles.icon} /> {resumeData.email}
                       </Text>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                        <MapPin size={14} style={styles.icon} /> {resumeData.address}
+                      <Text style={styles.text}>
+                        <MapPin style={styles.icon} /> {resumeData.address}
                       </Text>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                        <Globe size={14} style={styles.icon} /> {resumeData.website}
+                      <Text style={styles.text}>
+                        <Globe style={styles.icon} /> {resumeData.website}
                       </Text>
                     </>
                   )}
                   {section === "education" && resumeData.education.map((edu, index) => (
-                    <View key={index} style={{ marginBottom: 15 }}>
-                      <Text style={{ fontWeight: "bold", fontSize: 14, color: resumeData.sectionStyles[section].textColor, marginBottom: 2 }}>
-                        {edu.university}
-                      </Text>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>{edu.degree}</Text>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>{edu.period}</Text>
-                      {edu.gpa && (
-                        <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>GPA: {edu.gpa}</Text>
-                      )}
+                    <View key={index} style={{ marginBottom: 10 }}>
+                      <Text style={{ fontWeight: "bold", fontSize: 14, color: "#333333", marginBottom: 4 }}>{edu.university}</Text>
+                      <Text style={styles.text}>{edu.degree}</Text>
+                      <Text style={styles.text}>{edu.period}</Text>
+                      {edu.gpa && <Text style={styles.text}>GPA: {edu.gpa}</Text>}
                     </View>
-                  ))}
-                  {section === "skills" && resumeData.skills.map((skill, index) => (
-                    <Text key={index} style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                      • {skill}
-                    </Text>
-                  ))}
-                  {section === "languages" && resumeData.languages.map((language, index) => (
-                    <Text key={index} style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                      • {language}
-                    </Text>
                   ))}
                 </View>
               );
@@ -136,41 +123,24 @@ const TemplatePDF = ({ resumeData }) => (
           })}
         </View>
 
-        <View style={styles.rightColumn}>
+        <View style={styles.column}>
           {resumeData.sectionOrder.map((section) => {
             if (["profile", "workExperience"].includes(section) && resumeData.sectionVisibility[section]) {
               return (
-                <View
-                  key={section}
-                  style={{
-                    marginBottom: 20,
-                    backgroundColor: resumeData.sectionStyles[section].bgColor,
-                    color: resumeData.sectionStyles[section].textColor,
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...styles.sectionTitle,
-                      color: resumeData.primaryColor,
-                      borderBottomColor: "#D3E4E5",
-                    }}
-                  >
+                <View key={section} style={styles.section}>
+                  <Text style={styles.sectionTitle}>
                     {section === "profile" && "Profile Summary"}
                     {section === "workExperience" && "Work Experience"}
                   </Text>
-                  {section === "profile" && (
-                    <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
-                      {resumeData.profile}
-                    </Text>
-                  )}
+                  {section === "profile" && <Text style={styles.text}>{resumeData.profile}</Text>}
                   {section === "workExperience" && resumeData.workExperience.map((exp, index) => (
-                    <View key={index} style={{ marginBottom: 15 }}>
-                      <Text style={{ fontWeight: "bold", fontSize: 14, color: resumeData.sectionStyles[section].textColor, marginBottom: 4 }}>
+                    <View key={index} style={{ marginBottom: 10 }}>
+                      <Text style={{ fontWeight: "bold", fontSize: 14, color: "#333333", marginBottom: 4 }}>
                         {exp.company} - {exp.role}
                       </Text>
-                      <Text style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>{exp.period}</Text>
+                      <Text style={styles.text}>{exp.period}</Text>
                       {exp.achievements.map((achievement, i) => (
-                        <Text key={i} style={[styles.text, { color: resumeData.sectionStyles[section].textColor }]}>
+                        <Text key={i} style={styles.listItem}>
                           • {achievement}
                         </Text>
                       ))}
@@ -196,7 +166,7 @@ function Template03() {
     email: "hello@reallygreatsite.com",
     address: "123 Anywhere St., Any City",
     website: "www.reallygreatsite.com",
-    profileImage: "", // Removed profile image as per the new design
+    profileImage: "", // No profile image as per the design
     languages: ["English: Fluent", "French: Fluent", "German: Basics", "Spanish: Intermediate"],
     skills: ["Project Management", "Public Relations", "Teamwork", "Time Management", "Leadership", "Effective Communication", "Critical Thinking"],
     workExperience: [
@@ -247,20 +217,16 @@ function Template03() {
     headerTextColor: "#333333",
     sidebarTextColor: "#333333",
     mainTextColor: "#333333",
-    sectionOrder: ["contact", "education", "skills", "languages", "profile", "workExperience"],
+    sectionOrder: ["contact", "education", "profile", "workExperience"],
     sectionVisibility: {
       contact: true,
       education: true,
-      skills: true,
-      languages: true,
       profile: true,
       workExperience: true,
     },
     sectionStyles: {
       contact: { bgColor: "#ffffff", textColor: "#333333" },
       education: { bgColor: "#ffffff", textColor: "#333333" },
-      skills: { bgColor: "#ffffff", textColor: "#333333" },
-      languages: { bgColor: "#ffffff", textColor: "#333333" },
       profile: { bgColor: "#ffffff", textColor: "#333333" },
       workExperience: { bgColor: "#ffffff", textColor: "#333333" },
     },
@@ -311,7 +277,7 @@ function Template03() {
     const destDroppableId = destination.droppableId;
 
     const sidebarSections = resumeData.sectionOrder.filter((section) =>
-      ["contact", "education", "skills", "languages"].includes(section) && resumeData.sectionVisibility[section]
+      ["contact", "education"].includes(section) && resumeData.sectionVisibility[section]
     );
     const contentSections = resumeData.sectionOrder.filter((section) =>
       ["profile", "workExperience"].includes(section) && resumeData.sectionVisibility[section]
@@ -327,7 +293,7 @@ function Template03() {
     newSections.splice(destination.index, 0, reorderedItem);
 
     const updatedSectionOrder = resumeData.sectionOrder.map((section) => {
-      if (sourceDroppableId === "sidebar" && ["contact", "education", "skills", "languages"].includes(section)) {
+      if (sourceDroppableId === "sidebar" && ["contact", "education"].includes(section)) {
         return newSections.shift() || section;
       } else if (sourceDroppableId === "content" && ["profile", "workExperience"].includes(section)) {
         return newSections.shift() || section;
@@ -339,7 +305,7 @@ function Template03() {
   };
 
   const sidebarSections = resumeData.sectionOrder.filter((section) =>
-    ["contact", "education", "skills", "languages"].includes(section) && resumeData.sectionVisibility[section]
+    ["contact", "education"].includes(section) && resumeData.sectionVisibility[section]
   );
   const contentSections = resumeData.sectionOrder.filter((section) =>
     ["profile", "workExperience"].includes(section) && resumeData.sectionVisibility[section]
@@ -396,7 +362,7 @@ function Template03() {
                 className="w-12 h-10 p-1 rounded"
               />
             </div>
-            {["contact", "education", "skills", "languages", "profile", "workExperience"].map((section) => (
+            {["contact", "education", "profile", "workExperience"].map((section) => (
               <div key={section} className="flex items-center gap-2">
                 <label className="text-sm font-medium">Show {section.charAt(0).toUpperCase() + section.slice(1)}:</label>
                 <input
@@ -453,7 +419,7 @@ function Template03() {
 
             {/* Two-Column Layout */}
             <div className="flex" style={{ minHeight: "calc(100vh - 200px)" }}>
-              {/* Sidebar (Left Column, 35%) */}
+              {/* Sidebar (Left Column, 50%) */}
               <Droppable droppableId="sidebar" direction="vertical">
                 {(provided) => (
                   <div
@@ -461,7 +427,7 @@ function Template03() {
                     {...provided.droppableProps}
                     className="p-6"
                     style={{
-                      flex: "0 0 35%",
+                      flex: "0 0 50%",
                       backgroundColor: resumeData.secondaryColor,
                       color: resumeData.sidebarTextColor,
                     }}
@@ -473,17 +439,16 @@ function Template03() {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="mb-6 cursor-move p-4 rounded-lg shadow-sm"
+                            className="mb-6 cursor-move p-4 rounded-lg shadow-sm border border-cyan-200"
                             style={{
                               ...provided.draggableProps.style,
                               backgroundColor: resumeData.sectionStyles[section].bgColor,
                               color: resumeData.sectionStyles[section].textColor,
-                              borderBottom: "1px solid #D3E4E5",
                             }}
                           >
                             {section === "contact" && (
                               <>
-                                <h2 className="text-lg font-semibold mb-3 border-b-2 border-cyan-200 pb-2">Contact</h2>
+                                <h2 className="text-lg font-semibold mb-3 border-b border-cyan-200 pb-2">Contact</h2>
                                 <div className="space-y-3">
                                   <div className="flex items-center gap-3">
                                     <Phone className="h-5 w-5" style={{ color: "#D3E4E5" }} />
@@ -527,7 +492,7 @@ function Template03() {
                             {section === "education" && (
                               <>
                                 <div className="flex justify-between items-center mb-3">
-                                  <h2 className="text-lg font-semibold border-b-2 border-cyan-200 pb-2">Education</h2>
+                                  <h2 className="text-lg font-semibold border-b border-cyan-200 pb-2">Education</h2>
                                   <Button
                                     variant="ghost"
                                     size="icon"
@@ -597,74 +562,6 @@ function Template03() {
                                 ))}
                               </>
                             )}
-                            {section === "skills" && (
-                              <>
-                                <div className="flex justify-between items-center mb-3">
-                                  <h2 className="text-lg font-semibold border-b-2 border-cyan-200 pb-2">Skills</h2>
-                                  <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-gray-600">
-                                    <Plus className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                                {resumeData.skills.map((skill, index) => (
-                                  <div key={index} className="flex items-center gap-2 mb-2">
-                                    <Input
-                                      value={skill}
-                                      onChange={(e) => {
-                                        const newSkills = [...resumeData.skills];
-                                        newSkills[index] = e.target.value;
-                                        setResumeData((prev) => ({ ...prev, skills: newSkills }));
-                                      }}
-                                      className="bg-transparent border-none flex-1"
-                                      style={{ color: resumeData.sectionStyles[section].textColor }}
-                                    />
-                                    {resumeData.skills.length > 1 && (
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => removeItem("skills", index)}
-                                        className="text-gray-600"
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                    )}
-                                  </div>
-                                ))}
-                              </>
-                            )}
-                            {section === "languages" && (
-                              <>
-                                <div className="flex justify-between items-center mb-3">
-                                  <h2 className="text-lg font-semibold border-b-2 border-cyan-200 pb-2">Languages</h2>
-                                  <Button variant="ghost" size="icon" onClick={() => addItem("languages", "")} className="text-gray-600">
-                                    <Plus className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                                {resumeData.languages.map((language, index) => (
-                                  <div key={index} className="flex items-center gap-2 mb-2">
-                                    <Input
-                                      value={language}
-                                      onChange={(e) => {
-                                        const newLanguages = [...resumeData.languages];
-                                        newLanguages[index] = e.target.value;
-                                        setResumeData((prev) => ({ ...prev, languages: newLanguages }));
-                                      }}
-                                      className="bg-transparent border-none flex-1"
-                                      style={{ color: resumeData.sectionStyles[section].textColor }}
-                                    />
-                                    {resumeData.languages.length > 1 && (
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => removeItem("languages", index)}
-                                        className="text-gray-600"
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                    )}
-                                  </div>
-                                ))}
-                              </>
-                            )}
                           </div>
                         )}
                       </Draggable>
@@ -674,7 +571,7 @@ function Template03() {
                 )}
               </Droppable>
 
-              {/* Content (Right Column, 65%) */}
+              {/* Content (Right Column, 50%) */}
               <Droppable droppableId="content" direction="vertical">
                 {(provided) => (
                   <div
@@ -682,7 +579,7 @@ function Template03() {
                     {...provided.droppableProps}
                     className="p-6"
                     style={{
-                      flex: "0 0 65%",
+                      flex: "0 0 50%",
                       backgroundColor: "#ffffff",
                       color: resumeData.mainTextColor,
                     }}
@@ -694,17 +591,16 @@ function Template03() {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="mb-6 cursor-move p-4 rounded-lg shadow-sm"
+                            className="mb-6 cursor-move p-4 rounded-lg shadow-sm border border-cyan-200"
                             style={{
                               ...provided.draggableProps.style,
                               backgroundColor: resumeData.sectionStyles[section].bgColor,
                               color: resumeData.sectionStyles[section].textColor,
-                              borderBottom: "1px solid #D3E4E5",
                             }}
                           >
                             {section === "profile" && (
                               <>
-                                <h2 className="text-lg font-semibold mb-3 border-b-2 border-cyan-200 pb-2">Profile Summary</h2>
+                                <h2 className="text-lg font-semibold mb-3 border-b border-cyan-200 pb-2">Profile Summary</h2>
                                 <Textarea
                                   value={resumeData.profile}
                                   onChange={(e) => setResumeData((prev) => ({ ...prev, profile: e.target.value }))}
@@ -717,7 +613,7 @@ function Template03() {
                             {section === "workExperience" && (
                               <>
                                 <div className="flex justify-between items-center mb-3">
-                                  <h2 className="text-lg font-semibold border-b-2 border-cyan-200 pb-2">Work Experience</h2>
+                                  <h2 className="text-lg font-semibold border-b border-cyan-200 pb-2">Work Experience</h2>
                                   <Button
                                     variant="ghost"
                                     size="icon"
