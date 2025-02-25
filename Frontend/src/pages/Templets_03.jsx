@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
   },
   sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 8, color: "#333333", borderBottom: "1px solid #D3E4E5" },
   text: { fontSize: 12, marginBottom: 6, color: "#333333" },
-  icon: { display: "inline", marginRight: 8, color: "#D3E4E5", width: 14, height: 14 },
   listItem: { marginLeft: 16, marginBottom: 4 },
+  icon: { display: "inline", marginRight: 8, color: "#D3E4E5", width: 14, height: 14 },
 });
 
-// PDF Document Component (Updated to match UI)
+// PDF Document Component (Updated to include Skills)
 const TemplatePDF = ({ resumeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -85,12 +85,13 @@ const TemplatePDF = ({ resumeData }) => (
       <View style={styles.container}>
         <View style={styles.column}>
           {resumeData.sectionOrder.map((section) => {
-            if (["contact", "education"].includes(section) && resumeData.sectionVisibility[section]) {
+            if (["contact", "education", "skills"].includes(section) && resumeData.sectionVisibility[section]) {
               return (
                 <View key={section} style={styles.section}>
                   <Text style={styles.sectionTitle}>
                     {section === "contact" && "Contact"}
                     {section === "education" && "Education"}
+                    {section === "skills" && "Skills"}
                   </Text>
                   {section === "contact" && (
                     <>
@@ -115,6 +116,11 @@ const TemplatePDF = ({ resumeData }) => (
                       <Text style={styles.text}>{edu.period}</Text>
                       {edu.gpa && <Text style={styles.text}>GPA: {edu.gpa}</Text>}
                     </View>
+                  ))}
+                  {section === "skills" && resumeData.skills.map((skill, index) => (
+                    <Text key={index} style={styles.listItem}>
+                      • {skill}
+                    </Text>
                   ))}
                 </View>
               );
@@ -217,16 +223,18 @@ function Template03() {
     headerTextColor: "#333333",
     sidebarTextColor: "#333333",
     mainTextColor: "#333333",
-    sectionOrder: ["contact", "education", "profile", "workExperience"],
+    sectionOrder: ["contact", "education", "skills", "profile", "workExperience"],
     sectionVisibility: {
       contact: true,
       education: true,
+      skills: true,
       profile: true,
       workExperience: true,
     },
     sectionStyles: {
       contact: { bgColor: "#ffffff", textColor: "#333333" },
       education: { bgColor: "#ffffff", textColor: "#333333" },
+      skills: { bgColor: "#ffffff", textColor: "#333333" },
       profile: { bgColor: "#ffffff", textColor: "#333333" },
       workExperience: { bgColor: "#ffffff", textColor: "#333333" },
     },
@@ -277,7 +285,7 @@ function Template03() {
     const destDroppableId = destination.droppableId;
 
     const sidebarSections = resumeData.sectionOrder.filter((section) =>
-      ["contact", "education"].includes(section) && resumeData.sectionVisibility[section]
+      ["contact", "education", "skills"].includes(section) && resumeData.sectionVisibility[section]
     );
     const contentSections = resumeData.sectionOrder.filter((section) =>
       ["profile", "workExperience"].includes(section) && resumeData.sectionVisibility[section]
@@ -293,7 +301,7 @@ function Template03() {
     newSections.splice(destination.index, 0, reorderedItem);
 
     const updatedSectionOrder = resumeData.sectionOrder.map((section) => {
-      if (sourceDroppableId === "sidebar" && ["contact", "education"].includes(section)) {
+      if (sourceDroppableId === "sidebar" && ["contact", "education", "skills"].includes(section)) {
         return newSections.shift() || section;
       } else if (sourceDroppableId === "content" && ["profile", "workExperience"].includes(section)) {
         return newSections.shift() || section;
@@ -305,7 +313,7 @@ function Template03() {
   };
 
   const sidebarSections = resumeData.sectionOrder.filter((section) =>
-    ["contact", "education"].includes(section) && resumeData.sectionVisibility[section]
+    ["contact", "education", "skills"].includes(section) && resumeData.sectionVisibility[section]
   );
   const contentSections = resumeData.sectionOrder.filter((section) =>
     ["profile", "workExperience"].includes(section) && resumeData.sectionVisibility[section]
@@ -362,7 +370,7 @@ function Template03() {
                 className="w-12 h-10 p-1 rounded"
               />
             </div>
-            {["contact", "education", "profile", "workExperience"].map((section) => (
+            {["contact", "education", "skills", "profile", "workExperience"].map((section) => (
               <div key={section} className="flex items-center gap-2">
                 <label className="text-sm font-medium">Show {section.charAt(0).toUpperCase() + section.slice(1)}:</label>
                 <input
@@ -558,6 +566,40 @@ function Template03() {
                                       style={{ color: resumeData.sectionStyles[section].textColor }}
                                       placeholder="GPA (optional)"
                                     />
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                            {section === "skills" && (
+                              <>
+                                <div className="flex justify-between items-center mb-3">
+                                  <h2 className="text-lg font-semibold border-b border-cyan-200 pb-2">Skills</h2>
+                                  <Button variant="ghost" size="icon" onClick={() => addItem("skills", "")} className="text-gray-600">
+                                    <Plus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                                {resumeData.skills.map((skill, index) => (
+                                  <div key={index} className="flex items-center gap-2 mb-2">
+                                    <Input
+                                      value={skill}
+                                      onChange={(e) => {
+                                        const newSkills = [...resumeData.skills];
+                                        newSkills[index] = e.target.value;
+                                        setResumeData((prev) => ({ ...prev, skills: newSkills }));
+                                      }}
+                                      className="bg-transparent border-none flex-1"
+                                      style={{ color: resumeData.sectionStyles[section].textColor }}
+                                    />
+                                    {resumeData.skills.length > 1 && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => removeItem("skills", index)}
+                                        className="text-gray-600"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    )}
                                   </div>
                                 ))}
                               </>
