@@ -79,7 +79,7 @@ export default function MainSection() {
     },
     { 
       id: 3, 
-      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-8.png",
+      image: '/Temp - 03.png', // Use root-relative path
       path: "/resume/template03",
     },
     { 
