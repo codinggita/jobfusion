@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// No need to import Temp01 here if using public paths directly
-
 export default function MainSection() {
   const [currentTip, setCurrentTip] = useState(0);
 
@@ -69,17 +67,17 @@ export default function MainSection() {
   const templates = [
     { 
       id: 1, 
-      image: '/Re_Temp_001.png', // Use root-relative path
+      image: '/Re_Temp_001.png',
       path: "/resume/template01",
     },
     { 
       id: 2, 
-      image: '/Temp - 02.png', // Use root-relative path
+      image: '/Temp - 02.png',
       path: "/resume/template02",
     },
     { 
       id: 3, 
-      image: '/Temp - 03.png', // Use root-relative path
+      image: '/Temp - 03.png',
       path: "/resume/template03",
     },
     { 
@@ -88,6 +86,14 @@ export default function MainSection() {
       path: "/resume/template04",
     },
   ];
+
+  // Function to handle scrolling to templates section
+  const scrollToTemplates = () => {
+    const templatesSection = document.getElementById('resume-templates');
+    if (templatesSection) {
+      templatesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <main className="w-full">
@@ -102,7 +108,10 @@ export default function MainSection() {
               By employing the best practices and innovative tech, Resume Builder boosts
               your chances of landing a better job - completely for free.
             </p>
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+            <button 
+              onClick={scrollToTemplates}
+              className="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors"
+            >
               Build Resume
             </button>
           </div>
@@ -192,7 +201,10 @@ export default function MainSection() {
       </section>
 
       {/* Templates Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-16">
+      <section 
+        id="resume-templates"
+        className="py-16 px-4 md:px-8 lg:px-16"
+      >
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12">Resume Templates</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -207,7 +219,7 @@ export default function MainSection() {
                     alt={`Resume template ${template.id}`}
                     className="w-full h-auto"
                     loading="lazy"
-                    onError={(e) => console.error(`Failed to load image: ${template.image}`, e)} // Log errors for debugging
+                    onError={(e) => console.error(`Failed to load image: ${template.image}`, e)}
                   />
                 </Link>
               </div>
