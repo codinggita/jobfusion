@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import Temp01 from '../../public/Re_Temp_001.png'
-import Temp02 from '../../public/Temp - 02.png'
+import Temp01 from '../../public/Re_Temp_001.png';
 
 export default function MainSection() {
     const [currentTip, setCurrentTip] = useState(0);
