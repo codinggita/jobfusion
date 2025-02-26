@@ -8,6 +8,7 @@ const { getTrendingJobs } = require('./src/controllers/jobController');
 const savedJobRoutes = require("./src/routes/savedJobRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes"); // Import review routes
 const newStailerRoutes = require("./src/routes/newStailerRoutes")
+const atsRoutes = require("./src/routes/atsRoutes");
 
 // MongoDB connection
 const connectDB = async () => {
@@ -53,6 +54,9 @@ app.use('/api/reviews', reviewRoutes);
 
 //Newstailer royes
 app.use('/api/newStailer', newStailerRoutes);
+
+//Ats Score Cheking
+app.use("/api", atsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
