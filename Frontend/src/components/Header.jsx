@@ -41,6 +41,9 @@ const Header = () => {
           <Link to="/resume" className="text-gray-700 hover:text-blue-600">
             Resume
           </Link>
+          <Link to="/ats-cheking" className="text-gray-700 hover:text-blue-600">
+            ATS_Cheking
+          </Link>
         </nav>
 
         {/* User Profile & Mobile Menu Button */}
@@ -95,6 +98,9 @@ const Header = () => {
           </Link>
           <Link to="/resume" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
             Resume
+          </Link>
+          <Link to="/ats-cheking" className="text-gray-700 hover:text-blue-600" onClick={() => setIsMenuOpen(false)}>
+          ATS_Cheking
           </Link>
 
           {/* Sign In button in Mobile (only for guests) */}

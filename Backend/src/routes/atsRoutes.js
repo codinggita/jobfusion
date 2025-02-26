@@ -10,4 +10,5 @@ const upload = multer({ dest: "uploads/" });
 // ATS Resume Checker Route
 router.post("/ats-checker", upload.single("resume"), analyzeResume);
 
+
 module.exports = router;
