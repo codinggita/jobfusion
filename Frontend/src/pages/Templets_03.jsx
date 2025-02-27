@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { Document, Page, Text, View, StyleSheet, pdf } from "@react-pdf/renderer";
+import { Document, Page, View, Text, StyleSheet, pdf } from "@react-pdf/renderer";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Phone, Mail, MapPin, Globe, Download, Plus, Trash2 } from "lucide-react";
+import SaveResumeButton from "../components/SaveResumeButton";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Modal from "react-modal";
 
 // Custom Button Component
 const Button = ({ children, onClick, className = "", variant = "primary", size = "md", ...props }) => {
@@ -38,127 +43,115 @@ const Textarea = ({ className = "", ...props }) => (
   />
 );
 
-// PDF Styles (Updated to match UI)
+// PDF Styles (matching Template02’s structure for consistency)
 const styles = StyleSheet.create({
-  page: { flexDirection: "column", backgroundColor: "#ffffff", padding: 20 },
+  page: { padding: 30, backgroundColor: "#ffffff", fontSize: 10 },
   header: {
-    padding: 25,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-    backgroundColor: "#E0F6F6",
-    borderBottom: "2px solid #D3E4E5",
-  },
-  name: { fontSize: 32, fontWeight: "bold", color: "#333333", textAlign: "center" },
-  title: { fontSize: 18, color: "#333333", marginTop: 6, textAlign: "center" },
-  line: { flex: 1, height: "2px", backgroundColor: "#D3E4E5" },
-  container: { flexDirection: "row", marginTop: 10 },
-  column: { width: "50%", padding: 10, backgroundColor: "#ffffff" },
-  section: {
+    textAlign: "center",
     marginBottom: 15,
-    padding: 10,
-    border: "1px solid #D3E4E5",
-    borderRadius: 8,
-    backgroundColor: "#ffffff",
-    shadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#E0F6F6",
   },
-  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 8, color: "#333333", borderBottom: "1px solid #D3E4E5" },
-  text: { fontSize: 12, marginBottom: 6, color: "#333333" },
+  name: { fontSize: 24, fontWeight: "bold", color: "#333333" },
+  title: { fontSize: 14, fontWeight: "medium", color: "#333333", marginTop: 3 },
+  contact: { fontSize: 10, color: "#666666", marginTop: 3, fontWeight: "light" },
+  section: { marginBottom: 15, backgroundColor: "#ffffff" },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333333",
+    borderBottom: "1px solid #D3E4E5",
+    paddingBottom: 3,
+    marginBottom: 8,
+  },
+  text: { fontSize: 10, color: "#4a4a4a", marginBottom: 3, fontWeight: "light" },
+  item: { marginBottom: 8 },
+  itemTitle: { fontWeight: "bold", fontSize: 12, color: "#4a4a4a" },
   listItem: { marginLeft: 16, marginBottom: 4 },
   icon: { display: "inline", marginRight: 8, color: "#D3E4E5", width: 14, height: 14 },
 });
 
-// PDF Document Component (Updated to include Skills)
+// PDF Document Component (simplified to match Template02’s structure)
 const TemplatePDF = ({ resumeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <View style={[styles.header, { backgroundColor: resumeData.primaryColor }]}>
-        <View style={styles.line} />
-        <View>
-          <Text style={[styles.name, { color: resumeData.headerTextColor }]}>{resumeData.name}</Text>
-          <Text style={[styles.title, { color: resumeData.headerTextColor }]}>{resumeData.title}</Text>
-        </View>
-        <View style={styles.line} />
+      <View style={[styles.header, { backgroundColor: resumeData.primaryColor || "#E0F6F6" }]}>
+        <Text style={[styles.name, { color: resumeData.headerTextColor || "#333333" }]}>
+          {resumeData.name || "Your Name"}
+        </Text>
+        <Text style={[styles.title, { color: resumeData.headerTextColor || "#333333" }]}>
+          {resumeData.title || "Your Title"}
+        </Text>
+        <Text style={[styles.contact, { color: resumeData.headerTextColor || "#666666" }]}>
+          {resumeData.phone || "Phone"} | {resumeData.email || "Email"} | {resumeData.address || "Address"} | {resumeData.website || "Website"}
+        </Text>
       </View>
-
-      <View style={styles.container}>
-        <View style={styles.column}>
-          {resumeData.sectionOrder.map((section) => {
-            if (["contact", "education", "skills"].includes(section) && resumeData.sectionVisibility[section]) {
-              return (
-                <View key={section} style={styles.section}>
-                  <Text style={styles.sectionTitle}>
-                    {section === "contact" && "Contact"}
-                    {section === "education" && "Education"}
-                    {section === "skills" && "Skills"}
+      {resumeData.sectionOrder
+        ?.filter((section) => resumeData.sectionVisibility?.[section])
+        .map((section) => (
+          <View key={section} style={[styles.section, { backgroundColor: resumeData.sectionStyles?.[section]?.bgColor || "#ffffff" }]}>
+            <Text style={[styles.sectionTitle, { color: resumeData.headerTextColor || "#333333" }]}>
+              {section === "contact" && "Contact"}
+              {section === "education" && "Education"}
+              {section === "skills" && "Skills"}
+              {section === "profile" && "Profile Summary"}
+              {section === "workExperience" && "Work Experience"}
+            </Text>
+            {section === "contact" && (
+              <>
+                <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                  <Phone style={styles.icon} /> {resumeData.phone || "Phone"}
+                </Text>
+                <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                  <Mail style={styles.icon} /> {resumeData.email || "Email"}
+                </Text>
+                <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                  <MapPin style={styles.icon} /> {resumeData.address || "Address"}
+                </Text>
+                <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                  <Globe style={styles.icon} /> {resumeData.website || "Website"}
+                </Text>
+              </>
+            )}
+            {section === "education" &&
+              resumeData.education?.map((edu, index) => (
+                <View key={index} style={styles.item}>
+                  <Text style={[styles.itemTitle, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                    {edu.university || "University"} - {edu.degree || "Degree"}
                   </Text>
-                  {section === "contact" && (
-                    <>
-                      <Text style={styles.text}>
-                        <Phone style={styles.icon} /> {resumeData.phone}
-                      </Text>
-                      <Text style={styles.text}>
-                        <Mail style={styles.icon} /> {resumeData.email}
-                      </Text>
-                      <Text style={styles.text}>
-                        <MapPin style={styles.icon} /> {resumeData.address}
-                      </Text>
-                      <Text style={styles.text}>
-                        <Globe style={styles.icon} /> {resumeData.website}
-                      </Text>
-                    </>
-                  )}
-                  {section === "education" && resumeData.education.map((edu, index) => (
-                    <View key={index} style={{ marginBottom: 10 }}>
-                      <Text style={{ fontWeight: "bold", fontSize: 14, color: "#333333", marginBottom: 4 }}>{edu.university}</Text>
-                      <Text style={styles.text}>{edu.degree}</Text>
-                      <Text style={styles.text}>{edu.period}</Text>
-                      {edu.gpa && <Text style={styles.text}>GPA: {edu.gpa}</Text>}
-                    </View>
-                  ))}
-                  {section === "skills" && resumeData.skills.map((skill, index) => (
-                    <Text key={index} style={styles.listItem}>
-                      • {skill}
+                  <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                    {edu.period || "Period"} {edu.gpa ? `| GPA: ${edu.gpa}` : ""}
+                  </Text>
+                </View>
+              ))}
+            {section === "skills" &&
+              resumeData.skills?.map((skill, index) => (
+                <Text key={index} style={[styles.listItem, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                  • {skill || "Skill"}
+                </Text>
+              ))}
+            {section === "profile" && (
+              <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                {resumeData.profile || "Profile Summary"}
+              </Text>
+            )}
+            {section === "workExperience" &&
+              resumeData.workExperience?.map((exp, index) => (
+                <View key={index} style={styles.item}>
+                  <Text style={[styles.itemTitle, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                    {exp.company || "Company"} - {exp.role || "Role"}
+                  </Text>
+                  <Text style={[styles.text, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                    {exp.period || "Period"}
+                  </Text>
+                  {exp.achievements?.map((achievement, i) => (
+                    <Text key={i} style={[styles.listItem, { color: resumeData.sectionStyles?.[section]?.textColor || "#4a4a4a" }]}>
+                      • {achievement || "Achievement"}
                     </Text>
                   ))}
                 </View>
-              );
-            }
-            return null;
-          })}
-        </View>
-
-        <View style={styles.column}>
-          {resumeData.sectionOrder.map((section) => {
-            if (["profile", "workExperience"].includes(section) && resumeData.sectionVisibility[section]) {
-              return (
-                <View key={section} style={styles.section}>
-                  <Text style={styles.sectionTitle}>
-                    {section === "profile" && "Profile Summary"}
-                    {section === "workExperience" && "Work Experience"}
-                  </Text>
-                  {section === "profile" && <Text style={styles.text}>{resumeData.profile}</Text>}
-                  {section === "workExperience" && resumeData.workExperience.map((exp, index) => (
-                    <View key={index} style={{ marginBottom: 10 }}>
-                      <Text style={{ fontWeight: "bold", fontSize: 14, color: "#333333", marginBottom: 4 }}>
-                        {exp.company} - {exp.role}
-                      </Text>
-                      <Text style={styles.text}>{exp.period}</Text>
-                      {exp.achievements.map((achievement, i) => (
-                        <Text key={i} style={styles.listItem}>
-                          • {achievement}
-                        </Text>
-                      ))}
-                    </View>
-                  ))}
-                </View>
-              );
-            }
-            return null;
-          })}
-        </View>
-      </View>
+              ))}
+          </View>
+        ))}
     </Page>
   </Document>
 );
@@ -172,8 +165,6 @@ function Template03() {
     email: "hello@reallygreatsite.com",
     address: "123 Anywhere St., Any City",
     website: "www.reallygreatsite.com",
-    profileImage: "", // No profile image as per the design
-    languages: ["English: Fluent", "French: Fluent", "German: Basics", "Spanish: Intermediate"],
     skills: ["Project Management", "Public Relations", "Teamwork", "Time Management", "Leadership", "Effective Communication", "Critical Thinking"],
     workExperience: [
       {
@@ -222,7 +213,7 @@ function Template03() {
     secondaryColor: "#ffffff",
     headerTextColor: "#333333",
     sidebarTextColor: "#333333",
-    mainTextColor: "#333333",
+    mainTextColor: "#4a4a4a",
     sectionOrder: ["contact", "education", "skills", "profile", "workExperience"],
     sectionVisibility: {
       contact: true,
@@ -232,12 +223,13 @@ function Template03() {
       workExperience: true,
     },
     sectionStyles: {
-      contact: { bgColor: "#ffffff", textColor: "#333333" },
-      education: { bgColor: "#ffffff", textColor: "#333333" },
-      skills: { bgColor: "#ffffff", textColor: "#333333" },
-      profile: { bgColor: "#ffffff", textColor: "#333333" },
-      workExperience: { bgColor: "#ffffff", textColor: "#333333" },
+      contact: { bgColor: "#ffffff", textColor: "#4a4a4a" },
+      education: { bgColor: "#ffffff", textColor: "#4a4a4a" },
+      skills: { bgColor: "#ffffff", textColor: "#4a4a4a" },
+      profile: { bgColor: "#ffffff", textColor: "#4a4a4a" },
+      workExperience: { bgColor: "#ffffff", textColor: "#4a4a4a" },
     },
+    templateId: "template03", // Add template identifier
   });
 
   const handleImageUpload = (e) => {
@@ -266,15 +258,25 @@ function Template03() {
   };
 
   const handleDownloadPDF = async () => {
-    const blob = await pdf(<TemplatePDF resumeData={resumeData} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "resume_template03.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    try {
+      console.log("Generating PDF with resumeData:", resumeData);
+      const blob = await pdf(<TemplatePDF resumeData={resumeData} />).toBlob();
+      if (!blob) {
+        throw new Error("Failed to generate PDF blob");
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "resume_template03.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success("PDF downloaded successfully!", { position: "top-center", autoClose: 2000 }); // 2-second toast
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast.error("Failed to download PDF. Check console for details.", { position: "top-center", autoClose: 2000 }); // 2-second toast
+    }
   };
 
   const onDragEnd = (result) => {
@@ -322,7 +324,7 @@ function Template03() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Controls Section */}
+        {/* Controls Section with Save Button */}
         <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex flex-wrap gap-4 w-full md:w-auto">
             <div className="flex items-center gap-2">
@@ -376,24 +378,29 @@ function Template03() {
                 <input
                   type="checkbox"
                   checked={resumeData.sectionVisibility[section]}
-                  onChange={(e) => setResumeData((prev) => ({
-                    ...prev,
-                    sectionVisibility: { ...prev.sectionVisibility, [section]: e.target.checked },
-                  }))}
+                  onChange={(e) =>
+                    setResumeData((prev) => ({
+                      ...prev,
+                      sectionVisibility: { ...prev.sectionVisibility, [section]: e.target.checked },
+                    }))
+                  }
                   className="h-4 w-4 rounded border-gray-300 focus:ring-blue-500"
                 />
               </div>
             ))}
           </div>
-          <Button onClick={handleDownloadPDF} className="flex items-center gap-2">
-            <Download className="h-4 w-4" /> Download PDF
-          </Button>
+          <div className="flex gap-2">
+            <button onClick={handleDownloadPDF} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              <Download className="h-4 w-4" /> Download PDF
+            </button>
+            <SaveResumeButton resumeData={resumeData} onToggle={() => {}} />
+          </div>
         </div>
 
         {/* Resume Content with Drag-and-Drop */}
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{ minWidth: "100%" }}>
-            {/* Header Section (No Image, Lines on Both Sides) */}
+            {/* Header Section */}
             <div
               style={{
                 backgroundColor: resumeData.primaryColor,
@@ -659,7 +666,9 @@ function Template03() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    onClick={() => addItem("workExperience", { company: "", role: "", period: "", achievements: [""] })}
+                                    onClick={() =>
+                                      addItem("workExperience", { company: "", role: "", period: "", achievements: [""] })
+                                    }
                                     className="text-gray-600"
                                   >
                                     <Plus className="h-4 w-4" />
@@ -761,8 +770,13 @@ function Template03() {
           </div>
         </DragDropContext>
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer autoClose={2000} hideProgressBar={false} /> {/* Set toast duration to 2 seconds */}
     </div>
   );
 }
+
+Modal.setAppElement("#root"); // Ensure this matches your root element ID
 
 export default Template03;
