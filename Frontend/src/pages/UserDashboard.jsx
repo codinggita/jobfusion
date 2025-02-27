@@ -293,7 +293,7 @@ const UserDashboard = () => {
           }
 
           // Fetch saved resumes
-          const resumesResponse = await axios.get(`http://localhost:5000/api/resumes/saved/${email}`);
+          const resumesResponse = await axios.get(`https://jobfusion.onrender.com/api/resumes/saved/${email}`);
           if (resumesResponse.data.success) {
             console.log("Fetched saved resumes:", resumesResponse.data.data);
             setSavedResumes(resumesResponse.data.data);

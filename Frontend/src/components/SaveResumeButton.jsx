@@ -27,7 +27,7 @@ const SaveResumeButton = ({ resumeData, onToggle }) => {
 
     try {
       console.log("Saving resumeData:", resumeData);
-      const response = await axios.post("http://localhost:5000/api/resumes/save", {
+      const response = await axios.post("https://jobfusion.onrender.com/api/resumes/save", {
         email,
         resumeData,
         title: resumeTitle,
@@ -53,7 +53,7 @@ const SaveResumeButton = ({ resumeData, onToggle }) => {
     }
 
     try {
-      await axios.delete("http://localhost:5000/api/resumes/unsave", {
+      await axios.delete("https://jobfusion.onrender.com/api/resumes/unsave", {
         data: { email, resumeId: resumeData._id },
       });
       setBookmarked(false);
