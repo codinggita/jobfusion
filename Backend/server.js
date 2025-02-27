@@ -9,6 +9,8 @@ const savedJobRoutes = require("./src/routes/savedJobRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes"); // Import review routes
 const newStailerRoutes = require("./src/routes/newStailerRoutes")
 const atsRoutes = require("./src/routes/atsRoutes");
+const resumeRoutes = require("./src/routes/resumeRoutes");
+
 
 // MongoDB connection
 const connectDB = async () => {
@@ -57,6 +59,10 @@ app.use('/api/newStailer', newStailerRoutes);
 
 //Ats Score Cheking
 app.use("/api", atsRoutes);
+
+// resume saved routes
+app.use("/api/resumes", resumeRoutes);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
