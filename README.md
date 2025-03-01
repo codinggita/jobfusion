@@ -14,7 +14,6 @@ JobFusion bridges the gap by integrating job search functionalities with resume-
 
 ## 🔑 Key Features
 - **Job Search:** Find jobs based on filters like job title, location, and salary.
-- **Trending Jobs:** View the top 10 in-demand jobs along with career guidance.
 - **Resume Maker:** Create well-structured resumes with professional tips.
 - **ATS Checker:** Analyze resumes to ensure they pass Applicant Tracking Systems.
 - **Job Alerts:** Get notified about job postings relevant to your interests.
