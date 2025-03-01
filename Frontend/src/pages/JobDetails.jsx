@@ -11,7 +11,7 @@ const JobDetails = () => {
 
   if (!job) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FCFCFE]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FCFCFE] animate-fade-in">
         <p className="text-[#5A78B1] text-xl font-medium">Job details are not available. Please navigate from the trending jobs page.</p>
       </div>
     );
@@ -91,18 +91,20 @@ const JobDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFCFE] py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <div className="max-w-2xl w-full bg-white rounded-lg shadow-md p-6 border border-[#688BC5]/20">
+    <div className="min-h-screen bg-[#FCFCFE] py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center animate-fade-in">
+      <div className="max-w-2xl w-full bg-white rounded-lg shadow-md p-6 border border-[#688BC5]/20 transform transition-all duration-300 hover:shadow-xl">
         {/* Job Header */}
         <div className="border-b border-[#688BC5]/30 pb-4">
-          <h2 className="text-2xl font-bold text-[#5A78B1]">{job.title}</h2>
+          <h2 className="text-2xl font-bold text-[#5A78B1] tracking-tight animate-slide-up">{job.title}</h2>
           {job.company && (
-            <p className="text-md text-gray-800 mt-1">{job.company.display_name}</p>
+            <p className="text-md text-gray-800 mt-1 font-semibold animate-slide-up-delayed">{job.company.display_name}</p>
           )}
           {job.location && (
             <p className="mt-2 text-md">
-              <span className="text-[#5A78B1] font-semibold">Location :</span>
-              <span className="text-[#688BC5] font-medium ml-1">{job.location.display_name}</span>
+              <span className="text-[#5A78B1] font-semibold animate-slide-up-delayed">Location :</span>
+              <span className="text-[#688BC5] font-medium ml-1 animate-slide-up-delayed">
+                {job.location.display_name}
+              </span>
             </p>
           )}
         </div>
@@ -112,16 +114,21 @@ const JobDetails = () => {
           <ReactMarkdown
             className="prose prose-gray max-w-none"
             remarkPlugins={[remarkGfm]}
-            rehypePlugins=[{rehypeRaw}]
+            rehypePlugins={[rehypeRaw]}
             components={{
-              h3: ({ node, ...props }) => (
-                <h3 className="text-lg font-semibold text-[#5A78B1] mt-4 mb-2" {...props} />
-              ),
+              h3: ({ node, ...props }) => {
+                return (
+                  <h3 className="text-lg font-semibold text-[#5A78B1] mt-4 mb-2 flex items-center animate-fade-in-delayed" {...props}>
+                    <span className="w-2 h-2 bg-[#688BC5] rounded-full mr-2"></span>
+                    {props.children}
+                  </h3>
+                );
+              },
               ul: ({ node, ...props }) => (
-                <ul className="list-disc pl-5 text-gray-700" {...props} />
+                <ul className="list-disc pl-5 text-gray-700 animate-fade-in-delayed" {...props} />
               ),
               li: ({ node, ...props }) => (
-                <li className="mb-2" {...props} />
+                <li className="mb-2 animate-fade-in-delayed" {...props} />
               ),
             }}
           >
@@ -133,7 +140,7 @@ const JobDetails = () => {
         <div className="mt-6 text-center">
           <button
             onClick={() => window.open(job.redirect_url, '_blank')}
-            className="bg-[#688BC5] text-white px-6 py-2 rounded-full hover:bg-[#5A78B1] transition-colors duration-200"
+            className="bg-[#688BC5] text-white px-6 py-2 rounded-full hover:bg-[#5A78B1] transition-all duration-300 transform hover:scale-105 animate-bounce-in"
           >
             Apply Now
           </button>
@@ -142,5 +149,39 @@ const JobDetails = () => {
     </div>
   );
 };
+
+// Add CSS for animations (if not using Tailwind's built-in animations)
+const styles = `
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideUpDelayed {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fadeInDelayed {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes bounceIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  .animate-fade-in { animation: fadeIn 0.6s ease-in-out; }
+  .animate-slide-up { animation: slideUp 0.6s ease-in-out; }
+  .animate-slide-up-delayed { animation: slideUpDelayed 0.6s ease-in-out 0.2s backwards; }
+  .animate-fade-in-delayed { animation: fadeInDelayed 0.6s ease-in-out 0.4s backwards; }
+  .animate-bounce-in { animation: bounceIn 0.6s ease-in-out; }
+`;
+
+const styleSheet = new CSSStyleSheet();
+styleSheet.replaceSync(styles);
+document.adoptedStyleSheets = [styleSheet];
 
 export default JobDetails;
