@@ -30,7 +30,7 @@ function ATSChecker() {
     formData.append("resume", file);
 
     try {
-      const response = await fetch("http://localhost:5000/api/ats-checker", {
+      const response = await fetch("https://jobfusion.onrender.com/api/ats-checker", {
         method: "POST",
         body: formData,
       });
