@@ -17,7 +17,7 @@ const JobDetails = () => {
     );
   }
 
-  // Enhanced function to format job descriptions with full-stop splitting and line limit
+  // Enhanced function to format job descriptions with 10-word minimum per line
   const formatDescription = (description) => {
     if (!description) return 'No description available.';
 
@@ -48,26 +48,37 @@ const JobDetails = () => {
       formattedText = formattedText.replace(regex, `\n\n${value}\n`);
     });
 
-    // Split by full stops and convert into bullet points
+    // Preserve existing bullets and handle full-stop splitting, enforcing 10-word minimum
     formattedText = formattedText
-      .replace(/(\d+\.\s+)/g, '\n- ') // Handle numbered lists
-      .replace(/(Exp:|Experience:)\s*/gi, '\n### Experience\n')
-      .replace(/(Key Skills:)\s*/gi, '\n### Key Skills\n')
       .replace(/\.\.\.$/, '') // Remove trailing "..." at the end
       .split('\n')
       .map((line) => {
         if (line.trim().length === 0 || line.startsWith('#')) return line;
 
+        // Check if the line already starts with a bullet (•)
+        if (line.trim().startsWith('•')) {
+          const cleanedLine = line.trim().replace(/^•\s*/, '').trim();
+          const words = cleanedLine.split(/\s+/).filter(word => word.length > 0);
+          if (words.length < 10) return ''; // Eliminate if less than 10 words
+          return `- ${cleanedLine}`;
+        }
+
+        // For non-bulleted lines, split by full stops and filter for 10+ words
         const sentences = line
           .split(/(?<=\.)\s+/)
           .filter((s) => s.trim().length > 0)
-          .map((s) => s.trim());
+          .map((s) => s.trim())
+          .filter((sentence) => {
+            const words = sentence.split(/\s+/).filter(word => word.length > 0);
+            return words.length >= 10; // Keep only sentences with 10+ words
+          });
 
-        if (sentences.length > 1 || !line.startsWith('-')) {
+        if (sentences.length > 0) {
           return sentences.map((sentence) => `- ${sentence}`).join('\n');
         }
-        return line;
+        return ''; // Eliminate if no valid sentences
       })
+      .filter(line => line.trim().length > 0) // Remove empty lines
       .join('\n');
 
     // Limit to 10 lines (counting bullets and headers)
@@ -80,42 +91,37 @@ const JobDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFCFE] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <div className="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-8 border border-[#688BC5]/20 transform transition-all duration-300 hover:shadow-xl">
+    <div className="min-h-screen bg-[#FCFCFE] py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+      <div className="max-w-2xl w-full bg-white rounded-lg shadow-md p-6 border border-[#688BC5]/20">
         {/* Job Header */}
-        <div className="border-b border-[#688BC5]/30 pb-5 animate-fade-in">
-          <h2 className="text-3xl font-extrabold text-[#5A78B1] tracking-tight animate-slide-up">{job.title}</h2>
+        <div className="border-b border-[#688BC5]/30 pb-4">
+          <h2 className="text-2xl font-bold text-[#5A78B1]">{job.title}</h2>
           {job.company && (
-            <p className="text-lg text-gray-800 mt-2 font-semibold animate-slide-up-delayed">{job.company.display_name}</p>
+            <p className="text-md text-gray-800 mt-1">{job.company.display_name}</p>
           )}
           {job.location && (
-            <p className="mt-2 text-lg flex items-center">
-              <span className="text-[#5A78B1] font-bold mr-2">Location :</span>
-              <span className="text-[#688BC5] font-medium">
-                {job.location.display_name}
-              </span>
+            <p className="mt-2 text-md">
+              <span className="text-[#5A78B1] font-semibold">Location :</span>
+              <span className="text-[#688BC5] font-medium ml-1">{job.location.display_name}</span>
             </p>
           )}
         </div>
 
         {/* Job Description */}
-        <div className="mt-6 text-gray-700">
+        <div className="mt-4 text-gray-700">
           <ReactMarkdown
             className="prose prose-gray max-w-none"
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
+            rehypePlugins=[{rehypeRaw}]
             components={{
               h3: ({ node, ...props }) => (
-                <h3 className="text-xl font-bold text-[#5A78B1] mt-6 mb-3 flex items-center animate-fade-in-delayed" {...props}>
-                  <span className="w-2 h-2 bg-[#688BC5] rounded-full mr-2"></span>
-                  {props.children}
-                </h3>
+                <h3 className="text-lg font-semibold text-[#5A78B1] mt-4 mb-2" {...props} />
               ),
               ul: ({ node, ...props }) => (
-                <ul className="list-disc pl-6 text-gray-700" {...props} />
+                <ul className="list-disc pl-5 text-gray-700" {...props} />
               ),
               li: ({ node, ...props }) => (
-                <li className="mb-3 text-lg" {...props} />
+                <li className="mb-2" {...props} />
               ),
             }}
           >
@@ -124,10 +130,10 @@ const JobDetails = () => {
         </div>
 
         {/* Apply Button */}
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           <button
             onClick={() => window.open(job.redirect_url, '_blank')}
-            className="bg-[#688BC5] text-white px-8 py-3 rounded-full shadow-md hover:bg-[#5A78B1] transition-all duration-300 transform hover:scale-105 text-lg font-semibold animate-bounce-in"
+            className="bg-[#688BC5] text-white px-6 py-2 rounded-full hover:bg-[#5A78B1] transition-colors duration-200"
           >
             Apply Now
           </button>
@@ -136,39 +142,5 @@ const JobDetails = () => {
     </div>
   );
 };
-
-// Add CSS for animations (if not using Tailwind's built-in animations)
-const styles = `
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes slideUpDelayed {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes fadeInDelayed {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes bounceIn {
-    0% { transform: scale(0.9); opacity: 0; }
-    50% { transform: scale(1.05); opacity: 1; }
-    100% { transform: scale(1); }
-  }
-  .animate-fade-in { animation: fadeIn 0.6s ease-in-out; }
-  .animate-slide-up { animation: slideUp 0.6s ease-in-out; }
-  .animate-slide-up-delayed { animation: slideUpDelayed 0.6s ease-in-out 0.2s backwards; }
-  .animate-fade-in-delayed { animation: fadeInDelayed 0.6s ease-in-out 0.4s backwards; }
-  .animate-bounce-in { animation: bounceIn 0.6s ease-in-out; }
-`;
-
-const styleSheet = new CSSStyleSheet();
-styleSheet.replaceSync(styles);
-document.adoptedStyleSheets = [styleSheet];
 
 export default JobDetails;
