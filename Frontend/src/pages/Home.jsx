@@ -6,9 +6,8 @@ import TopCompanies from '../components/TopCompanies';
 import Newsletter from '../components/Newsletter';
 import Review from '../components/Reviews';
 
-
-
 function Home() {
+  window.scrollTo(0, 0);
   return (
     <>
       <main>

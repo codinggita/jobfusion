@@ -1,27 +1,37 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 
 const JobDetails = () => {
-  window.scrollTo(0, 0);
   const location = useLocation();
+  const navigate = useNavigate();
   const job = location.state?.job;
+
+  // Scroll to top when entering the page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Optional: Manual back button
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
 
   if (!job) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FCFCFE] animate-fade-in">
-        <p className="text-[#5A78B1] text-xl font-medium">Job details are not available. Please navigate from the trending jobs page.</p>
+        <p className="text-[#5A78B1] text-xl font-medium">
+          Job details are not available. Please navigate from the trending jobs page.
+        </p>
       </div>
     );
   }
 
-  // Enhanced function to format job descriptions with 10-word minimum per line
   const formatDescription = (description) => {
+    // Your existing formatDescription function (unchanged)
     if (!description) return 'No description available.';
-
-    // Define common section headers
     const sectionHeaders = {
       'What you’ll do': '### Responsibilities',
       'Key Responsibilities': '### Responsibilities',
@@ -41,47 +51,38 @@ const JobDetails = () => {
     };
 
     let formattedText = description;
-
-    // Replace section headers with markdown headers
     Object.entries(sectionHeaders).forEach(([key, value]) => {
       const regex = new RegExp(`(${key})[\\s:]*`, 'gi');
       formattedText = formattedText.replace(regex, `\n\n${value}\n`);
     });
 
-    // Preserve existing bullets and handle full-stop splitting, enforcing 10-word minimum
     formattedText = formattedText
-      .replace(/\.\.\.$/, '') // Remove trailing "..." at the end
+      .replace(/\.\.\.$/, '')
       .split('\n')
       .map((line) => {
         if (line.trim().length === 0 || line.startsWith('#')) return line;
-
-        // Check if the line already starts with a bullet (•)
         if (line.trim().startsWith('•')) {
           const cleanedLine = line.trim().replace(/^•\s*/, '').trim();
           const words = cleanedLine.split(/\s+/).filter(word => word.length > 0);
-          if (words.length < 10) return ''; // Eliminate if less than 10 words
+          if (words.length < 10) return '';
           return `- ${cleanedLine}`;
         }
-
-        // For non-bulleted lines, split by full stops and filter for 10+ words
         const sentences = line
           .split(/(?<=\.)\s+/)
           .filter((s) => s.trim().length > 0)
           .map((s) => s.trim())
           .filter((sentence) => {
             const words = sentence.split(/\s+/).filter(word => word.length > 0);
-            return words.length >= 10; // Keep only sentences with 10+ words
+            return words.length >= 10;
           });
-
         if (sentences.length > 0) {
           return sentences.map((sentence) => `- ${sentence}`).join('\n');
         }
-        return ''; // Eliminate if no valid sentences
+        return '';
       })
-      .filter(line => line.trim().length > 0) // Remove empty lines
+      .filter(line => line.trim().length > 0)
       .join('\n');
 
-    // Limit to 10 lines (counting bullets and headers)
     const lines = formattedText.split('\n').filter((line) => line.trim().length > 0);
     if (lines.length > 10) {
       formattedText = lines.slice(0, 10).join('\n') + '\n*(Description truncated. See full details on application page.)';
@@ -93,6 +94,14 @@ const JobDetails = () => {
   return (
     <div className="min-h-screen bg-[#FCFCFE] py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-center animate-fade-in">
       <div className="max-w-2xl w-full bg-white rounded-lg shadow-md p-6 border border-[#688BC5]/20 transform transition-all duration-300 hover:shadow-xl">
+        {/* Optional Back Button */}
+        <button
+          onClick={handleGoBack}
+          className="mb-4 text-[#5A78B1] hover:underline flex items-center"
+        >
+          ← Back
+        </button>
+
         {/* Job Header */}
         <div className="border-b border-[#688BC5]/30 pb-4">
           <h2 className="text-2xl font-bold text-[#5A78B1] tracking-tight animate-slide-up">{job.title}</h2>
@@ -116,14 +125,12 @@ const JobDetails = () => {
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
             components={{
-              h3: ({ node, ...props }) => {
-                return (
-                  <h3 className="text-lg font-semibold text-[#5A78B1] mt-4 mb-2 flex items-center animate-fade-in-delayed" {...props}>
-                    <span className="w-2 h-2 bg-[#688BC5] rounded-full mr-2"></span>
-                    {props.children}
-                  </h3>
-                );
-              },
+              h3: ({ node, ...props }) => (
+                <h3 className="text-lg font-semibold text-[#5A78B1] mt-4 mb-2 flex items-center animate-fade-in-delayed" {...props}>
+                  <span className="w-2 h-2 bg-[#688BC5] rounded-full mr-2"></span>
+                  {props.children}
+                </h3>
+              ),
               ul: ({ node, ...props }) => (
                 <ul className="list-disc pl-5 text-gray-700 animate-fade-in-delayed" {...props} />
               ),
@@ -150,7 +157,7 @@ const JobDetails = () => {
   );
 };
 
-// Add CSS for animations (if not using Tailwind's built-in animations)
+// Existing styles (unchanged)
 const styles = `
   @keyframes fadeIn {
     from { opacity: 0; }
