@@ -50,7 +50,7 @@ function App() {
       </Routes>
 
       {/* Show Footer only on Home and other main pages */}
-      {!hideHeaderFooter && <Footer />}
+,      {!hideHeaderFooter && <Footer />}
     </div>
   );
 }

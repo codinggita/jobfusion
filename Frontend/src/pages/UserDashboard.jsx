@@ -196,7 +196,7 @@ const ResumeCard = ({ resume, onDelete }) => {
   const handleDelete = async () => {
     const email = localStorage.getItem("userEmail");
     try {
-      await axios.delete("http://localhost:5000/api/resumes/unsave", {
+      await axios.delete("https://jobfusion.onrender.com/api/resumes/unsave", {
         data: { email, resumeId: resume._id },
       });
       toast.success("Resume deleted successfully!", { position: "top-center", autoClose: 2000 });
