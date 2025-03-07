@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Ragister'; // Typo: Should this be "Register"?
@@ -72,11 +72,4 @@ function App() {
   );
 }
 
-// Wrap App with Router (since useLocation requires it)
-export default function RootApp() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
-}
+export default App; // Export App directly, no Router wrapper here
