@@ -21,7 +21,7 @@ const JobDetails = () => {
 
   if (!job) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FCFCFE] animate-fade-in">
+      <div className="min-h-screen flex items-center justify-center bg-black-50 animate-fade-in">
         <p className="text-[#5A78B1] text-xl font-medium">
           Job details are not available. Please navigate from the trending jobs page.
         </p>

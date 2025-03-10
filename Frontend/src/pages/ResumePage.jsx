@@ -98,7 +98,7 @@ export default function MainSection() {
   return (
     <main className="w-full">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-100 to-white py-16 px-4 md:px-8 lg:px-16">
+      <section className="bg-black-50 py-16 px-4 md:px-8 lg:px-16">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800">
@@ -148,7 +148,7 @@ export default function MainSection() {
       </section>
 
       {/* Tips Section */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
+      <section className="py-16 px-4 md:px-8 lg:px-16 bg-black-50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-8">Tips For Making A Resume</h2>
           <div className="relative bg-white rounded-xl shadow-lg p-8 md:p-12">

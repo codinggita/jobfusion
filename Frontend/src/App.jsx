@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Ragister'; // Typo: Should this be "Register"?
+import Register from './pages/Ragister'; 
 import UserDashboard from './pages/UserDashboard';
 import JobDetails from "./pages/JobDetails";
 import Companies from "./pages/Companies";
@@ -31,14 +31,54 @@ function ScrollRestoration() {
 
 function App() {
   const location = useLocation(); // Get current route
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
 
   // Pages that should not have Header & Footer
   const hideHeaderFooter = ["/", "/login", "/register"].includes(location.pathname);
 
+  // Initialize dark mode on first load
+  useEffect(() => {
+    // Check for user preference in localStorage
+    const savedTheme = localStorage.getItem("theme");
+    
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setDarkMode(true);
+    } else if (savedTheme === "light") {
+      document.documentElement.classList.remove("dark");
+      setDarkMode(false);
+    } else {
+      // If no preference is saved, check system preference
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      
+      if (prefersDark) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        setDarkMode(true);
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        setDarkMode(false);
+      }
+    }
+  }, []);
+
+  // Function to toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    if (!darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       {/* Show Navbar & Footer only on Home and other main pages */}
-      {!hideHeaderFooter && <Header />}
+      {!hideHeaderFooter && <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
 
       {/* Add ScrollRestoration here to apply it to all routes */}
       <ScrollRestoration />
