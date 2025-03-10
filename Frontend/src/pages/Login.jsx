@@ -9,8 +9,10 @@ function Login() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
+        otp: "",
     });
     const [error, setError] = useState("");
+    const [view, setView] = useState("login"); // login, verify, forgotPassword, resetPassword
     const navigate = useNavigate();
 
     // Function to handle input changes (optimized with useCallback)
@@ -25,35 +27,319 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Show loader
-
-        const userData = {
-            email: formData.email,
-            password: formData.password,
-        };
+        setError("");
 
         try {
-            const response = await fetch("https://jobfusion.onrender.com/api/users/login", {
+            if (view === "login") {
+                const userData = {
+                    email: formData.email,
+                    password: formData.password,
+                };
+
+                const response = await fetch("https://jobfusion.onrender.com/api/users/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("userEmail", formData.email);
+                    navigate("/home");
+                } else {
+                    if (data.needsVerification) {
+                        setView("verify");
+                    } else {
+                        setError(data.message || "Login failed. Please try again.");
+                    }
+                }
+            } else if (view === "verify") {
+                const verifyData = {
+                    email: formData.email,
+                    otp: formData.otp
+                };
+
+                const response = await fetch("https://jobfusion.onrender.com/api/users/verify-otp", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(verifyData),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setView("login");
+                    setError("Email verified successfully. You can now login.");
+                } else {
+                    setError(data.message || "Verification failed. Please try again.");
+                }
+            } else if (view === "forgotPassword") {
+                const forgotData = {
+                    email: formData.email
+                };
+
+                const response = await fetch("https://jobfusion.onrender.com/api/users/forgot-password", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(forgotData),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setView("resetPassword");
+                } else {
+                    setError(data.message || "Failed to send reset code. Please try again.");
+                }
+            } else if (view === "resetPassword") {
+                const resetData = {
+                    email: formData.email,
+                    otp: formData.otp,
+                    newPassword: formData.password
+                };
+
+                const response = await fetch("https://jobfusion.onrender.com/api/users/reset-password", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(resetData),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setView("login");
+                    setError("Password reset successful. You can now login with your new password.");
+                    setFormData(prev => ({...prev, password: "", otp: ""}));
+                } else {
+                    setError(data.message || "Password reset failed. Please try again.");
+                }
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            setError("An error occurred. Please try again later.");
+        } finally {
+            setLoading(false); // Hide loader
+        }
+    };
+
+    const handleResendOTP = async () => {
+        setLoading(true);
+        setError("");
+
+        try {
+            const endpoint = view === "verify" 
+                ? "https://jobfusion.onrender.com/api/users/resend-otp" 
+                : "https://jobfusion.onrender.com/api/users/forgot-password";
+
+            const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(userData),
+                body: JSON.stringify({ email: formData.email }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("userEmail", formData.email);
-                navigate("/home");
+                alert(data.message || "A new code has been sent to your email");
             } else {
-                setError(data.message || "Login failed. Please try again.");
+                setError(data.message || "Failed to send code. Please try again.");
             }
         } catch (error) {
-            console.error("Error logging in:", error);
+            console.error("Error:", error);
             setError("An error occurred. Please try again later.");
         } finally {
-            setLoading(false); // Hide loader
+            setLoading(false);
+        }
+    };
+
+    const renderForm = () => {
+        switch (view) {
+            case "login":
+                return (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            />
+                        </div>
+
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                placeholder="Password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                            >
+                                {showPassword ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
+                            </button>
+                        </div>
+
+                        <div className="flex justify-end">
+                            <button 
+                                type="button" 
+                                onClick={() => setView("forgotPassword")}
+                                className="text-blue-600 text-sm hover:underline"
+                            >
+                                Forgot Password?
+                            </button>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Login Now
+                        </button>
+                    </form>
+                );
+            case "verify":
+                return (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <p className="text-gray-600 mb-4">
+                            Your email needs verification. We've sent a verification code to your email address. Please enter the code below.
+                        </p>
+                        <input
+                            type="text"
+                            name="otp"
+                            placeholder="Enter verification code"
+                            value={formData.otp}
+                            onChange={handleChange}
+                            className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Verify Email
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleResendOTP}
+                            className="w-full bg-transparent text-blue-600 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                        >
+                            Resend Verification Code
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setView("login")}
+                            className="w-full bg-transparent text-gray-600 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            Back to Login
+                        </button>
+                    </form>
+                );
+            case "forgotPassword":
+                return (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <p className="text-gray-600 mb-4">
+                            Enter your email address and we'll send you a code to reset your password.
+                        </p>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Send Reset Code
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setView("login")}
+                            className="w-full bg-transparent text-gray-600 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            Back to Login
+                        </button>
+                    </form>
+                );
+            case "resetPassword":
+                return (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <p className="text-gray-600 mb-4">
+                            Enter the code sent to your email and your new password.
+                        </p>
+                        <input
+                            type="text"
+                            name="otp"
+                            placeholder="Enter reset code"
+                            value={formData.otp}
+                            onChange={handleChange}
+                            className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                            required
+                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                placeholder="New Password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                            >
+                                {showPassword ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
+                            </button>
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            Reset Password
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleResendOTP}
+                            className="w-full bg-transparent text-blue-600 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                        >
+                            Resend Reset Code
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setView("login")}
+                            className="w-full bg-transparent text-gray-600 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                            Back to Login
+                        </button>
+                    </form>
+                );
+            default:
+                return null;
         }
     };
 
@@ -73,63 +359,34 @@ function Login() {
                                 <span className="text-xl font-bold">JOB FUSION</span>
                             </Link>
 
-                            <h1 className="text-3xl font-bold mb-2">LOGIN</h1>
+                            <h1 className="text-3xl font-bold mb-2">
+                                {view === "login" && "LOGIN"}
+                                {view === "verify" && "VERIFY EMAIL"}
+                                {view === "forgotPassword" && "FORGOT PASSWORD"}
+                                {view === "resetPassword" && "RESET PASSWORD"}
+                            </h1>
 
                             {error && <div className="mb-4 text-red-600">{error}</div>}
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        placeholder="Email"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                    />
-                                </div>
+                            {renderForm()}
 
-                                <div className="relative">
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        name="password"
-                                        placeholder="Password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        className="w-full p-3 rounded-lg bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword((prev) => !prev)}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                                    >
-                                        {showPassword ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
-                                    </button>
+                            {view === "login" && (
+                                <div className="mt-8">
+                                    <p className="text-center text-gray-600 mb-4">--- OR ---</p>
+                                    <div className="space-y-3">
+                                        <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
+                                            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                                            <span>Login with Google</span>
+                                        </button>
+                                        <p className="text-center mt-6">
+                                            For A New User{" "}
+                                            <Link to="/register" className="text-blue-600 hover:underline">
+                                                Sign Up
+                                            </Link>
+                                        </p>
+                                    </div>
                                 </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                                >
-                                    Login Now
-                                </button>
-                            </form>
-
-                            <div className="mt-8">
-                                <p className="text-center text-gray-600 mb-4">--- OR ---</p>
-                                <div className="space-y-3">
-                                    <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
-                                        <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-                                        <span>Login with Google</span>
-                                    </button>
-                                    <p className="text-center mt-6">
-                                        For A New User{" "}
-                                        <Link to="/register" className="text-blue-600 hover:underline">
-                                            Sign Up
-                                        </Link>
-                                    </p>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
 
