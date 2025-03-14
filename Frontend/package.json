@@ -17,7 +17,7 @@
     "@react-pdf/font": "^3.1.0",
     "@react-pdf/renderer": "^4.2.2",
     "@tailwindcss/vite": "^4.0.3",
-    "axios": "^1.7.9",
+    "axios": "^1.8.3",
     "canvas": "^3.1.0",
     "framer-motion": "^12.3.1",
     "html2canvas": "^1.4.1",
