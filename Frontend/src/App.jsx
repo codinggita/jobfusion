@@ -15,6 +15,8 @@ import Templet01 from "./pages/Templets_01";
 import Template02 from './pages/Templets_02';
 import Template03 from './pages/Templets_03';
 import Template04 from './pages/Templets_04';
+import Template05 from './pages/Templets_05';
+
 
 // Scroll Restoration Component
 function ScrollRestoration() {
@@ -62,6 +64,7 @@ function App() {
         <Route path="/resume/template02" element={<Template02 />} />
         <Route path="/resume/template03" element={<Template03 />} />
         <Route path="/resume/template04" element={<Template04 />} />
+        <Route path="/resume/template05" element={<Template05 />} />
         <Route path="/ats-cheking" element={<ATS />} />
 
         {/* Redirect any unknown route to FirstPage */}
