@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Template05 from '../assets/Screenshot (67).png';
+// import Template06 from '../assets/Screenshot (68).png';
 
 export default function MainSection() {
   const [currentTip, setCurrentTip] = useState(0);
@@ -90,6 +91,11 @@ export default function MainSection() {
       id: 5, 
       image: Template05,
       path: "/resume/template05",
+    },
+    {
+      id: 6,
+      image: "https://www.resumebuilder.com/wp-content/uploads/2023/12/Homepage-7-New-2.png",
+      path: "/resume/template06",
     }
   ];
 
