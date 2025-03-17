@@ -140,7 +140,7 @@ const TrendingJobs = () => {
   }, [location.search]);
 
   return (
-    <section className="py-16 px-6 bg-gray-50 min-h-screen">
+    <section className="py-16 px-6 bg-gray min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">
           Explore Jobs That Fit You

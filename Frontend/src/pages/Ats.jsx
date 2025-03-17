@@ -80,23 +80,23 @@ function ATSChecker() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#E8EEF5] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full">
-        <h1 className="text-3xl font-bold text-center mb-8 text-[#333]">
+        <h1 className="text-3xl font-bold text-center mb-8 text-grey">
           ATS Resume Checker
         </h1>
 
         {!file ? (
           <div
             {...getRootProps()}
-            className="border-2 border-dashed border-[#688BC5] rounded-lg p-8 text-center cursor-pointer transition-colors hover:bg-[#F7F9FC]"
+            className="border-2 border-dashed border-[#688BC5] rounded-lg p-8 text-center cursor-pointer transition-colors hover:bg-black"
           >
             <input {...getInputProps()} />
             <Upload className="mx-auto text-[#688BC5] mb-4" size={48} />
             {isDragActive ? (
               <p className="text-[#688BC5]">Drop your resume here...</p>
             ) : (
-              <p className="text-[#333]">
+              <p className="text-grey">
                 Drag & drop your resume (PDF) or click to upload
               </p>
             )}

@@ -7,11 +7,13 @@ function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [step, setStep] = useState('register'); // 'register' or 'verify'
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
         workStatus: 'fresher',
+        otp: ''
     });
     const navigate = useNavigate();
 
@@ -20,19 +22,47 @@ function Register() {
         setLoading(true);
         setError(null);
 
-        const userData = {
-            username: formData.username,
-            email: formData.email,
-            password: formData.password,
-            experienceLevel: formData.workStatus === 'fresher' ? 'Fresher' : 'Experienced',
-        };
+        try {
+            if (step === 'register') {
+                const userData = {
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password,
+                    experienceLevel: formData.workStatus === 'fresher' ? 'Fresher' : 'Experienced',
+                };
+
+                const response = await axios.post('http://localhost:5000/api/users/register', userData);
+                console.log('Registration initiated:', response.data);
+                setStep('verify');
+            } else if (step === 'verify') {
+                const verifyData = {
+                    email: formData.email,
+                    otp: formData.otp
+                };
+
+                const response = await axios.post('http://localhost:5000/api/users/verify-otp', verifyData);
+                console.log('Email verified:', response.data);
+                navigate('/login');
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || (step === 'register' ? 'Registration failed' : 'Verification failed'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResendOTP = async () => {
+        setLoading(true);
+        setError(null);
 
         try {
-            const response = await axios.post('https://jobfusion.onrender.com/api/users/register', userData);
-            console.log('User registered successfully:', response.data);
-            navigate('/login');
+            const response = await axios.post('http://localhost:5000/api/users/resend-otp', {
+                email: formData.email
+            });
+            console.log('OTP resent:', response.data);
+            alert('A new verification code has been sent to your email');
         } catch (error) {
-            setError(error.response?.data?.message || 'Registration failed');
+            setError(error.response?.data?.message || 'Failed to resend verification code');
         } finally {
             setLoading(false);
         }
@@ -51,41 +81,124 @@ function Register() {
                         <span className="text-xl font-bold">JOB FUSION</span>
                     </div>
 
-                    <h1 className="text-3xl font-bold mb-2">REGISTER</h1>
-                    {error && <p className="text-red-500">{error}</p>}
+                    <h1 className="text-3xl font-bold mb-2">
+                        {step === 'register' ? 'REGISTER' : 'VERIFY EMAIL'}
+                    </h1>
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" required />
-                        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" required />
+                    {step === 'register' ? (
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <input 
+                                type="text" 
+                                name="username" 
+                                placeholder="Username" 
+                                value={formData.username} 
+                                onChange={handleChange} 
+                                className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" 
+                                required 
+                            />
+                            <input 
+                                type="email" 
+                                name="email" 
+                                placeholder="Email" 
+                                value={formData.email} 
+                                onChange={handleChange} 
+                                className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" 
+                                required 
+                            />
 
-                        <div className="relative">
-                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" value={formData.password} onChange={handleChange} className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" required />
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                                {showPassword ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
+                            <div className="relative">
+                                <input 
+                                    type={showPassword ? "text" : "password"} 
+                                    name="password" 
+                                    placeholder="Password" 
+                                    value={formData.password} 
+                                    onChange={handleChange} 
+                                    className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" 
+                                    required 
+                                />
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowPassword(!showPassword)} 
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                                >
+                                    {showPassword ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
+                                </button>
+                            </div>
+
+                            <div className="flex gap-4">
+                                <label className="flex items-center gap-2">
+                                    <input 
+                                        type="radio" 
+                                        name="workStatus" 
+                                        value="fresher" 
+                                        checked={formData.workStatus === 'fresher'} 
+                                        onChange={handleChange} 
+                                        className="hidden" 
+                                    />
+                                    <span className={`px-4 py-2 rounded-full cursor-pointer ${formData.workStatus === 'fresher' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-gray-700'}`}>
+                                        Fresher
+                                    </span>
+                                </label>
+                                <label className="flex items-center gap-2">
+                                    <input 
+                                        type="radio" 
+                                        name="workStatus" 
+                                        value="experienced" 
+                                        checked={formData.workStatus === 'experienced'} 
+                                        onChange={handleChange} 
+                                        className="hidden" 
+                                    />
+                                    <span className={`px-4 py-2 rounded-full cursor-pointer ${formData.workStatus === 'experienced' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-gray-700'}`}>
+                                        Experienced
+                                    </span>
+                                </label>
+                            </div>
+
+                            <button 
+                                type="submit" 
+                                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex justify-center items-center"
+                            >
+                                {loading ? <Loader className="animate-spin" /> : 'Register Now'}
                             </button>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <label className="flex items-center gap-2">
-                                <input type="radio" name="workStatus" value="fresher" checked={formData.workStatus === 'fresher'} onChange={handleChange} className="hidden" />
-                                <span className={`px-4 py-2 rounded-full cursor-pointer ${formData.workStatus === 'fresher' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-gray-700'}`}>Fresher</span>
-                            </label>
-                            <label className="flex items-center gap-2">
-                                <input type="radio" name="workStatus" value="experienced" checked={formData.workStatus === 'experienced'} onChange={handleChange} className="hidden" />
-                                <span className={`px-4 py-2 rounded-full cursor-pointer ${formData.workStatus === 'experienced' ? 'bg-blue-600 text-white' : 'bg-blue-50 text-gray-700'}`}>Experienced</span>
-                            </label>
-                        </div>
-
-                        <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex justify-center items-center">
-                            {loading ? <Loader className="animate-spin" /> : 'Register Now'}
-                        </button>
-                    </form>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <p className="text-gray-600 mb-4">
+                                We've sent a verification code to your email address. Please enter the code below to verify your account.
+                            </p>
+                            <input 
+                                type="text" 
+                                name="otp" 
+                                placeholder="Enter verification code" 
+                                value={formData.otp} 
+                                onChange={handleChange} 
+                                className="w-full p-3 rounded-lg bg-blue-50 focus:ring-2 focus:ring-blue-600" 
+                                required 
+                            />
+                            <button 
+                                type="submit" 
+                                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors flex justify-center items-center"
+                            >
+                                {loading ? <Loader className="animate-spin" /> : 'Verify Email'}
+                            </button>
+                            <button 
+                                type="button" 
+                                onClick={handleResendOTP} 
+                                className="w-full bg-transparent text-blue-600 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+                            >
+                                Resend Verification Code
+                            </button>
+                        </form>
+                    )}
 
                     <div className="mt-8">
-                        <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
-                            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
-                            <span>Continue with Google</span>
-                        </button>
+                        {step === 'register' && (
+                            <button className="w-full flex items-center justify-center gap-2 p-3 border rounded-lg hover:bg-gray-50">
+                                <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+                                <span>Continue with Google</span>
+                            </button>
+                        )}
                     </div>
 
                     <p className="text-center mt-6">

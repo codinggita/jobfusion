@@ -10,6 +10,18 @@ const userSchema = new mongoose.Schema({
       required: true, 
       enum: ['Fresher', 'Experienced'],
     },
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    otp: {
+      code: { type: String },
+      expiresAt: { type: Date }
+    },
+    resetPasswordOtp: {
+      code: { type: String },
+      expiresAt: { type: Date }
+    }
   }, { timestamps: true });
   
 

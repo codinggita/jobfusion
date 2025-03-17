@@ -196,7 +196,7 @@ const ResumeCard = ({ resume, onDelete }) => {
   const handleDelete = async () => {
     const email = localStorage.getItem("userEmail");
     try {
-      await axios.delete("https://jobfusion.onrender.com/api/resumes/unsave", {
+      await axios.delete("http://localhost:5000/api/resumes/unsave", {
         data: { email, resumeId: resume._id },
       });
       toast.success("Resume deleted successfully!", { position: "top-center", autoClose: 2000 });
@@ -208,7 +208,7 @@ const ResumeCard = ({ resume, onDelete }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mb-4 flex justify-between items-center hover:shadow-lg transition-shadow">
+    <div className="bg-black p-4 rounded-lg shadow-md mb-4 flex justify-between items-center hover:shadow-lg transition-shadow">
       <div className="flex items-center space-x-3 min-w-0 flex-1">
         <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
           <FileText className="text-blue-500" size={24} />
@@ -237,7 +237,7 @@ const JobCard = ({ job, onToggle }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer relative">
+    <div className="bg-black p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer relative">
       <div className="absolute top-4 right-4">
         <BookmarkButton job={job} onToggle={onToggle} />
       </div>
@@ -269,7 +269,7 @@ const UserDashboard = () => {
           setLoading(false);
           return;
         }
-        const response = await axios.get(`https://jobfusion.onrender.com/api/users/profile/${storedEmail}`);
+        const response = await axios.get(`http://localhost:5000/api/users/profile/${storedEmail}`);
         if (response.data.success) {
           setUserData(response.data.data);
         } else {
@@ -287,13 +287,13 @@ const UserDashboard = () => {
       if (email) {
         try {
           // Fetch saved jobs
-          const jobsResponse = await axios.get(`https://jobfusion.onrender.com/api/jobs/saved/${email}`);
+          const jobsResponse = await axios.get(`http://localhost:5000/api/jobs/saved/${email}`);
           if (jobsResponse.data.success) {
             setSavedJobs(jobsResponse.data.data.map((item) => item.jobData));
           }
 
           // Fetch saved resumes
-          const resumesResponse = await axios.get(`https://jobfusion.onrender.com/api/resumes/saved/${email}`);
+          const resumesResponse = await axios.get(`http://localhost:5000/api/resumes/saved/${email}`);
           if (resumesResponse.data.success) {
             console.log("Fetched saved resumes:", resumesResponse.data.data);
             setSavedResumes(resumesResponse.data.data);
@@ -317,7 +317,7 @@ const UserDashboard = () => {
   if (error) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black-50">
       {/* Header with User Profile */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="container mx-auto px-4 py-6">

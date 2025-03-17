@@ -1,22 +1,32 @@
-// routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
 const {
-    createUser,
-    loginUser,
-    getUserProfile,
-    getSavedJobs,
-    saveJob,
-    unsaveJob
+  createUser,
+  verifyOTP,
+  resendOTP,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  getUserProfile,
+  getSavedJobs,
+  saveJob,
+  unsaveJob
 } = require('../controllers/userController');
 
-// User Registration
+const authMiddleware = require('../middleware/authMiddleware');
+
+// Public Routes
 router.post('/register', createUser);
-
-// User Login
+router.post('/verify-otp', verifyOTP);
+router.post('/resend-otp', resendOTP);
 router.post('/login', loginUser);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
-// Get User Profile
-router.get('/profile/:email', getUserProfile);
+// Protected Routes (require authentication)
+router.get('/profile/:email', authMiddleware, getUserProfile);
+router.get('/saved-jobs', authMiddleware, getSavedJobs);
+router.post('/save-job', authMiddleware, saveJob);
+router.delete('/unsave-job/:jobId', authMiddleware, unsaveJob);
 
 module.exports = router;
