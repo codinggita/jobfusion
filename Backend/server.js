@@ -7,10 +7,9 @@ const userRoutes = require('./src/routes/userRoutes'); // Import user routes
 const { getTrendingJobs } = require('./src/controllers/jobController');
 const savedJobRoutes = require("./src/routes/savedJobRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes"); // Import review routes
-const newStailerRoutes = require("./src/routes/newStailerRoutes")
+const newStailerRoutes = require("./src/routes/newStailerRoutes");
 const atsRoutes = require("./src/routes/atsRoutes");
 const resumeRoutes = require("./src/routes/resumeRoutes");
-
 
 // MongoDB connection
 const connectDB = async () => {
@@ -27,7 +26,7 @@ const connectDB = async () => {
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 const corsOptions = {
@@ -49,20 +48,19 @@ app.use('/api/users', userRoutes);
 app.get('/api/trending', getTrendingJobs);
 
 // Save Jobs Routes 
-app.use("/api/jobs", savedJobRoutes);
+app.use("/api/saved-jobs", savedJobRoutes);
 
 // Use review routes
 app.use('/api/reviews', reviewRoutes);
 
-//Newstailer royes
+// Newstailer routes
 app.use('/api/newStailer', newStailerRoutes);
 
-//Ats Score Cheking
-app.use("/api", atsRoutes);
+// ATS Score Checking
+app.use("/api/ats", atsRoutes);
 
-// resume saved routes
+// Resume saved routes
 app.use("/api/resumes", resumeRoutes);
-
 
 // Error handling middleware
 app.use((err, req, res, next) => {

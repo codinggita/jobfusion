@@ -196,7 +196,7 @@ const ResumeCard = ({ resume, onDelete }) => {
   const handleDelete = async () => {
     const email = localStorage.getItem("userEmail");
     try {
-      await axios.delete("https://jobfusion.onrender.com/api/resumes/unsave", {
+      await axios.delete("http://localhost:5000/api/resumes/unsave", {
         data: { email, resumeId: resume._id },
       });
       toast.success("Resume deleted successfully!", { position: "top-center", autoClose: 2000 });
@@ -269,7 +269,7 @@ const UserDashboard = () => {
           setLoading(false);
           return;
         }
-        const response = await axios.get(`https://jobfusion.onrender.com/api/users/profile/${storedEmail}`);
+        const response = await axios.get(`http://localhost:5000/api/users/profile/${storedEmail}`);
         if (response.data.success) {
           setUserData(response.data.data);
         } else {
@@ -287,13 +287,13 @@ const UserDashboard = () => {
       if (email) {
         try {
           // Fetch saved jobs
-          const jobsResponse = await axios.get(`https://jobfusion.onrender.com/api/jobs/saved/${email}`);
+          const jobsResponse = await axios.get(`http://localhost:5000/api/jobs/saved/${email}`);
           if (jobsResponse.data.success) {
             setSavedJobs(jobsResponse.data.data.map((item) => item.jobData));
           }
 
           // Fetch saved resumes
-          const resumesResponse = await axios.get(`https://jobfusion.onrender.com/api/resumes/saved/${email}`);
+          const resumesResponse = await axios.get(`http://localhost:5000/api/resumes/saved/${email}`);
           if (resumesResponse.data.success) {
             console.log("Fetched saved resumes:", resumesResponse.data.data);
             setSavedResumes(resumesResponse.data.data);

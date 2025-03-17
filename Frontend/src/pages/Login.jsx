@@ -36,7 +36,7 @@ function Login() {
                     password: formData.password,
                 };
 
-                const response = await fetch("https://jobfusion.onrender.com/api/users/login", {
+                const response = await fetch("http://localhost:5000/api/users/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function Login() {
                     otp: formData.otp
                 };
 
-                const response = await fetch("https://jobfusion.onrender.com/api/users/verify-otp", {
+                const response = await fetch("http://localhost:5000/api/users/verify-otp", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -84,7 +84,7 @@ function Login() {
                     email: formData.email
                 };
 
-                const response = await fetch("https://jobfusion.onrender.com/api/users/forgot-password", {
+                const response = await fetch("http://localhost:5000/api/users/forgot-password", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -106,7 +106,7 @@ function Login() {
                     newPassword: formData.password
                 };
 
-                const response = await fetch("https://jobfusion.onrender.com/api/users/reset-password", {
+                const response = await fetch("http://localhost:5000/api/users/reset-password", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -138,8 +138,8 @@ function Login() {
 
         try {
             const endpoint = view === "verify" 
-                ? "https://jobfusion.onrender.com/api/users/resend-otp" 
-                : "https://jobfusion.onrender.com/api/users/forgot-password";
+                ? "http://localhost:5000/api/users/resend-otp" 
+                : "http://localhost:5000/api/users/forgot-password";
 
             const response = await fetch(endpoint, {
                 method: "POST",
