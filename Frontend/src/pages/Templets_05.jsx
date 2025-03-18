@@ -29,7 +29,7 @@ import Input from '../components/Resume-Template/Input';
 import Textarea from '../components/Resume-Template/Textarea';
 import ColorPicker from '../components/Resume-Template/ColorPicker';
 import Toggle from '../components/Resume-Template/Toggle';
-import Card from '../components/Resume-Template/Card';
+import Card from '../components/Resume-Template/card';
 import TabButton from '../components/Resume-Template/TabButton';
 import Section from '../components/Resume-Template/Section';
 import Notification from '../components/Resume-Template/Notification';
