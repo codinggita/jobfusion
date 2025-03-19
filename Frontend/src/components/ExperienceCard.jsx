@@ -25,11 +25,11 @@ const ExperienceCard = ({ experience }) => {
           
           <div className="space-y-2 mb-4">
             <p className="text-gray-600 font-medium">Job Title: {experience.job_title}</p>
-            <p className="text-gray-500">Company: {experience.company_name}</p>
+            <p className="texframer-motiont-gray-500">Company: {experience.company_name}</p>
           </div>
           
           <div className="mb-4">
-            <p className="text-gray-600 line-clamp-2">Journey Description: {experience.journey_description}</p>
+            <p className="text-gray-600 line-clamp-1">Journey Description: {experience.journey_description}</p>
           </div>
           
           <button
