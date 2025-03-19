@@ -17,6 +17,8 @@ import Template03 from './pages/Templets_03';
 import Template04 from './pages/Templets_04';
 import Template05 from './pages/Templets_05';
 import Template06 from './pages/Templets_06';
+import BlogForm from './components/BlogSection/BlogForm';
+import SuccessStories from './pages/SuccessStories';
 
 // Scroll Restoration Component
 function ScrollRestoration() {
@@ -107,6 +109,8 @@ function App() {
         <Route path="/resume/template05" element={<Template05 />} />
         <Route path="/resume/template06" element={<Template06 />} />
         <Route path="/ats-cheking" element={<ATS />} />
+        <Route path='/blogeditor' element={<BlogForm />} />
+        <Route path="/successstories" element={<SuccessStories />} />
 
         {/* Redirect any unknown route to FirstPage */}
         <Route path="*" element={<Navigate to="/" />} />
