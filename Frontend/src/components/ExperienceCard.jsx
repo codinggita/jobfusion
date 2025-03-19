@@ -44,7 +44,7 @@ const ExperienceCard = ({ experience }) => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/5 backdrop-blur-2xl bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-hidden">
             <div className="sticky top-0 bg-white p-6 border-b flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-gray-900">{experience.name}'s Journey</h2>
               <button

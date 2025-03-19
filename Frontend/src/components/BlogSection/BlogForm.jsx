@@ -16,7 +16,6 @@ const SuccessForm = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState('');
-  const [userDetails, setUserDetails] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
@@ -91,6 +90,14 @@ const SuccessForm = () => {
 
 
   };
+
+  useEffect(()=>{
+    (async ()=>{
+      if(localStorage.getItem("userEmail") == null){
+        navigate("/login");
+      }
+    })()
+  },[])
 
   return (
     <motion.div

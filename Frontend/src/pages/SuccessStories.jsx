@@ -2,6 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import ExperienceCard from '../components/ExperienceCard';
 import Spinner from '../components/Loader';
+import { Plus } from 'lucide-react';
+import { Tooltip } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const SuccessStories = () => {
     const [experienceData, setExperienceData] = useState([]);
@@ -31,6 +34,19 @@ const SuccessStories = () => {
                                         <ExperienceCard key={experience._id} experience={experience} />
                                     ))}
                                 </div>
+                                <Tooltip
+                                    title="Share your journey and inspire others"
+                                    placement="top"
+                                    classes={{ tooltip: 'bg-white p-2 rounded-md shadow-lg' }}
+                                >
+                                    <div className="fixed bottom-0 left-0 p-4">
+                                        <Link to={'/blogeditor'}>
+                                            <div className="bg-white rounded-full shadow-lg p-2">
+                                                <Plus className="h-8 w-8 text-blue-500 hover:text-blue-700" />
+                                            </div>
+                                        </Link>
+                                    </div>
+                                </Tooltip>
                             </div>
                         </div>
                     )
