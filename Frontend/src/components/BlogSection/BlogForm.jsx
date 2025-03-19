@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Spinner from '../Loader';
 
 const SuccessForm = () => {
   const [formData, setFormData] = useState({
@@ -13,12 +15,15 @@ const SuccessForm = () => {
   });
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState('');
+  const [userDetails, setUserDetails] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
 
@@ -36,7 +41,7 @@ const SuccessForm = () => {
       }
       setFormData((prev) => ({
         ...prev,
-        image: file,
+        image: file
       }));
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -46,14 +51,15 @@ const SuccessForm = () => {
     }
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     console.log('Form Submitted:', formData);
 
     const data = new FormData();
     data.append("file", formData.image);
-    data.append("upload_preset", "JF_Reviews")
-    data.append("cloud_name", "dxdrzit6x")
+    data.append("upload_preset", "JF_Reviews");
+    data.append("cloud_name", "dxdrzit6x");
 
     try {
       const response = await axios.post("https://api.cloudinary.com/v1_1/dxdrzit6x/image/upload", data);
@@ -63,30 +69,35 @@ const SuccessForm = () => {
         ...prev,
         image_url: response.data.secure_url
       }));
-    } catch (error) {
-      console.error(error);
-    }
-
       const postRequestData = {
         name: formData.name,
         job_title: formData.jobTitle,
         company_name: formData.companyName,
         salary_range: formData.salaryRange,
         journey_description: formData.journeyDescription,
-        image_url: formData.image_url,
-      }
+        image_url: response.data.secure_url
+      };
 
-      try {
-        const response = await axios.post("http://localhost:5000/api/experience/newExperience", postRequestData);
-        console.log(response.data);
-        console.log(response.data.message);
-      } catch (error) {
-        console.error(error);
-      }
+      const mongodbResponse = await axios.post("http://localhost:5000/api/experience/newExperience", postRequestData);
+      console.log(response.data);
+      console.log(response.data.message);
+      navigate("/successstories")
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      return;
+    }
+
+
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <>
+    
+    {
+      isSubmitting ? <Spinner /> : 
+      (
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-xl overflow-hidden">
         <div className="bg-[#E8F1F9] dark:bg-gray-800 bg-noise bg-opacity-50 backdrop-blur-md rounded-t-xl p-6">
           <h2 className="text-5xl font-extrabold text-gray-800 dark:text-white tracking-tight mb-2">Share Your Success Story</h2>
@@ -195,6 +206,10 @@ const SuccessForm = () => {
         </form>
       </div>
     </div>
+      )
+    }
+    
+    </>
   );
 };
 

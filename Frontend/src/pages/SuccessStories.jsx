@@ -12,7 +12,7 @@ const SuccessStories = () => {
             console.log(data.data);
             setExperienceData(data.data);
         })()
-    })
+    }, [])
 
     return (
         <div className="min-h-screen bg-gray-50 p-8 md:p-12 lg:p-16">

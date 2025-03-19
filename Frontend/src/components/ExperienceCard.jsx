@@ -29,7 +29,7 @@ const ExperienceCard = ({ experience }) => {
           </div>
           
           <div className="mb-4">
-            <p className="text-gray-600">Journey Description: {experience.journey_description}</p>
+            <p className="text-gray-600 line-clamp-2">Journey Description: {experience.journey_description}</p>
           </div>
           
           <button
