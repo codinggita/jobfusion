@@ -10,6 +10,7 @@ const reviewRoutes = require("./src/routes/reviewRoutes"); // Import review rout
 const newStailerRoutes = require("./src/routes/newStailerRoutes");
 const atsRoutes = require("./src/routes/atsRoutes");
 const resumeRoutes = require("./src/routes/resumeRoutes");
+const UserExperienceRoutes = require('./src/routes/UserExperienceRoutes');
 
 // MongoDB connection
 const connectDB = async () => {
@@ -61,6 +62,8 @@ app.use("/api/ats", atsRoutes);
 
 // Resume saved routes
 app.use("/api/resumes", resumeRoutes);
+
+app.use('/api/experience', UserExperienceRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -44,6 +44,9 @@ const Header = ({ darkMode, toggleDarkMode }) => {
           <Link to="/ats-cheking" className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'} transition-colors duration-200`}>
             ATS Checking
           </Link>
+          <Link to="/successstories" className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'} transition-colors duration-200`}>
+            Success Stories
+          </Link>
         </nav>
 
         {/* User Profile, Dark Mode Toggle & Mobile Menu */}
@@ -103,6 +106,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
           >
             Home
           </Link>
+          
           <Link 
             to="/Companies" 
             className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'}`} 
@@ -123,6 +127,13 @@ const Header = ({ darkMode, toggleDarkMode }) => {
             onClick={() => setIsMenuOpen(false)}
           >
             ATS Checking
+          </Link>
+          <Link 
+            to="/successstories" 
+            className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-blue-600'}`} 
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Success Stories
           </Link>
 
           {!userEmail && (
