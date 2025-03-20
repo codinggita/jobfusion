@@ -6,7 +6,7 @@ const ExperienceCard = ({ experience }) => {
 
   return (
     <>
-      <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+      <div className="group relative bg-white border-2 border-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
         <div className="aspect-[4/3] w-full overflow-hidden">
           <img
             src={experience.image_url}
@@ -34,7 +34,7 @@ const ExperienceCard = ({ experience }) => {
           
           <button
             onClick={() => setIsModalOpen(true)}
-            className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+            className="text-blue-600 hover:text-blue-800 bg-transparent font-medium transition-colors"
           >
             Read More
           </button>
@@ -60,7 +60,7 @@ const ExperienceCard = ({ experience }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 items-center border-b border-gray-200 pb-4">
                   <div className="flex flex-col justify-center">
                     <h3 className="text-2xl font-semibold text-gray-900">
-                      <span className="text-emerald-600">{experience.job_title}</span> at {experience.company_name}
+                      <span className="text-emerald-600 font-bold">{experience.job_title}</span> at {experience.company_name}
                     </h3>
                     <p className="text-gray-600 text-sm mt-2">
                       {experience.company_name} is a leading company in the {experience.industry} industry.
@@ -78,7 +78,7 @@ const ExperienceCard = ({ experience }) => {
                 
                 <div className="mt-6">
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">Journey Description</h4>
-                  <p className="text-gray-600 whitespace-pre-line">{experience.journey_description}</p>
+                  <p className="text-gray-500 whitespace-pre-line">{experience.journey_description}</p>
                   <img
                     src={experience.image_url}
                     alt={experience.name}
