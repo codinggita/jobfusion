@@ -2,18 +2,20 @@ const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
 const dotenv = require("dotenv");
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 // Configure email transporter for Gmail
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false, 
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
+  debug: true,
+  logger: true
 });
 
 // Verify transporter configuration on startup
@@ -69,20 +71,30 @@ const sendOTP = async (email, otp, type = "verification") => {
       </div>
     `;
 
-    const mailOptions = {
-      from: `"Job Fusion" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject,
-      text,
-      html,
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Email sent successfully to:", email, "| Response:", info.response);
-    return true;
+    // Create a promise to handle the async operation
+    return new Promise((resolve, reject) => {
+      transporter.sendMail(
+        {
+          from: `"Job Fusion" <${process.env.EMAIL_USER}>`,
+          to: email,
+          subject,
+          text,
+          html,
+        },
+        (error, info) => {
+          if (error) {
+            console.error("❌ Error sending email to:", email, "| Error:", error.message);
+            reject(error);
+          } else {
+            console.log("✅ Email sent successfully to:", email, "| Response:", info.response);
+            resolve(true);
+          }
+        }
+      );
+    });
   } catch (error) {
     console.error("❌ Error sending email to:", email, "| Error:", error.message);
-    return false;
+    throw error;
   }
 };
 
