@@ -19,7 +19,7 @@ const connectDB = async () => {
     const conn = await mongoose.connect(mongoURL); // Removed deprecated options
     console.log(`Connected to MongoDB: ${conn.connection.host}`);
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error.message);
+    console.error('Error connecting to MongoDB:', erro.r.message);
     process.exit(1); // Exit process with failure
   }
 };
@@ -36,7 +36,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
 };
 
-app.use(cors(corsOptions));  // Apply CORS middleware with the options
+app.use(cors(corsOptions)); 
 app.use(express.json());
 
 // Use job routes

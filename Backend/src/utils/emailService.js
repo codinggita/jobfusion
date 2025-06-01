@@ -8,14 +8,17 @@ dotenv.config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
-  debug: true,
-  logger: true
+  tls: {
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false
+  },
+  debug: true
 });
 
 // Verify transporter configuration on startup
@@ -98,5 +101,37 @@ const sendOTP = async (email, otp, type = "verification") => {
   }
 };
 
+const sendEmail = async (to, subject, html) => {
+  try {
+    console.log('Attempting to send email with following config:', {
+      from: process.env.EMAIL_USER,
+      to: to,
+      subject: subject
+    });
+
+    const mailOptions = {
+      from: {
+        name: "JobFusion",
+        address: process.env.EMAIL_USER
+      },
+      to: to,
+      subject: subject,
+      html: html
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully:', info.response);
+    return { success: true, info };
+  } catch (error) {
+    console.error('❌ Error sending email:', {
+      error: error.message,
+      stack: error.stack,
+      code: error.code,
+      command: error.command
+    });
+    throw error;
+  }
+};
+
 // Export functions
-module.exports = { generateOTP, sendOTP };
+module.exports = { generateOTP, sendOTP, sendEmail };
