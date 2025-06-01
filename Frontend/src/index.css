@@ -3,7 +3,38 @@
 @tailwind "components";
 @tailwind "utilities";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --border-color: #e5e7eb;
+  --card-bg: #ffffff;
+}
+
+/* Dark mode variables */
+.dark {
+  --bg-primary: #111827;
+  --bg-secondary: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border-color: #374151;
+  --card-bg: #1f2937;
+}
+
+/* Global styles */
 html {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -77,11 +108,95 @@ body {
   color: white !important;
 }
 
+/* Card styles */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* Input styles */
+input, select, textarea {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.dark input, 
+.dark select, 
+.dark textarea {
+  background-color: #374151;
+  color: var(--text-primary);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 text-white;
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Navigation styles */
+.nav-link {
+  color: var(--text-secondary);
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+/* Table styles */
+.table {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.table th,
+.table td {
+  border-color: var(--border-color);
+}
+
+/* Modal styles */
+.modal {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar {
+  width: 12px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 6px;
+  border: 3px solid var(--bg-secondary);
+}
+
+/* Custom dark mode styles */
+.dark .shadow-md,
+.dark .shadow-lg {
+  --tw-shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+.dark .border {
+  border-color: var(--border-color);
+}
+
+.dark .hover\:shadow-lg:hover {
+  --tw-shadow-color: rgba(0, 0, 0, 0.4);
+}
+
 /* Transition for all elements */
 * {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-
 
 .scrollbar-hidden{
   scrollbar-width: none;

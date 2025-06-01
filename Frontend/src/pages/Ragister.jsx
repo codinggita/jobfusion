@@ -31,7 +31,7 @@ function Register() {
                     experienceLevel: formData.workStatus === 'fresher' ? 'Fresher' : 'Experienced',
                 };
 
-                const response = await axios.post('http://localhost:5000/api/users/register', userData);
+                const response = await axios.post('https://jobfusion.onrender.com/api/users/register', userData);
                 console.log('Registration initiated:', response.data);
                 setStep('verify');
             } else if (step === 'verify') {
@@ -40,7 +40,7 @@ function Register() {
                     otp: formData.otp
                 };
 
-                const response = await axios.post('http://localhost:5000/api/users/verify-otp', verifyData);
+                const response = await axios.post('https://jobfusion.onrender.com/api/users/verify-otp', verifyData);
                 console.log('Email verified:', response.data);
                 navigate('/login');
             }
@@ -56,7 +56,7 @@ function Register() {
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/users/resend-otp', {
+            const response = await axios.post('https://jobfusion.onrender.com/api/users/resend-otp', {
                 email: formData.email
             });
             console.log('OTP resent:', response.data);
