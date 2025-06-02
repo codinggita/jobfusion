@@ -2,18 +2,23 @@ const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
 const dotenv = require("dotenv");
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 // Configure email transporter for Gmail
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, 
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
+  tls: {
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false
+  },
+  debug: true
 });
 
 // Verify transporter configuration on startup
@@ -69,22 +74,64 @@ const sendOTP = async (email, otp, type = "verification") => {
       </div>
     `;
 
+    // Create a promise to handle the async operation
+    return new Promise((resolve, reject) => {
+      transporter.sendMail(
+        {
+          from: `"Job Fusion" <${process.env.EMAIL_USER}>`,
+          to: email,
+          subject,
+          text,
+          html,
+        },
+        (error, info) => {
+          if (error) {
+            console.error("❌ Error sending email to:", email, "| Error:", error.message);
+            reject(error);
+          } else {
+            console.log("✅ Email sent successfully to:", email, "| Response:", info.response);
+            resolve(true);
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error("❌ Error sending email to:", email, "| Error:", error.message);
+    throw error;
+  }
+};
+
+const sendEmail = async (to, subject, html) => {
+  try {
+    console.log('Attempting to send email with following config:', {
+      from: process.env.EMAIL_USER,
+      to: to,
+      subject: subject
+    });
+
     const mailOptions = {
-      from: `"Job Fusion" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject,
-      text,
-      html,
+      from: {
+        name: "JobFusion",
+        address: process.env.EMAIL_USER
+      },
+      to: to,
+      subject: subject,
+      html: html
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log("✅ Email sent successfully to:", email, "| Response:", info.response);
-    return true;
+    console.log('✅ Email sent successfully:', info.response);
+    return { success: true, info };
   } catch (error) {
-    console.error("❌ Error sending email to:", email, "| Error:", error.message);
-    return false;
+    console.error('❌ Error sending email:', {
+      error: error.message,
+      stack: error.stack,
+      code: error.code,
+      command: error.command
+    });
+    throw error;
   }
 };
 
 // Export functions
-module.exports = { generateOTP, sendOTP };
+module.exports = { generateOTP, sendOTP, sendEmail };

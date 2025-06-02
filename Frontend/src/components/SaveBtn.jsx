@@ -24,17 +24,28 @@ export default function BookmarkButton({ job, onToggle }) {
 
     // Optimistic UI update
     const newBookmarkedState = !bookmarked;
-    setBookmarked(newBookmarkedState);
-
-    try {
+    setBookmarked(newBookmarkedState);    try {
       let updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-
+      
       if (newBookmarkedState) {
-        await axios.post("https://jobfusion.onrender.com/api/jobs/save", { email, jobData: job });
+        const jobData = {
+          id: job.id,
+          jobTitle: job.title || job.jobTitle,
+          companyName: job.company || job.companyName,
+          location: job.location,
+          salary: job.salary,
+          description: job.description,
+          redirect_url: job.redirect_url
+        };
+        
+        await axios.post("http://localhost:5000/api/saved-jobs/save", { 
+          email, 
+          jobData 
+        });
         updatedJobs.push(job.id);
         toast.success("Job saved successfully!", { position: "top-center" });
       } else {
-        await axios.delete("https://jobfusion.onrender.com/api/jobs/unsave", {
+        await axios.delete("http://localhost:5000/api/saved-jobs/unsave", {
           data: { email, jobId: job.id },
         });
         updatedJobs = updatedJobs.filter((id) => id !== job.id);

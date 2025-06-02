@@ -19,6 +19,7 @@ import Template05 from './pages/Templets_05';
 import Template06 from './pages/Templets_06';
 import BlogForm from './components/BlogSection/BlogForm';
 import SuccessStories from './pages/SuccessStories';
+import { ThemeProvider } from './components/ThemeContext';
 
 // Scroll Restoration Component
 function ScrollRestoration() {
@@ -81,44 +82,46 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
-      {/* Show Navbar & Footer only on Home and other main pages */}
-      {!hideHeaderFooter && <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+    <ThemeProvider>
+      <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
+        {/* Show Navbar & Footer only on Home and other main pages */}
+        {!hideHeaderFooter && <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
 
-      {/* Add ScrollRestoration here to apply it to all routes */}
-      <ScrollRestoration />
+        {/* Add ScrollRestoration here to apply it to all routes */}
+        <ScrollRestoration />
 
-      <Routes>
-        {/* Landing Page (First Page) */}
-        <Route path="/" element={<FirstPage />} />
+        <Routes>
+          {/* Landing Page (First Page) */}
+          <Route path="/" element={<FirstPage />} />
 
-        {/* Authentication Pages */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          {/* Authentication Pages */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Main Website After Login */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/companies" element={<Companies />} />
-        <Route path="/userdashboard" element={<UserDashboard />} />
-        <Route path="/jobs/:id" element={<JobDetails />} />
-        <Route path="/resume" element={<ResumePage />} />
-        <Route path="/resume/template01" element={<Templet01 />} />
-        <Route path="/resume/template02" element={<Template02 />} />
-        <Route path="/resume/template03" element={<Template03 />} />
-        <Route path="/resume/template04" element={<Template04 />} />
-        <Route path="/resume/template05" element={<Template05 />} />
-        <Route path="/resume/template06" element={<Template06 />} />
-        <Route path="/ats-cheking" element={<ATS />} />
-        <Route path='/blogeditor' element={<BlogForm />} />
-        <Route path="/successstories" element={<SuccessStories />} />
+          {/* Main Website After Login */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/companies" element={<Companies />} />
+          <Route path="/userdashboard" element={<UserDashboard />} />
+          <Route path="/jobs/:id" element={<JobDetails />} />
+          <Route path="/resume" element={<ResumePage />} />
+          <Route path="/resume/template01" element={<Templet01 />} />
+          <Route path="/resume/template02" element={<Template02 />} />
+          <Route path="/resume/template03" element={<Template03 />} />
+          <Route path="/resume/template04" element={<Template04 />} />
+          <Route path="/resume/template05" element={<Template05 />} />
+          <Route path="/resume/template06" element={<Template06 />} />
+          <Route path="/ats-cheking" element={<ATS />} />
+          <Route path='/blogeditor' element={<BlogForm />} />
+          <Route path="/successstories" element={<SuccessStories />} />
 
-        {/* Redirect any unknown route to FirstPage */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+          {/* Redirect any unknown route to FirstPage */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
 
-      {/* Show Footer only on Home and other main pages */}
-      {!hideHeaderFooter && <Footer />}
-    </div>
+        {/* Show Footer only on Home and other main pages */}
+        {!hideHeaderFooter && <Footer />}
+      </div>
+    </ThemeProvider>
   );
 }
 
