@@ -29,41 +29,20 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration
-const corsOptions = {
-  origin: '*',  // Replace with your deployed frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
-};
-
-app.use(cors(corsOptions)); 
+// Middleware
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Use job routes
+// Mount routes
 app.use('/api/jobs', jobRoutes);
-
-// Use user routes for registration and login
 app.use('/api/users', userRoutes);
-
-// Separate route for trending jobs
-app.get('/api/trending', getTrendingJobs);
-
-// Save Jobs Routes 
-app.use("/api/saved-jobs", savedJobRoutes);
-
-// Use review routes
+app.use('/api/savedjobs', savedJobRoutes); // Mount saved jobs routes under a distinct path
 app.use('/api/reviews', reviewRoutes);
-
-// Newstailer routes
-app.use('/api/newStailer', newStailerRoutes);
-
-// ATS Score Checking
-app.use("/api/ats", atsRoutes);
-
-// Resume saved routes
-app.use("/api/resumes", resumeRoutes);
-
-app.use('/api/experience', UserExperienceRoutes)
+app.use('/api/newstailer', newStailerRoutes);
+app.use('/api/ats', atsRoutes);
+app.use('/api/resumes', resumeRoutes);
+app.use('/api/experience', UserExperienceRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
