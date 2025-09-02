@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Document, Page, Text, View, StyleSheet, Image, pdf } from "@react-pdf/renderer";
+import React, { useState, useCallback } from "react";
+import { Document, Page, View, Text, StyleSheet, pdf } from "@react-pdf/renderer";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Phone, Mail, MapPin, Download, Plus, Trash2, Github, Linkedin, Twitter, Globe } from "lucide-react";
-
+import { Mail, Phone, MapPin, Globe, Trash2, Plus, Download, Linkedin, Twitter, Github } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
 // Custom Button Component (unchanged)
 const Button = ({ children, onClick, className = "", variant = "primary", size = "md", ...props }) => {
   const baseStyle = "rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
@@ -192,6 +192,7 @@ const TemplatePDF = ({ resumeData }) => (
 
 function Template01() {
   const [resumeData, setResumeData] = useState({
+    templateId: "template01",
     name: "RICHARD SANCHEZ",
     title: "Product Designer",
     about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -351,10 +352,9 @@ function Template01() {
 
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-3xl mx-auto md:max-w-5xl">
-        {/* Controls Section (Navbar) - Unchanged */}
-        <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex flex-wrap gap-4 w-full md:w-auto">
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-6 bg-white p-4 rounded-lg shadow flex flex-wrap gap-4 items-center justify-between">
+          <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium">Header Color:</label>
               <Input

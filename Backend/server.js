@@ -9,7 +9,7 @@ const savedJobRoutes = require("./src/routes/savedJobRoutes");
 const reviewRoutes = require("./src/routes/reviewRoutes"); // Import review routes
 const newStailerRoutes = require("./src/routes/newStailerRoutes");
 const atsRoutes = require("./src/routes/atsRoutes");
-const resumeRoutes = require("./src/routes/resumeRoutes");
+const analyzeRoutes = require("./src/routes/analyzeRoutes");
 const UserExperienceRoutes = require('./src/routes/UserExperienceRoutes');
 
 // MongoDB connection
@@ -19,7 +19,7 @@ const connectDB = async () => {
     const conn = await mongoose.connect(mongoURL); // Removed deprecated options
     console.log(`Connected to MongoDB: ${conn.connection.host}`);
   } catch (error) {
-    console.error('Error connecting to MongoDB:', erro.r.message);
+    console.error('Error connecting to MongoDB:', error.message);
     process.exit(1); // Exit process with failure
   }
 };
@@ -30,7 +30,23 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use((req, res, next) => {
+  const allowedOrigins = ['http://localhost:5173', 'https://jobfusionofficial.netlify.app'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, X-Requested-With');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Length, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '86400');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,7 +57,7 @@ app.use('/api/savedjobs', savedJobRoutes); // Mount saved jobs routes under a di
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/newstailer', newStailerRoutes);
 app.use('/api/ats', atsRoutes);
-app.use('/api/resumes', resumeRoutes);
+app.use('/api/resume', analyzeRoutes);
 app.use('/api/experience', UserExperienceRoutes);
 
 // Error handling middleware

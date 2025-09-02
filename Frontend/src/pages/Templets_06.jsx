@@ -35,7 +35,6 @@ import Card from '../components/Resume-Template/card';
 import TabButton from '../components/Resume-Template/TabButton';
 import Section from '../components/Resume-Template/Section';
 import Notification from '../components/Resume-Template/Notification';
-import SaveResumeButton from '../components/Resume-Template/SaveResumeButton';
 
 const Template06 = () => {
     const resumeRef = useRef(null);
@@ -50,6 +49,7 @@ const Template06 = () => {
 
     // Enhanced Resume Data with modern theme
     const [resumeData, setResumeData] = useState({
+        templateId: "template06",
         photo: '',
         name: 'Aarav Patel',
         title: 'Frontend Developer',
@@ -400,7 +400,6 @@ const Template06 = () => {
                 <Button onClick={generatePDF} className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-full">
                     <Download size={20} />
                 </Button>
-                <SaveResumeButton resumeData={resumeData} />
             </div>
 
             <div className="max-w-7xl mx-auto flex gap-6">

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Document, Page, Text, View, StyleSheet, pdf } from "@react-pdf/renderer";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Phone, Mail, MapPin, Download, Plus, Trash2, Globe } from "lucide-react";
-
+import { toast, ToastContainer } from "react-toastify";
 // Custom Button Component
 const Button = ({ children, onClick, className = "", variant = "primary", size = "md", ...props }) => {
   const baseStyle = "rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
@@ -118,6 +118,7 @@ const TemplatePDF = ({ resumeData }) => (
 
 function Template02() {
   const [resumeData, setResumeData] = useState({
+    templateId: "template02",
     name: "DANIEL GALLEGO",
     title: "UX DESIGNER",
     address: "123 Anywhere St., Any City",

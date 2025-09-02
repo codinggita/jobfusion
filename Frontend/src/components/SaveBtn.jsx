@@ -6,27 +6,50 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function BookmarkButton({ job, onToggle }) {
+export default function BookmarkButton({ job }) {
   const [bookmarked, setBookmarked] = useState(false);
-
+  
   useEffect(() => {
-    const savedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-    setBookmarked(savedJobs.includes(job.id));
+    const checkSavedStatus = async () => {
+      const email = localStorage.getItem("userEmail");
+      const token = localStorage.getItem("token");
+      
+      if (email && token) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/savedjobs/saved/${email}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          
+          if (response.data.success) {
+            const savedJobs = response.data.data || [];
+            const isJobSaved = savedJobs.some(savedJob => savedJob.jobData.id === job.id);
+            setBookmarked(isJobSaved);
+          }
+        } catch (error) {
+          console.error("Error checking saved status:", error);
+        }
+      }
+    };
+
+    checkSavedStatus();
   }, [job.id]);
 
   const handleClick = async () => {
     const email = localStorage.getItem("userEmail");
+    const token = localStorage.getItem("token");
 
-    if (!email) {
+    if (!email || !token) {
       toast.error("Please log in to save jobs.", { position: "top-center" });
       return;
     }
 
     // Optimistic UI update
     const newBookmarkedState = !bookmarked;
-    setBookmarked(newBookmarkedState);    try {
-      let updatedJobs = JSON.parse(localStorage.getItem("savedJobs")) || [];
-      
+    setBookmarked(newBookmarkedState);
+    
+    try {
       if (newBookmarkedState) {
         const jobData = {
           id: job.id,
@@ -37,23 +60,31 @@ export default function BookmarkButton({ job, onToggle }) {
           description: job.description,
           redirect_url: job.redirect_url
         };
-        
-        await axios.post("http://localhost:5000/api/saved-jobs/save", { 
+
+        const response = await axios.post("http://localhost:5000/api/savedjobs/save", { 
           email, 
           jobData 
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
-        updatedJobs.push(job.id);
-        toast.success("Job saved successfully!", { position: "top-center" });
-      } else {
-        await axios.delete("http://localhost:5000/api/saved-jobs/unsave", {
-          data: { email, jobId: job.id },
-        });
-        updatedJobs = updatedJobs.filter((id) => id !== job.id);
-        toast.info("Job removed from saved list.", { position: "top-center" });
-      }
 
-      localStorage.setItem("savedJobs", JSON.stringify(updatedJobs));
-      onToggle();
+        if (response.data.success) {
+          toast.success("Job saved successfully!", { position: "top-center" });
+        }
+      } else {
+        const response = await axios.delete("http://localhost:5000/api/savedjobs/unsave", {
+          data: { email, jobId: job.id },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        
+        if (response.data.success) {
+          toast.info("Job removed from saved list.", { position: "top-center" });
+        }
+      }
     } catch (error) {
       console.error("Error updating saved jobs:", error);
       toast.error("Failed to update saved jobs.", { position: "top-center" });
@@ -89,8 +120,7 @@ export default function BookmarkButton({ job, onToggle }) {
         </AnimatePresence>
       </button>
 
-      {/* Toast Container */}
-      <ToastContainer autoClose={3000} hideProgressBar={false} />
+      <ToastContainer autoClose={2000} hideProgressBar={false} />
     </>
   );
 }
